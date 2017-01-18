@@ -1,0 +1,54 @@
+name: Twig Feeds
+version: 1.0.0
+description: "Parse RSS and Atom feeds with Twig."
+icon: asterisk
+author:
+  name: Ole Vik
+  email: git@olevik.me
+  url: http://olevik.me
+homepage: https://github.com/olevik/grav-plugin-twigfeeds
+keywords: avatar, avatars, identicon, identicons
+bugs: https://github.com/olevik/grav-plugin-twigfeeds/issues
+license: MIT
+
+form:
+  validation: loose
+  fields:
+    enabled:
+      type: toggle
+      label: Plugin Status
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    twig_feeds:
+      name: twig_feeds
+      type: list
+      style: vertical
+      label: Feeds
+      fields:
+        .source:
+          type: text
+          label: Source
+          description: URL to RSS or Atom feed.
+          validate:
+            required: true
+        .start:
+          type: text
+          label: Item start
+          description: Start of feed results. Must be a number between 0 and 500.
+          validate:
+            type: int
+            min: 0
+            max: 500
+        .end:
+          type: text
+          label: Item end
+          description: End of feed results. Must be a number between 0 and 500.
+          validate:
+            type: int
+            min: 0
+            max: 500

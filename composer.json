@@ -1,0 +1,8 @@
+{
+	"config": {
+		"preferred-install": "dist"
+	},
+	"require": {
+		"fguillot/picofeed": "^0.1.31"
+	}
+}
