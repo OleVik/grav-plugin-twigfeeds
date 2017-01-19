@@ -16,10 +16,10 @@ class TwigFeedsPlugin extends Plugin
 {
 	public static function getSubscribedEvents() {
 		return [
-			'onPageContentProcessed' => ['onPageContentProcessed', 0]
+			'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
 		];
 	}
-	public function onPageContentProcessed(Event $event) {
+	public function onTwigSiteVariables(Event $event) {
 		if (!$this->isAdmin()) {
 			$pluginsobject = (array) $this->config->get('plugins');
 			$pluginsobject = $pluginsobject['twigfeeds'];
