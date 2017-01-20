@@ -37,24 +37,41 @@ class TwigFeedsPlugin extends Plugin
 							);
 							$result = $parser->execute();
 							$title = $result->getTitle();
+							$source = $feed['source'];
 							
-							if ($feed['start']) {
+							if (isset($feed['name'])) {
+								$name = $feed['name'];
+							} else {
+								$name = $title;
+							}
+							if (isset($feed['start'])) {
 								$start = $feed['start'];
 							} else {
 								$start = 0;
 							}
-							if ($feed['end']) {
+							if (isset($feed['end'])) {
 								$end = $feed['end'];
 							} else {
 								$end = 500;
 							}
+							if (isset($feed['start']) && isset($feed['end'])) {
+								$amount = abs($start-$end);
+							} else {
+								$amount = count($result->items);
+							}
+							
+							$items[$name]['title'] = $title;
+							$items[$name]['source'] = $source;
+							$items[$name]['start'] = $start;
+							$items[$name]['end'] = $end;
+							$items[$name]['amount'] = $amount;
 							foreach ($result->items as $item) {
-								$items[$title][] = $item;
+								$items[$name]['items'][] = $item;
 								if (++$start == $end) break;
 							}
 						}
 						catch (Exception $e) {
-							$this->grav['debugger']->addMessage('Vendor-package PicoFeed threw an exception, check error logs.');
+							$this->grav['debugger']->addMessage('Twig Feeds-plugin: Vendor-package PicoFeed threw an exception, check error logs.');
 						}
 					}
 					$this->grav['twig']->twig_vars['twig_feeds'] = $items;

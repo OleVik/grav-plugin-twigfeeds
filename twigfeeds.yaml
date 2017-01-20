@@ -1,5 +1,10 @@
 enabled: true
 twig_feeds:
-  - source: http://feeds.bbci.co.uk/news/world/rss.xml
+  - source: http://rss.nytimes.com/services/xml/rss/nyt/World.xml
+    name: NY Times
     start: 0
-    end: 3
+    end: 2
+  - source: http://feeds.bbci.co.uk/news/uk/rss.xml
+    start: 0
+    end: 2
+  - source: http://www.aljazeera.com/xml/rss/all.xml
