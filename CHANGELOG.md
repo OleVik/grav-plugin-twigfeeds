@@ -1,3 +1,10 @@
+# v2.0.0
+## 28-01-2017
+1. [](#improved)
+    * Added cache-functionality
+2. [](#new)
+    * Added cache, static_cache, and debug options
+
 # v1.2.0
 ## 28-01-2017
 1. [](#improved)

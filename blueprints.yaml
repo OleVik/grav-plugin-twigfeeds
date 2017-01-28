@@ -1,5 +1,5 @@
 name: Twig Feeds
-version: 1.2.0
+version: 2.0.0
 description: "Parse RSS and Atom feeds with Twig."
 icon: asterisk
 author:
@@ -17,6 +17,38 @@ form:
     enabled:
       type: toggle
       label: Plugin Status
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    cache:
+      type: toggle
+      label: Cache Feeds
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    static_cache:
+      type: toggle
+      label: Use Static Cache
+      description: Saves feeds in /user/data rather than in /cache.
+      highlight: 1
+      default: 1
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
+    debug:
+      type: toggle
+      label: Debug
+      description: Enables Debug-mode, which logs to Grav's Debugger and log-file.
       highlight: 1
       default: 1
       options:

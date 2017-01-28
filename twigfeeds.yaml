@@ -1,4 +1,7 @@
 enabled: true
+cache: true
+static_cache: false
+debug: false
 twig_feeds:
   - source: http://rss.nytimes.com/services/xml/rss/nyt/World.xml
     name: NY Times
