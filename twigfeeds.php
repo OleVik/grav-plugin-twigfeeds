@@ -11,6 +11,8 @@ use RocketTheme\Toolbox\Event\Event;
 use RocketTheme\Toolbox\File\File;
 require __DIR__ . '/vendor/autoload.php';
 use PicoFeed\Reader\Reader;
+use PicoFeed\Config\Config;
+use PicoFeed\PicoFeedException;
 
 class TwigFeedsPlugin extends Plugin
 {
@@ -28,7 +30,9 @@ class TwigFeedsPlugin extends Plugin
 					$items = array();
 					foreach ($pluginsobject['twig_feeds'] as $feed) {
 						try {
-							$reader = new Reader;
+							$config = new Config;
+							$config->setTimezone('UTC');
+							$reader = new Reader($config);
 							$resource = $reader->download($feed['source']);
 							$parser = $reader->getParser(
 								$resource->getUrl(),
@@ -70,8 +74,11 @@ class TwigFeedsPlugin extends Plugin
 								if (++$start == $end) break;
 							}
 						}
+						catch (PicoFeedException $e) {
+							$this->grav['debugger']->addMessage('PicoFeed threw an exception: ' . $e);
+						}
 						catch (Exception $e) {
-							$this->grav['debugger']->addMessage('Twig Feeds-plugin: Vendor-package PicoFeed threw an exception, check error logs.');
+							$this->grav['debugger']->addMessage('Twig Feeds-plugin threw an exception: ' . $e);
 						}
 					}
 					$this->grav['twig']->twig_vars['twig_feeds'] = $items;
