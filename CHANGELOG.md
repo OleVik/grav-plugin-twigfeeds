@@ -1,5 +1,6 @@
 # v2.0.1
 ## 09-02-2017
+
 1. [](#bugfix)
     * Blueprint list-field temporary fix
     * DateTime fallback
@@ -8,6 +9,7 @@
 
 # v2.0.0
 ## 28-01-2017
+
 1. [](#improved)
     * Added cache-functionality
 2. [](#new)
@@ -15,6 +17,7 @@
 
 # v1.2.0
 ## 28-01-2017
+
 1. [](#improved)
     * More specific Exceptions by vendor-library and plugin
     * Declarative timezone: UTC
@@ -23,6 +26,7 @@
 
 # v1.1.0
 ## 20-01-2017
+
 1. [](#improved)
     * Added name-property to config and blueprint
     * Added return values to returned array
@@ -31,10 +35,12 @@
 
 # v1.0.1
 ## 19-01-2017
+
 3. [](#bugfix)
      * Fixed caching issues
 
 # v1.0.0
 ## 20-01-2017
+
 1. [](#new)
     * Initial release
