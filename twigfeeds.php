@@ -53,7 +53,11 @@ class TwigFeedsPlugin extends Plugin
 							$file = File::instance($manifest_file);
 							$manifest_json = json_decode($file->content());
 							foreach ($manifest_json as $entry => $data) {
-								$date = DateTime::createFromFormat('U', $data->timestamp);
+								if (isset($data->timestamp)) {
+									$date = DateTime::createFromFormat('U', (string) $data->timestamp);
+								} else {
+									$date = new DateTime('now');
+								}
 								$last_modified = $date->format(DateTime::RSS);
 								$manifest[$entry]['etag'] = $data->etag;
 								$manifest[$entry]['last_modified'] = $date->format(DateTime::RSS);
@@ -142,8 +146,8 @@ class TwigFeedsPlugin extends Plugin
 								}
 								$data = $feed_items;
 								if ($pluginsobject['debug'] && $this->config->get('system')['debugger']['enabled']) {
-									$this->grav['debugger']->addMessage(array('state' =>'uncached', 'type' => gettype($data), 'action' => 'add->feed_items: ' . $filename, $data));
-									$this->grav['log']->debug('Twig Feeds: ' . $filename . ', state: uncached, type: ' . gettype($data) . ', action: add to feed_items');
+									$this->grav['debugger']->addMessage(array('state' =>'modified', 'type' => gettype($data), 'action' => 'add to feed_items: ' . $filename, $data));
+									$this->grav['log']->debug('Twig Feeds: ' . $filename . ', state: modified, type: ' . gettype($data) . ', action: add to feed_items');
 								}
 								
 								if ($pluginsobject['cache']) {
@@ -156,7 +160,7 @@ class TwigFeedsPlugin extends Plugin
 								$data = json_decode($file->content());
 								$feed_items[$data->title] = $data;
 								if ($pluginsobject['debug'] && $this->config->get('system')['debugger']['enabled']) {
-									$this->grav['debugger']->addMessage(array('state' =>'cached', 'type' => gettype($data), 'action' => 'add->feed_items: : ' . $filename, $data));
+									$this->grav['debugger']->addMessage(array('state' =>'cached', 'type' => gettype($data), 'action' => 'add to feed_items: : ' . $filename, $data));
 									$this->grav['log']->debug('Twig Feeds: ' . $filename . ', state: cached, type: ' . gettype($data) . ', action: add to feed_items');
 								}
 							}

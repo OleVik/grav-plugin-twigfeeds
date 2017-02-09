@@ -1,3 +1,11 @@
+# v2.0.1
+## 09-02-2017
+1. [](#bugfix)
+    * Blueprint list-field temporary fix
+    * DateTime fallback
+2. [](#improved)
+    * Debug message clarity
+
 # v2.0.0
 ## 28-01-2017
 1. [](#improved)
