@@ -151,6 +151,8 @@ class TwigFeedsPlugin extends Plugin
 								}
 								
 								if ($pluginsobject['cache']) {
+									/* Add custom name to feed before saving */
+									$feed_items[$name]['name'] = $name;
 									/* Save results */
 									$file = File::instance($cache_path . '' . $filename);
 									$file->save(json_encode($feed_items[$name], JSON_PRETTY_PRINT));
@@ -158,7 +160,13 @@ class TwigFeedsPlugin extends Plugin
 							} else {
 								$file = File::instance($cache_path . '' . $filename);
 								$data = json_decode($file->content());
-								$feed_items[$data->title] = $data;
+								if ($data->name) {
+									$name = $data->name;
+								}
+								else {
+									$name = $data->title;
+								}
+								$feed_items[$name] = $data;
 								if ($pluginsobject['debug'] && $this->config->get('system')['debugger']['enabled']) {
 									$this->grav['debugger']->addMessage(array('state' =>'cached', 'type' => gettype($data), 'action' => 'add to feed_items: : ' . $filename, $data));
 									$this->grav['log']->debug('Twig Feeds: ' . $filename . ', state: cached, type: ' . gettype($data) . ', action: add to feed_items');
