@@ -56,6 +56,13 @@ form:
         0: PLUGIN_ADMIN.DISABLED
       validate:
         type: bool
+    cache_time:
+      type: text
+      label: Cache time in seconds
+      description: Minimum cache time, in seconds. If > 0, plugin won't check for new content before this time is passed since last check.
+      validate:
+        type: int
+        min: 0
     twig_feeds:
       name: twig_feeds
       type: list

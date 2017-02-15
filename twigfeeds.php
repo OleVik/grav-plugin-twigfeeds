@@ -43,6 +43,7 @@ class TwigFeedsPlugin extends Plugin
 								$manifest[$feed['source']]['etag'] = '';
 								$manifest[$feed['source']]['last_modified'] = '';
 								$manifest[$feed['source']]['filename'] = '';
+								$manifest[$feed['source']]['last_checked'] = 0;
 							}
 							$file = File::instance($manifest_file);
 							$file->save(json_encode($manifest, JSON_PRETTY_PRINT));
@@ -60,12 +61,17 @@ class TwigFeedsPlugin extends Plugin
 								}
 								$last_modified = $date->format(DateTime::RSS);
 								$manifest[$entry]['etag'] = $data->etag;
-								$manifest[$entry]['last_modified'] = $date->format(DateTime::RSS);
+								$manifest[$entry]['last_modified'] = $last_modified;
 								$manifest[$entry]['filename'] = $data->filename;
+								if (isset($data->last_checked)) {
+									$manifest[$entry]['last_checked'] = $data->last_checked;
+								} else {
+									$manifest[$entry]['last_checked'] = 0;
+								}
 							}
 						}
 					}
-					
+
 					$feed_items = array();
 					foreach ($pluginsobject['twig_feeds'] as $feed) {
 						$filename = parse_url($feed['source'], PHP_URL_HOST) . '.json';
@@ -74,16 +80,22 @@ class TwigFeedsPlugin extends Plugin
 							$config = new Config;
 							$config->setTimezone('UTC');
 							$reader = new Reader($config);
-							
+
 							if ($pluginsobject['cache']) {
 								$last_modified = $manifest[$feed['source']]['last_modified'];
-								$etag = $manifest[$feed['source']]['etag'];
-								
-								$resource = $reader->download($feed['source'], $last_modified, $etag);
+								$last_checked = $manifest[$feed['source']]['last_checked'];
+								if (!$last_checked || ((new DateTime('now'))->format('U') - (($last_checked)) >= $pluginsobject['cache_time'])) {
+									$etag = $manifest[$feed['source']]['etag'];
+
+									$resource = $reader->download($feed['source'], $last_modified, $etag);
+								} else {
+
+									$resource = false;
+								}
 							} else {
 								$resource = $reader->download($feed['source']);
 							}
-							if ($resource->isModified()) {
+							if ($resource && $resource->isModified()) {
 								$parser = $reader->getParser(
 									$resource->getUrl(),
 									$resource->getContent(),
@@ -93,27 +105,29 @@ class TwigFeedsPlugin extends Plugin
 								$title = $result->getTitle();
 								$source = $feed['source'];
 							}
-							
-							if ($pluginsobject['cache']) {
+
+							if ($resource && $pluginsobject['cache']) {
 								$etag = $resource->getEtag();
 								$last_modified = $resource->getLastModified();
-								
+								$last_checked = new DateTime('now');
+
 								if (!empty($last_modified)) {
 									$date_object = DateTime::createFromFormat(DateTime::RSS, $last_modified);
 								} else {
 									$date_object = new DateTime('now');
 								}
 								$timestamp = $date_object->getTimestamp();
-								
+
 								/* Update Manifest.json */
 								$manifest[$feed['source']]['etag'] = $etag;
 								$manifest[$feed['source']]['timestamp'] = $timestamp;
 								$manifest[$feed['source']]['filename'] = $filename;
+								$manifest[$feed['source']]['last_checked'] = $last_checked->getTimestamp();
 								$file = File::instance($manifest_file);
 								$file->save(json_encode($manifest));
 							}
-							
-							if ($resource->isModified()) {
+
+							if ($resource && $resource->isModified()) {
 								if (isset($feed['name'])) {
 									$name = $feed['name'];
 								} else {
@@ -134,7 +148,7 @@ class TwigFeedsPlugin extends Plugin
 								} else {
 									$amount = count($result->items);
 								}
-								
+
 								$feed_items[$name]['title'] = $title;
 								$feed_items[$name]['source'] = $source;
 								$feed_items[$name]['start'] = $start;
@@ -149,7 +163,7 @@ class TwigFeedsPlugin extends Plugin
 									$this->grav['debugger']->addMessage(array('state' =>'modified', 'type' => gettype($data), 'action' => 'add to feed_items: ' . $filename, $data));
 									$this->grav['log']->debug('Twig Feeds: ' . $filename . ', state: modified, type: ' . gettype($data) . ', action: add to feed_items');
 								}
-								
+
 								if ($pluginsobject['cache']) {
 									/* Add custom name to feed before saving */
 									$feed_items[$name]['name'] = $name;
@@ -160,7 +174,7 @@ class TwigFeedsPlugin extends Plugin
 							} else {
 								$file = File::instance($cache_path . '' . $filename);
 								$data = json_decode($file->content());
-								if ($data->name) {
+								if (isset($data->name)) {
 									$name = $data->name;
 								}
 								else {
