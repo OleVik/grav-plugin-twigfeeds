@@ -1,6 +1,7 @@
 enabled: true
 cache: true
 static_cache: false
+cache_time: 60
 debug: false
 twig_feeds:
   - source: http://rss.nytimes.com/services/xml/rss/nyt/World.xml
