@@ -20,6 +20,7 @@ class TwigFeedsPlugin extends Plugin
 {
 	public static function getSubscribedEvents() {
 		return [
+			'onTwigPageVariables' => ['onTwigSiteVariables', 0],
 			'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
 		];
 	}
@@ -182,7 +183,9 @@ class TwigFeedsPlugin extends Plugin
 							$this->grav['log']->error('Twig Feeds-plugin threw an exception: ' . $e);
 						}
 					}
-					$this->grav['twig']->twig_vars['twig_feeds'] = $feed_items;
+					if (!isset($this->grav['twig']->twig_vars['twig_feeds'])) {
+						$this->grav['twig']->twig_vars['twig_feeds'] = $feed_items;
+					}
 				}
 			}
 		}

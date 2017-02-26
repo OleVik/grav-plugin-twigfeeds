@@ -1,3 +1,9 @@
+# v2.0.4
+## 26-02-2017
+
+1. [](#bugfix)
+    * Add onTwigPageVariables to getSubscribedEvents
+
 # v2.0.3
 ## 15-02-2017
 

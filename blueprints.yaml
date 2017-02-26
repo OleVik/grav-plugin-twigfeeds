@@ -1,5 +1,5 @@
 name: Twig Feeds
-version: 2.0.3
+version: 2.0.4
 description: "Parse RSS and Atom feeds with Twig."
 icon: asterisk
 author:
