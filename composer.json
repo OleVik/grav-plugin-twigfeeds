@@ -3,6 +3,7 @@
 		"preferred-install": "dist"
 	},
 	"require": {
-		"fguillot/picofeed": "^0.1.31"
+		"fguillot/picofeed": "^0.1.31",
+		"symfony/filesystem": "^3.2"
 	}
 }

@@ -1,6 +1,6 @@
 # [Grav](http://getgrav.org/) Twig Feeds Plugin
 
-Exposes RSS and Atom feeds to Grav, making them available for use in Twig. This means you can define a RSS feed in the plugin-configuration, then access them for iteration in Twig-templates.
+Exposes RSS and Atom feeds to Grav, making them available for use in Twig. This means you can define RSS feeds in the plugin-configuration, then access them for iteration in templates.
 
 ## Installation and Configuration
 
@@ -21,13 +21,15 @@ The plugin is enabled by default, and can be disabled by copying `user/plugins/t
 | `cache` | `true` | `true` or `false` | Enables or disables cache-mechanism. |
 | `static_cache` | `false` | `true` or `false` | Makes cache-data persist beyond Grav's cache. |
 | `debug` | `false` | `true` or `false` | Enables or disables debug-mode. |
-| `twig_feeds` | List | List: `source`, `name`, `start`, `end` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with. |
+| `cache_time` | 900 | integer | Default time, in seconds, to wait before caching data again. |
+| `pass_headers` | `false` | `true` or `false` | Enables or disables passing ETag and Last Modified headers. |
+| `twig_feeds` | List | List: `source`, `name`, `start`, `end`, `cache_time` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again. |
 
-In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persistant beyond Grav's cache. This means that `bin/grav clear-cache` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs.
+In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
 
-The `debug`-option logs simple details to Grav's Debugger and in /logs/grav.log, which aids in identifying what `state` the feed is in (cached or uncached), what `type` of data the feed is parsed as, the `action` (eg. "add_>feed_items: FILENAME"), and the content of the feed-data. The log-file does not include the content.
+The `cache_time`-option sets a default time to use when checking whether a feed should be cached again. This value should be no less than 300, as ETags and Last Modified headers are fickle and set by the target servers, and bypassing the plugins `cache_time` with values below 300 could lead to Exceptions being thrown by the PicoFeed-library. The `pass_headers`-option enables or disables passing ETag and Last Modified headers to the PicoFeed-library, thus relying solely on `cache_time` for preventing re-caching of data, which is more robust.
 
-The `twig_feeds`-setting takes lists containing 4 properties: `source`, `name` `start`, and `end`. Only the first one is required, which should point to a URL for a RSS or Atom feed. If `name` is set it is used as the key for the returned array, so you can iterate over this array only (see example below). The latter two limits the returned results, where `start` is the item to start the results from, and `end` is the item to end the results with.
+The `twig_feeds`-setting takes lists containing 5 properties: `source`, `name` `start`, and `end`, `cache_time`. Only the first one is required, which should point to a URL for a RSS or Atom feed. If `name` is set it is used as the key for the returned array, so you can iterate over this array only (see example below). `start` and `end` limits the returned results, where `start` is the item to start the results from, and `end` is the item to end the results with. `cache_time` is the amount of time, in seconds, to wait before caching results again.
 
 For example, starting at 0 and ending at 10 would return a total of 10 items from the feed. You could also limit the results in Twig using the [slice-filter](http://twig.sensiolabs.org/doc/2.x/filters/slice.html) with `|slice(start, length)` or `[start:length]`.
 
@@ -35,26 +37,22 @@ For example, starting at 0 and ending at 10 would return a total of 10 items fro
 
 #### Caching
 
-The `cache`-option relies on two settings in the feed: [Entity tags](https://en.wikipedia.org/wiki/HTTP_ETag) (ETags) and [last modified](https://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers/) header. If the feed does not return these, then the cache is invalidated upon checking for new content. When set, the plugin checks whether the feed has modified content, and then stores the content locally in Grav's cache for subsequent use.
-
-The process is the following:
-
-1. Plugin-cache is enabled, a `manifest.json` is built in /cache/twigfeeds containing feed sources with related `etag`, `last_modified`, `filename`, and `timestamp`.
-2. On subsequent iterations, this file (if it exists) is used to retrieve data from associated `filename`'s.
-3. If the feed is cached, the content from these files is used to return feed contents.
+The `cache`-option relies on [Entity tags](https://en.wikipedia.org/wiki/HTTP_ETag) (ETags) and [Last Modified](https://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers/) headers. If the feed does not return these, then the cache is invalidated upon checking for new content. When set, the plugin checks whether the feed has modified content, and then stores the content locally in Grav's cache for subsequent use. This is superseded by `cache_time`, thus ETag and Last Modified headers are only checked if the time since the feed was last checked plus `cache_time` exceeds the current time.
 
 #### Returned values
 			
-The plugin makes 6 properties available to each of the feeds in the `twig_feeds`-array. These are:
+The plugin makes 8 properties available to each of the feeds in the `twig_feeds`-array. These are:
 
-- `title`: The retrieved title from the feed.
-- `source`: The initially defined URL for the feed.
-- `start`: The start of the returned results, if set.
-- `end`: The end of the returned results, if set.
-- `amount`: The total amount of returned results, computed.
+- `title`: The retrieved title of the feed.
+- `name`: The declared name of the feed.
+- `amount`: The total amount of returned results.
 - `items`: All items in the feed, for iteration.
+- `etag`: The ETag header of the feed.
+- `last_modified`: The Last Modified header of the feed.
+- `last_checked`: The Unix Timestamp when the feed was last checked by the plugin.
+- `timestamp`: The Unix Timestamp when the feed was last modified, as a fallback to `last_modified`.
 
-Additionally, each feed has a corresponding name - as the returned array is an associative array - which can be accessed by Twig (see examples below). If the `name`-property is set, this is used for this name. If not, it defaults to the retrieved title.
+If the `name`-property is set, this is used for this name. If not, it defaults to the retrieved title.
 
 #### Examples
 
@@ -89,7 +87,7 @@ This retrieves World News from The New York Times and UK News from the BBC, whic
 
 This will iterate over each feed and output the name, retrieved title (as a link), amount of items, and the first two items in each feed.
 
-Since v1.1.0 we can also access any defined feed by name, like this:
+We can also access any feed by its defined name:
 
 ```
 {% for name, feed in twig_feeds if name == 'NY Times' %}

@@ -1,5 +1,5 @@
 name: Twig Feeds
-version: 2.0.4
+version: 3.0.0
 description: "Parse RSS and Atom feeds with Twig."
 icon: asterisk
 author:
@@ -10,6 +10,8 @@ homepage: https://github.com/olevik/grav-plugin-twigfeeds
 keywords: avatar, avatars, identicon, identicons
 bugs: https://github.com/olevik/grav-plugin-twigfeeds/issues
 license: MIT
+dependencies:
+  - { name: grav, version: '~1.1.17' }
 
 form:
   validation: loose
@@ -36,7 +38,7 @@ form:
         type: bool
     static_cache:
       type: toggle
-      label: Use Static Cache
+      label: Static Cache
       description: Saves feeds in /user/data rather than in /cache.
       highlight: 1
       default: 1
@@ -89,3 +91,10 @@ form:
             type: int
             min: 0
             max: 500
+        .cache_time:
+          type: text
+          label: Cache Time
+          description: Time, in seconds, to wait before caching data again.
+          validate:
+            type: int
+            min: 0

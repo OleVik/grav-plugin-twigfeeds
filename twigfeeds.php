@@ -2,192 +2,228 @@
 namespace Grav\Plugin;
 
 use DateTime;
+use Grav\Common\Grav;
 use Grav\Common\Data;
 use Grav\Common\Cache;
 use Grav\Common\Plugin;
-use Grav\Common\Grav;
 use Grav\Common\Uri;
 use Grav\Common\Taxonomy;
 use Grav\Common\Page\Page;
 use RocketTheme\Toolbox\Event\Event;
-use RocketTheme\Toolbox\File\File;
+
 require __DIR__ . '/vendor/autoload.php';
 use PicoFeed\Reader\Reader;
 use PicoFeed\Config\Config;
 use PicoFeed\PicoFeedException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
+require('Manifest.php');
+require('Parser.php');
+require('Utilities.php');
+use TwigFeeds\Manifest;
+use TwigFeeds\Parser;
+use TwigFeeds\Utilities;
+
+/**
+ * Parse RSS and Atom feeds with Twig
+ *
+ * Exposes RSS and Atom feeds to Grav, making them available for use in Twig.
+ * This means you can define a RSS feed in the plugin-configuration, then
+ * access them for iteration in Twig-templates.
+ *
+ * Class TwigFeedsPlugin
+ * @package Grav\Plugin
+ * @return array Feeds in Twig-array
+ * @license MIT License by Ole Vik
+ */
 class TwigFeedsPlugin extends Plugin
 {
-	public static function getSubscribedEvents() {
-		return [
-			'onTwigPageVariables' => ['onTwigSiteVariables', 0],
-			'onTwigSiteVariables' => ['onTwigSiteVariables', 0]
-		];
-	}
-	public function onTwigSiteVariables(Event $event) {
-		if (!$this->isAdmin()) {
-			$pluginsobject = (array) $this->config->get('plugins');
-			$pluginsobject = $pluginsobject['twigfeeds'];
-			if (isset($pluginsobject) && $pluginsobject['enabled']) {
-				if ($pluginsobject['static_cache']) {
-					$cache_path = $this->grav['locator']->findResource('user://data', true) . DIRECTORY_SEPARATOR . 'twigfeeds' . DIRECTORY_SEPARATOR;
-				} else {
-					$cache_path = CACHE_DIR . 'twigfeeds' . DIRECTORY_SEPARATOR;
-				}
-				if (is_array($pluginsobject['twig_feeds'])) {
-					if ($pluginsobject['cache']) {
-						$manifest_file = $cache_path . 'manifest.json';
-						if (!file_exists($manifest_file)) {
-							/* Build Manifest */
-							$manifest = array();
-							foreach ($pluginsobject['twig_feeds'] as $feed) {
-								$manifest[$feed['source']]['etag'] = '';
-								$manifest[$feed['source']]['last_modified'] = '';
-								$manifest[$feed['source']]['filename'] = '';
-							}
-							$file = File::instance($manifest_file);
-							$file->save(json_encode($manifest, JSON_PRETTY_PRINT));
-						} else {
-							/* Read Manifest */
-							$manifest_file = $cache_path . 'manifest.json';
-							$manifest = array();
-							$file = File::instance($manifest_file);
-							$manifest_json = json_decode($file->content());
-							foreach ($manifest_json as $entry => $data) {
-								if (isset($data->timestamp)) {
-									$date = DateTime::createFromFormat('U', (string) $data->timestamp);
-								} else {
-									$date = new DateTime('now');
-								}
-								$last_modified = $date->format(DateTime::RSS);
-								$manifest[$entry]['etag'] = $data->etag;
-								$manifest[$entry]['last_modified'] = $date->format(DateTime::RSS);
-								$manifest[$entry]['filename'] = $data->filename;
-							}
-						}
-					}
-					
-					$feed_items = array();
-					foreach ($pluginsobject['twig_feeds'] as $feed) {
-						$filename = parse_url($feed['source'], PHP_URL_HOST) . '.json';
-						$items = array();
-						try {
-							$config = new Config;
-							$config->setTimezone('UTC');
-							$reader = new Reader($config);
-							
-							if ($pluginsobject['cache']) {
-								$last_modified = $manifest[$feed['source']]['last_modified'];
-								$etag = $manifest[$feed['source']]['etag'];
-								
-								$resource = $reader->download($feed['source'], $last_modified, $etag);
-							} else {
-								$resource = $reader->download($feed['source']);
-							}
-							if ($resource->isModified()) {
-								$parser = $reader->getParser(
-									$resource->getUrl(),
-									$resource->getContent(),
-									$resource->getEncoding()
-								);
-								$result = $parser->execute();
-								$title = $result->getTitle();
-								$source = $feed['source'];
-							}
-							
-							if ($pluginsobject['cache']) {
-								$etag = $resource->getEtag();
-								$last_modified = $resource->getLastModified();
-								
-								if (!empty($last_modified)) {
-									$date_object = DateTime::createFromFormat(DateTime::RSS, $last_modified);
-								} else {
-									$date_object = new DateTime('now');
-								}
-								$timestamp = $date_object->getTimestamp();
-								
-								/* Update Manifest.json */
-								$manifest[$feed['source']]['etag'] = $etag;
-								$manifest[$feed['source']]['timestamp'] = $timestamp;
-								$manifest[$feed['source']]['filename'] = $filename;
-								$file = File::instance($manifest_file);
-								$file->save(json_encode($manifest));
-							}
-							
-							if ($resource->isModified()) {
-								if (isset($feed['name'])) {
-									$name = $feed['name'];
-								} else {
-									$name = $title;
-								}
-								if (isset($feed['start'])) {
-									$start = $feed['start'];
-								} else {
-									$start = 0;
-								}
-								if (isset($feed['end'])) {
-									$end = $feed['end'];
-								} else {
-									$end = 500;
-								}
-								if (isset($feed['start']) && isset($feed['end'])) {
-									$amount = abs($start-$end);
-								} else {
-									$amount = count($result->items);
-								}
-								
-								$feed_items[$name]['title'] = $title;
-								$feed_items[$name]['source'] = $source;
-								$feed_items[$name]['start'] = $start;
-								$feed_items[$name]['end'] = $end;
-								$feed_items[$name]['amount'] = $amount;
-								foreach ($result->items as $item) {
-									$feed_items[$name]['items'][] = (array) $item;
-									if (++$start == $end) break;
-								}
-								$data = $feed_items;
-								if ($pluginsobject['debug'] && $this->config->get('system')['debugger']['enabled']) {
-									$this->grav['debugger']->addMessage(array('state' =>'modified', 'type' => gettype($data), 'action' => 'add to feed_items: ' . $filename, $data));
-									$this->grav['log']->debug('Twig Feeds: ' . $filename . ', state: modified, type: ' . gettype($data) . ', action: add to feed_items');
-								}
-								
-								if ($pluginsobject['cache']) {
-									/* Add custom name to feed before saving */
-									$feed_items[$name]['name'] = $name;
-									/* Save results */
-									$file = File::instance($cache_path . '' . $filename);
-									$file->save(json_encode($feed_items[$name], JSON_PRETTY_PRINT));
-								}
-							} else {
-								$file = File::instance($cache_path . '' . $filename);
-								$data = json_decode($file->content());
-								if ($data->name) {
-									$name = $data->name;
-								}
-								else {
-									$name = $data->title;
-								}
-								$feed_items[$name] = $data;
-								if ($pluginsobject['debug'] && $this->config->get('system')['debugger']['enabled']) {
-									$this->grav['debugger']->addMessage(array('state' =>'cached', 'type' => gettype($data), 'action' => 'add to feed_items: : ' . $filename, $data));
-									$this->grav['log']->debug('Twig Feeds: ' . $filename . ', state: cached, type: ' . gettype($data) . ', action: add to feed_items');
-								}
-							}
-						}
-						catch (PicoFeedException $e) {
-							$this->grav['debugger']->addMessage('PicoFeed threw an exception: ' . $e);
-							$this->grav['log']->error('PicoFeed threw an exception: ' . $e);
-						}
-						catch (Exception $e) {
-							$this->grav['debugger']->addMessage('Twig Feeds-plugin threw an exception: ' . $e);
-							$this->grav['log']->error('Twig Feeds-plugin threw an exception: ' . $e);
-						}
-					}
-					if (!isset($this->grav['twig']->twig_vars['twig_feeds'])) {
-						$this->grav['twig']->twig_vars['twig_feeds'] = $feed_items;
-					}
-				}
-			}
-		}
-	}
+
+    /**
+     * Registers events with Grav
+     * @return array
+     */
+    public static function getSubscribedEvents()
+    {
+        return [
+            'onBeforeCacheClear' => ['onBeforeCacheClear', 0],
+            'onTwigSiteVariables' => ['outputFeeds', 0],
+            'onTwigPageVariables' => ['outputFeeds', 0]
+        ];
+    }
+
+    /**
+     * Clears cache on 'bin/grav clearcache'
+     */
+    public function onBeforeCacheClear(Event $event)
+    {
+        $remove = isset($event['remove']) ? $event['remove'] : 'standard';
+        $paths = $event['paths'];
+
+        if (in_array($remove, ['all', 'standard', 'cache-only']) && !in_array('cache://', $paths)) {
+            $paths[] = 'cache://twigfeeds/';
+            $event['paths'] = $paths;
+        }
+    }
+
+    /**
+     * Logs and outputs messages to debugger
+     * @param string $msg Message to output
+     * @return string Debug messages logged and output to Debugger
+     */
+    protected function debug($msg)
+    {
+        if (is_array($msg)) {
+            $this->grav['debugger']->addMessage($msg);
+        } else {
+            $this->grav['debugger']->addMessage('TwigFeeds: ' . $msg);
+            $this->grav['log']->debug('TwigFeeds: ' . $msg);
+        }
+    }
+
+    /**
+     * Builds array of feeds for iteration, using cache-mechanism if enabled
+     * @return array Feeds
+     */
+    public function outputFeeds()
+    {
+        /* Check if Admin-interface */
+        if ($this->isAdmin()) {
+            return;
+        }
+
+        /* Check if `twig_feeds is already set */
+        if (isset($this->grav['twig']->twig_vars['twig_feeds'])) {
+            return;
+        }
+
+        /* Get config and check plugin status */
+        $pluginsobject = (array) $this->config->get('plugins');
+        if (isset($pluginsobject) && $pluginsobject['twigfeeds']['enabled']) {
+            $config = $pluginsobject['twigfeeds'];
+        } else {
+            return;
+        }
+        $config['locator'] = $this->grav['locator'];
+        $config['config_file'] = $config['locator']->findResource('user://config', true) . '/plugins/twigfeeds.yaml';
+        if ($config['static_cache']) {
+            $config['cache_path'] = $config['locator']->findResource('user://data', true) . '/twigfeeds/';
+        } else {
+            $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
+        }
+
+        /* Import library */
+        $utility = new Utilities($config);
+        $config['now'] = $utility->now;
+        $manifest = new Manifest($config);
+        $parser = new Parser($config);
+        $cache = $config['cache'];
+        $debug = $config['debug'];
+
+        if ($cache) {
+            /* Create Manifest */
+            $manifestFile = $config['cache_path'] . 'manifest.json';
+            if (!file_exists($manifestFile)) {
+                $debug ? $this->debug('Manifest does not exist, writing it') : null;
+                $content = $manifest->manifestStructure($config['config_file']);
+                $content['data'] = $config['twig_feeds'];
+                $call = $manifest->writeManifest($manifestFile, $content);
+                $debug ? $this->debug($call) : null;
+            } else {
+                $content = $manifest->readManifest($manifestFile);
+                $call = $manifest->compare($content);
+
+                /* Pass manifest and configuration in their entirety */
+                if ($call['state'] == 'changed') {
+                    $callback = $call['state'] . ' ' . $call['configFileDate'];
+                    $debug ? $this->debug('Config (' . $callback . ') and manifest unequal, busting cache') : null;
+                    $call = $manifest->bustCache();
+                    $debug ? $this->debug($call) : null;
+                    $debug ? $this->debug('Renewing manifest') : null;
+                    $call = $manifest->writeManifest($manifestFile, $content);
+                    $debug ? $this->debug($call) : null;
+                } else {
+                    $debug ? $this->debug('Config and manifest equal, continuing') : null;
+                }
+            }
+
+            /* Parse feeds */
+            $content = $manifest->readManifest($manifestFile);
+            foreach ($content['data'] as $entry => $data) {
+                $data['title'] = $data['filename'];
+                $data['source'] = $entry;
+                $data['now'] = $utility->now;
+                $data['cache'] = true;
+                if (!$config['pass_headers']) {
+                    unset($data['etag']);
+                    unset($data['last_modified']);
+                }
+                $path = $config['cache_path'] . $data['filename'];
+                if (!file_exists($path)) {
+                    $debug ? $this->debug('Can\'t find ' . $data['filename'] . ', writing it') : null;
+                    $call = $parser->parseFeed($data, $path);
+                    $debug ? $this->debug($call['callback']) : null;
+                    $content['data'][$entry]['etag'] = $call['data']['etag'];
+                    $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
+                    $content['data'][$entry]['last_checked'] = $utility->now;
+                    $content['data'][$entry]['last_checked_date'] = $utility->humanDate($utility->now);
+                } else {
+                    $then = $utility->humanDate($data['last_checked'] + $data['cache_time']);
+                    $now = $utility->humanDate($utility->now);
+                    if (($data['last_checked'] + $data['cache_time']) > $utility->now) {
+                        $debug ? $this->debug($then . ' is after ' . $now . ', skip ' . $entry) : null;
+                    } else {
+                        $debug ? $this->debug($then . ' is before ' . $now . ', download ' . $entry) : null;
+                        $call = $parser->parseFeed($data, $path);
+                        $debug ? $this->debug($call['callback']) : null;
+                        $content['data'][$entry]['etag'] = $call['data']['etag'];
+                        $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
+                        $content['data'][$entry]['last_checked'] = $utility->now;
+                        $content['data'][$entry]['last_checked_date'] = $utility->humanDate($utility->now);
+                    }
+                }
+            }
+            $debug ? $this->debug('Updating manifest') : null;
+            $call = $manifest->updateManifest($manifestFile, $content);
+            $debug ? $this->debug($call) : null;
+        }
+
+        /* Read data into Twig-variable */
+        $feed_items = array();
+        if ($cache) {
+            foreach ($content['data'] as $source => $data) {
+                $filename = $config['cache_path'] . $data['filename'];
+                $content = $parser->readFeed($filename);
+                $feed_items[$content['name']] = $content;
+            }
+        } else {
+            foreach ($config['twig_feeds'] as $feed) {
+                $feed['now'] = $utility->now;
+                $feed['cache'] = 'no';
+                if (isset($feed['start'])) {
+                    $start = $feed['start'];
+                } else {
+                    $start = 0;
+                }
+                if (isset($feed['end'])) {
+                    $end = $feed['end'];
+                } else {
+                    $end = 50;
+                }
+                $feed['amount'] = abs($start-$end);
+                $resource = $parser->parseFeed($feed);
+                if (isset($feed['name'])) {
+                    $name = $feed['name'];
+                } elseif (isset($resource['data']['title'])) {
+                    $name = $resource['data']['title'];
+                } else {
+                    $name = $feed['source'];
+                }
+                $feed_items[$name] = $resource['data'];
+                $debug ? $this->debug($resource['data']) : null;
+            }
+        }
+        $this->grav['twig']->twig_vars['twig_feeds'] = $feed_items;
+    }
 }

@@ -1,3 +1,21 @@
+# v3.0.0
+## 27-02-2017
+
+1. [](#improved)
+    * OOP-rewrite of entire plugin
+    * Simplify process and clarify inline comments
+    * Update README
+    * Default limit of retrieved and stored feed items to 50
+    * Default 'cache_time' set to 15 minutes (900 seconds)
+    * Default 'pass_headers' set to false, relying on 'cache_time' by default
+2. [](#new)
+    * Add 'cache_time' setting
+    * Add 'pass_headers' setting
+    * Document classes and methods
+    * Add Command Line Interface for clearing and building cache
+3. [](#bugfix)
+    * If plugin-config changes, cache is busted to ensure correct data.
+
 # v2.0.4
 ## 26-02-2017
 
