@@ -1,3 +1,12 @@
+# v3.0.1
+## 08-03-2017
+
+1. [](#new)
+    * Version 3 release
+2. [](#improved)
+    * Plugin icon
+    * Update README
+
 # v3.0.0
 ## 27-02-2017
 
