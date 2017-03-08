@@ -54,6 +54,12 @@ The plugin makes 8 properties available to each of the feeds in the `twig_feeds`
 
 If the `name`-property is set, this is used for this name. If not, it defaults to the retrieved title.
 
+#### Command Line Interface
+
+As of version 3 the plugin supports CLI-usage, which means that you can clear or build the cache from settings independently of running it on a site. Two methods are available: `bin/plugin twigfeeds clearcache` and `bin/plugin twigfeeds buildcache`. The `clearcache`-command deletes cached files from the active cache location, using the plugin's settings to determine whether the cache is in `/cache` or `/user/data`.
+
+The `buildcache`-command builds the cache, by default to the active cache location, which allows you to precache the feeds-data. It also uses the plugin's settings to determine the cache-location. You can also pass `--cache` to build the feeds to `/cache` or `--data` to build to `/user/data`.
+
 #### Examples
 
 Consider the following settings in `user/config/plugins/twigfeeds.yaml`:
