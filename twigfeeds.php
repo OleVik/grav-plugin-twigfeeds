@@ -41,7 +41,7 @@ class TwigFeedsPlugin extends Plugin
 {
 
     /**
-     * Registers events with Grav
+     * Register events with Grav
      * @return array
      */
     public static function getSubscribedEvents()

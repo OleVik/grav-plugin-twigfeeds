@@ -1,7 +1,7 @@
 name: Twig Feeds
-version: 3.0.0
+version: 3.0.1
 description: "Parse RSS and Atom feeds with Twig."
-icon: asterisk
+icon: feed
 author:
   name: Ole Vik
   email: git@olevik.me

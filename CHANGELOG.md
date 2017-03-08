@@ -14,7 +14,7 @@
     * Document classes and methods
     * Add Command Line Interface for clearing and building cache
 3. [](#bugfix)
-    * If plugin-config changes, cache is busted to ensure correct data.
+    * If plugin-config changes, cache is busted to ensure correct data
 
 # v2.0.4
 ## 26-02-2017
