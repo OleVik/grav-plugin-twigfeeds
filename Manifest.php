@@ -236,13 +236,11 @@ class Manifest
     /**
      * Compare manifest and settings
      * @param array $manifest Manifest
-     * @return array 'state' for state of operation, 'configFileDate' for date changed date of config-file
+     * @return array 'state' for state of operation, 'configFileDate' for date of changed config-file
      */
     public function compare($manifest)
     {
         foreach (array_keys($manifest['data']) as $key) {
-            unset($manifest['data'][$key]['name']);
-            unset($manifest['data'][$key]['amount']);
             unset($manifest['data'][$key]['etag']);
             unset($manifest['data'][$key]['last_modified']);
             unset($manifest['data'][$key]['last_checked']);
@@ -251,6 +249,20 @@ class Manifest
         $feeds = array();
         foreach ($this->twigFeeds as $feed) {
             $feeds[$feed['source']]['filename'] = parse_url($feed['source'], PHP_URL_HOST) . '.json';
+            if (isset($feed['name'])) {
+                $feeds[$feed['source']]['name'] = $feed['name'];
+            }
+            if (isset($feed['start'])) {
+                $start = $feed['start'];
+            } else {
+                $start = 0;
+            }
+            if (isset($feed['end'])) {
+                $end = $feed['end'];
+            } else {
+                $end = 50;
+            }
+            $feeds[$feed['source']]['amount'] = abs($start-$end);
             if (isset($feed['cache_time'])) {
                 $feeds[$feed['source']]['cache_time'] = $feed['cache_time'];
             } elseif (isset($setting['cache_time'])) {

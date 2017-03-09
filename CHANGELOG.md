@@ -1,3 +1,9 @@
+# v3.0.2
+## 09-03-2017
+
+1. [](#bugfix)
+    * Include 'name' and 'amount' in Manifest->compare()
+
 # v3.0.1
 ## 08-03-2017
 
