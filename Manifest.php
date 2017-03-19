@@ -272,8 +272,7 @@ class Manifest
             }
         }
         $return = array(
-            'state' => '',
-            'configFileDate' => $this->utility->humanDate(filemtime($this->configFile))
+            'state' => ''
         );
         if ($manifest['data'] == $feeds) {
             $return['state'] = 'unchanged';

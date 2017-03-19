@@ -124,11 +124,15 @@ class Parser
         }
         $return = array();
         if ($args['cache']) {
-            try {
-                $this->filesystem->dumpFile($path, json_encode($data, JSON_PRETTY_PRINT));
-                $return['callback'] = 'Wrote ' . $path;
-            } catch (IOException $e) {
-                throw new \Exception($e);
+            if (empty($path)) {
+                throw new Exception('Parser->parseFeed() has no path.');
+            } else {
+                try {
+                    $this->filesystem->dumpFile($path, json_encode($data, JSON_PRETTY_PRINT));
+                    $return['callback'] = 'Wrote ' . $path;
+                } catch (IOException $e) {
+                    throw new \Exception($e);
+                }
             }
         }
         $return['data'] = $data;

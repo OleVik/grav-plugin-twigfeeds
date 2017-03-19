@@ -1,3 +1,9 @@
+# v3.0.3
+## 19-03-2017
+
+1. [](#bugfix)
+    * Add Exception for empty path passed to Parser->parseFeed()
+
 # v3.0.2
 ## 09-03-2017
 
