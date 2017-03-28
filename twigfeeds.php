@@ -68,6 +68,28 @@ class TwigFeedsPlugin extends Plugin
     }
 
     /**
+     * Declare config from plugin-config
+     * @return array Plugin configuration
+     */
+    public function config()
+    {
+        $pluginsobject = (array) $this->config->get('plugins');
+        if (isset($pluginsobject) && $pluginsobject['twigfeeds']['enabled']) {
+            $config = $pluginsobject['twigfeeds'];
+        } else {
+            return;
+        }
+        $config['locator'] = $this->grav['locator'];
+        $config['config_file'] = $config['locator']->findResource('user://config', true) . '/plugins/twigfeeds.yaml';
+        if ($config['static_cache']) {
+            $config['cache_path'] = $config['locator']->findResource('user://data', true) . '/twigfeeds/';
+        } else {
+            $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
+        }
+        return $config;
+    }
+
+    /**
      * Logs and outputs messages to debugger
      * @param string $msg Message to output
      * @return string Debug messages logged and output to Debugger
@@ -99,19 +121,7 @@ class TwigFeedsPlugin extends Plugin
         }
 
         /* Get config and check plugin status */
-        $pluginsobject = (array) $this->config->get('plugins');
-        if (isset($pluginsobject) && $pluginsobject['twigfeeds']['enabled']) {
-            $config = $pluginsobject['twigfeeds'];
-        } else {
-            return;
-        }
-        $config['locator'] = $this->grav['locator'];
-        $config['config_file'] = $config['locator']->findResource('user://config', true) . '/plugins/twigfeeds.yaml';
-        if ($config['static_cache']) {
-            $config['cache_path'] = $config['locator']->findResource('user://data', true) . '/twigfeeds/';
-        } else {
-            $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
-        }
+        $config = $this->config();
 
         /* Import library */
         $utility = new Utilities($config);
@@ -136,7 +146,7 @@ class TwigFeedsPlugin extends Plugin
 
                 /* Pass manifest and configuration in their entirety */
                 if ($call['state'] == 'changed') {
-                    $callback = $call['state'] . ' ' . $call['configFileDate'];
+                    $callback = $call['state'];
                     $debug ? $this->debug('Config (' . $callback . ') and manifest unequal, busting cache') : null;
                     $call = $manifest->bustCache();
                     $debug ? $this->debug($call) : null;

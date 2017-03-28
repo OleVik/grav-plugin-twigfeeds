@@ -236,7 +236,7 @@ class Manifest
     /**
      * Compare manifest and settings
      * @param array $manifest Manifest
-     * @return array 'state' for state of operation, 'configFileDate' for date of changed config-file
+     * @return array 'state' for state of operation
      */
     public function compare($manifest)
     {
