@@ -52,6 +52,7 @@ class ClearTwigFeedsCacheCommand extends ConsoleCommand
         } else {
             $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
         }
+        $config['blueprint_path'] = $config['locator']->findResource('user://plugins/twigfeeds/blueprints.yaml', true);
         return $config;
     }
 

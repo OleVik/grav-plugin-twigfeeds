@@ -1,5 +1,22 @@
+# v3.1.0
+## 30-03-2017
+
+1. [](#improved)
+    * Add method for busting cache on version update (major or minor)
+    * Add test for versions
+    * Update vendor libraries
+2. [](#new)
+    * Add Manifest->blueprintVersion
+    * Add Parser->getVersion() for retrieving blueprint or manifest version
+    * Add Parser->compareSemVer() for comparing versions
+    * Add Symfony/Component/Yaml and Naneau/SemVer libraries to Parser
+3. [](#bugfix)
+    * Fix Manifest->manifestStructure() time-declarations
+    * Fix changelog date for v3.0.4
+
+
 # v3.0.4
-## 19-03-2017
+## 28-03-2017
 
 1. [](#bugfix)
     * Fix Exception-call

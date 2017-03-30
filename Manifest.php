@@ -55,6 +55,12 @@ class Manifest
     public $cacheTime;
 
     /**
+     * Plugin version from blueprint.yaml
+     * @var string
+     */
+    public $blueprintVersion;
+
+    /**
      * True if ETag and last Modified should be passed when caching
      * @var bool
      */
@@ -85,6 +91,7 @@ class Manifest
         $this->debug = $config['debug'];
         $this->configFile = $config['config_file'];
         $this->cachePath = $config['cache_path'];
+        $this->blueprintVersion = $utility->getVersion($config['blueprint_path'], 'blueprint');
         if (isset($config['cache_time'])) {
             $this->cacheTime = $config['cache_time'];
         } else {
@@ -217,8 +224,8 @@ class Manifest
             $manifest = array(
                 'config' => array(
                     'user' => true,
-                    'modified' => filemtime($file),
-                    'modified_date' => $this->utility->humanDate(filemtime($file))
+                    'modified' => time(),
+                    'modified_date' => $this->utility->humanDate(time())
                 ),
                 'data' => array()
             );
@@ -230,6 +237,7 @@ class Manifest
                 'data' => array()
             );
         }
+        $manifest['config']['version'] = $this->blueprintVersion;
         return $manifest;
     }
 

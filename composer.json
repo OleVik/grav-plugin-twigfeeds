@@ -4,6 +4,8 @@
 	},
 	"require": {
 		"fguillot/picofeed": "^0.1.31",
-		"symfony/filesystem": "^3.2"
+		"symfony/filesystem": "^3.2",
+		"symfony/yaml": "^3.2",
+		"naneau/semver": "^0.0.7"
 	}
 }

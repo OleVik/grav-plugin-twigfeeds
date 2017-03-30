@@ -17,14 +17,14 @@ use PicoFeed\Config\Config;
 use PicoFeed\PicoFeedException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-
+ 
 require('Manifest.php');
 require('Parser.php');
 require('Utilities.php');
 use TwigFeeds\Manifest;
 use TwigFeeds\Parser;
 use TwigFeeds\Utilities;
-
+ 
 /**
  * Parse RSS and Atom feeds with Twig
  *
@@ -53,8 +53,11 @@ class TwigFeedsPlugin extends Plugin
         ];
     }
 
+
     /**
-     * Clears cache on 'bin/grav clearcache'
+     * Register cache-location with onBeforeCacheClear-event
+     * @param RocketTheme\Toolbox\Event\Event $event
+     * @return void
      */
     public function onBeforeCacheClear(Event $event)
     {
@@ -86,6 +89,7 @@ class TwigFeedsPlugin extends Plugin
         } else {
             $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
         }
+        $config['blueprint_path'] = $config['locator']->findResource('user://plugins/twigfeeds/blueprints.yaml', true);
         return $config;
     }
 
@@ -134,6 +138,7 @@ class TwigFeedsPlugin extends Plugin
         if ($cache) {
             /* Create Manifest */
             $manifestFile = $config['cache_path'] . 'manifest.json';
+
             if (!file_exists($manifestFile)) {
                 $debug ? $this->debug('Manifest does not exist, writing it') : null;
                 $content = $manifest->manifestStructure($config['config_file']);
@@ -141,21 +146,42 @@ class TwigFeedsPlugin extends Plugin
                 $call = $manifest->writeManifest($manifestFile, $content);
                 $debug ? $this->debug($call) : null;
             } else {
+                /* Test versions */
+                $manifestVersion = $utility->getVersion($manifestFile, 'manifest');
+                $blueprintVersion = $utility->getVersion($config['blueprint_path'], 'blueprint');
+                $versionCompare = $utility->compareSemVer($manifestVersion, $blueprintVersion);
+                $major = $versionCompare['compare']['major'];
+                $minor = $versionCompare['compare']['minor'];
+                if ($major == 'greater' || $minor == 'greater') {
+                    $versionDiff = $blueprintVersion . ' != ' . $manifestVersion;
+                    $debug ? $this->debug('Versions different (' . $versionDiff . '), busting cache') : null;
+                    $bustCache = true;
+                } else {
+                    $debug ? $this->debug('Versions equal, continuing') : null;
+                }
+
+                /* Test contents of manifest and config */
                 $content = $manifest->readManifest($manifestFile);
                 $call = $manifest->compare($content);
-
-                /* Pass manifest and configuration in their entirety */
                 if ($call['state'] == 'changed') {
                     $callback = $call['state'];
                     $debug ? $this->debug('Config (' . $callback . ') and manifest unequal, busting cache') : null;
-                    $call = $manifest->bustCache();
-                    $debug ? $this->debug($call) : null;
-                    $debug ? $this->debug('Renewing manifest') : null;
-                    $call = $manifest->writeManifest($manifestFile, $content);
-                    $debug ? $this->debug($call) : null;
+                    $bustCache = true;
                 } else {
                     $debug ? $this->debug('Config and manifest equal, continuing') : null;
                 }
+
+                /* If necessary, bust cache */
+                if (isset($bustCache)) {
+                    $call = $manifest->bustCache();
+                    $debug ? $this->debug($call) : null;
+                }
+
+                /* Update manifest */
+                $debug ? $this->debug('Updating manifest') : null;
+                $content = $manifest->manifestStructure($manifestFile);
+                $call = $manifest->writeManifest($manifestFile, $content);
+                $debug ? $this->debug($call) : null;
             }
 
             /* Parse feeds */
