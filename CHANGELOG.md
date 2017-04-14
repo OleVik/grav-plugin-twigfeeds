@@ -1,3 +1,9 @@
+# v3.1.1
+## 14-04-2017
+
+1. [](#improved)
+    * Version-bump out of pre-release
+
 # v3.1.0
 ## 30-03-2017
 
