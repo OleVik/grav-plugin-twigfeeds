@@ -23,7 +23,7 @@ The plugin is enabled by default, and can be disabled by copying `user/plugins/t
 | `debug` | `false` | `true` or `false` | Enables or disables debug-mode. |
 | `cache_time` | 900 | integer | Default time, in seconds, to wait before caching data again. |
 | `pass_headers` | `false` | `true` or `false` | Enables or disables passing ETag and Last Modified headers. |
-| `twig_feeds` | List | List: `source`, `name`, `start`, `end`, `cache_time` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again.; `extra_tags`: List of additional tags to include from the feed. |
+| `twig_feeds` | List | List: `source`, `name`, `start`, `end`, `cache_time`, `extra_tags` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again.; `extra_tags`: List of additional tags to include from the feed. |
 
 In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
 
