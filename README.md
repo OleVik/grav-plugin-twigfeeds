@@ -95,15 +95,15 @@ This retrieves World News from The New York Times and UK News from the BBC, whic
 
 ```
 {% for name, feed in twig_feeds %}
-	<h4>Feed name: {{ name }}</h4>
-	<small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
-	{% for item in feed.items %}
-		<h5>
-			<a href="{{ item.url }}">{{ item.title }}</a>
-		</h5>
-		<time>{{ item.date.date }}</time>
-		<p>{{ item.content }}</p>
-	{% endfor %}
+    <h4>Feed name: {{ name }}</h4>
+    <small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
+    {% for item in feed.items %}
+        <h5>
+            <a href="{{ item.url }}">{{ item.title }}</a>
+        </h5>
+        <time>{{ item.date.date }}</time>
+        <p>{{ item.content }}</p>
+    {% endfor %}
 {% endfor %}
 ```
 
@@ -113,15 +113,15 @@ We can also access any feed by its defined name:
 
 ```
 {% for name, feed in twig_feeds if name == 'NY Times' %}
-	<h4>Feed name: {{ name }}</h4>
-	<small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
-	{% for item in feed.items %}
-		<h5>
-			<a href="{{ item.url }}">{{ item.title }}</a>
-		</h5>
-		<time>{{ item.date.date }}</time>
-		<p>{{ item.content }}</p>
-	{% endfor %}
+    <h4>Feed name: {{ name }}</h4>
+    <small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
+    {% for item in feed.items %}
+        <h5>
+            <a href="{{ item.url }}">{{ item.title }}</a>
+        </h5>
+        <time>{{ item.date.date }}</time>
+        <p>{{ item.content }}</p>
+    {% endfor %}
 {% endfor %}
 ```
 
