@@ -1,3 +1,14 @@
+# v3.2.0
+## 14-05-2017
+
+1. [](#improved)
+    * Facilitate non-standard tags in feed parsing
+    * Add note and example to README regarding non-standard tags
+    * Hash filenames to prevent conflict
+    * Minor cleanup
+2. [](#bugfix)
+    * Only recreate manifest after busting cache
+
 # v3.1.2
 ## 14-05-2017
 

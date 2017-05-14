@@ -143,8 +143,7 @@ class Manifest
         } else {
             $manifest = $this->manifestStructure($file);
         }
-        $json = json_decode($manifest, true);
-        return $json;
+        return json_decode($manifest, true);
     }
 
     /**
@@ -159,7 +158,7 @@ class Manifest
         $manifest = array();
         $manifest['config'] = $feeds['config'];
         foreach ($this->twigFeeds as $feed) {
-            $manifest['data'][$feed['source']]['filename'] = parse_url($feed['source'], PHP_URL_HOST) . '.json';
+            $manifest['data'][$feed['source']]['filename'] = hash('md5', parse_url($feed['source'], PHP_URL_HOST)) . '.json';
             if (isset($feed['name'])) {
                 $manifest['data'][$feed['source']]['name'] = $feed['name'];
             }
@@ -183,6 +182,9 @@ class Manifest
                 $manifest['data'][$feed['source']]['cache_time'] = $setting['cache_time'];
             } else {
                 $manifest['data'][$feed['source']]['cache_time'] = $this->cacheTime;
+            }
+            if (isset($feed['extra_tags'])) {
+                $manifest['data'][$feed['source']]['extra_tags'] = $feed['extra_tags'];
             }
             $manifest['data'][$feed['source']]['last_checked'] = $this->utility->now;
             $manifest['data'][$feed['source']]['last_checked_date'] = $this->utility->humanDate($this->utility->now);
@@ -256,7 +258,7 @@ class Manifest
         }
         $feeds = array();
         foreach ($this->twigFeeds as $feed) {
-            $feeds[$feed['source']]['filename'] = parse_url($feed['source'], PHP_URL_HOST) . '.json';
+            $feeds[$feed['source']]['filename'] = hash('md5', parse_url($feed['source'], PHP_URL_HOST)) . '.json';
             if (isset($feed['name'])) {
                 $feeds[$feed['source']]['name'] = $feed['name'];
             }
@@ -277,6 +279,9 @@ class Manifest
                 $feeds[$feed['source']]['cache_time'] = $setting['cache_time'];
             } else {
                 $feeds[$feed['source']]['cache_time'] = $this->cacheTime;
+            }
+            if (isset($feed['extra_tags'])) {
+                $feeds[$feed['source']]['extra_tags'] = $feed['extra_tags'];
             }
         }
         $return = array(
