@@ -1,3 +1,10 @@
+# v3.1.2
+## 14-05-2017
+
+1. [](#bugfix)
+    * Fix logic of updating manifest
+    * Remove Al Jazeera from example feeds, their feed-encoding is currently broken and will throw errors
+
 # v3.1.1
 ## 14-04-2017
 

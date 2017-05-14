@@ -176,12 +176,6 @@ class TwigFeedsPlugin extends Plugin
                     $call = $manifest->bustCache();
                     $debug ? $this->debug($call) : null;
                 }
-
-                /* Update manifest */
-                $debug ? $this->debug('Updating manifest') : null;
-                $content = $manifest->manifestStructure($manifestFile);
-                $call = $manifest->writeManifest($manifestFile, $content);
-                $debug ? $this->debug($call) : null;
             }
 
             /* Parse feeds */

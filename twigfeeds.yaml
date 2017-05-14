@@ -10,7 +10,5 @@ twig_feeds:
     start: 0
     end: 2
   - source: http://feeds.bbci.co.uk/news/uk/rss.xml
-    end: 2
-  - source: http://www.aljazeera.com/xml/rss/all.xml
     end: 4
     cache_time: 3600
