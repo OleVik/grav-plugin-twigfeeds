@@ -1,3 +1,9 @@
+# v3.2.1
+## 15-05-2017
+
+1. [](#bugfix)
+    * Dependency version-range compatibly with Grav >=1.1.17
+
 # v3.2.0
 ## 14-05-2017
 
