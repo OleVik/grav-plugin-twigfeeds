@@ -23,7 +23,7 @@ The plugin is enabled by default, and can be disabled by copying `user/plugins/t
 | `debug` | `false` | `true` or `false` | Enables or disables debug-mode. |
 | `cache_time` | 900 | integer | Default time, in seconds, to wait before caching data again. |
 | `pass_headers` | `false` | `true` or `false` | Enables or disables passing ETag and Last Modified headers. |
-| `twig_feeds` | List | List: `source`, `name`, `start`, `end`, `cache_time` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again.; `extra_tags`: List of additional tags to include from the feed. |
+| `twig_feeds` | List | List: `source`, `name`, `start`, `end`, `cache_time`, `extra_tags` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again.; `extra_tags`: List of additional tags to include from the feed. |
 
 In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
 
@@ -51,7 +51,7 @@ This requires special handling in Twig: The returned tag can be a single array-i
 
 `{{ attribute(item, 'itunes:subtitle')|first }}`
 
-This prints the first item of the `itunes:subtitle` tag, when placed within a regular loop of the feed's items. Further, since v3.2.1, you can pass any tag in `extra_tags` as a list with nested attributes. In the example above, the `href`-attribute of `itunes:image` will be retrieved, and the example returns:
+This prints the first item of the `itunes:subtitle` tag, when placed within a regular loop of the feed's items. Further, since v3.2.2, you can pass any tag in `extra_tags` as a list with nested attributes. In the example above, the `href`-attribute of `itunes:image` will be retrieved, and the example returns:
 
     "itunes:duration" => array:1 [
       0 => "01:38:53"
@@ -106,15 +106,15 @@ This retrieves World News from The New York Times and UK News from the BBC, whic
 
 ```
 {% for name, feed in twig_feeds %}
-	<h4>Feed name: {{ name }}</h4>
-	<small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
-	{% for item in feed.items %}
-		<h5>
-			<a href="{{ item.url }}">{{ item.title }}</a>
-		</h5>
-		<time>{{ item.date.date }}</time>
-		<p>{{ item.content }}</p>
-	{% endfor %}
+    <h4>Feed name: {{ name }}</h4>
+    <small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
+    {% for item in feed.items %}
+        <h5>
+            <a href="{{ item.url }}">{{ item.title }}</a>
+        </h5>
+        <time>{{ item.date.date }}</time>
+        <p>{{ item.content }}</p>
+    {% endfor %}
 {% endfor %}
 ```
 
@@ -124,15 +124,15 @@ We can also access any feed by its defined name:
 
 ```
 {% for name, feed in twig_feeds if name == 'NY Times' %}
-	<h4>Feed name: {{ name }}</h4>
-	<small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
-	{% for item in feed.items %}
-		<h5>
-			<a href="{{ item.url }}">{{ item.title }}</a>
-		</h5>
-		<time>{{ item.date.date }}</time>
-		<p>{{ item.content }}</p>
-	{% endfor %}
+    <h4>Feed name: {{ name }}</h4>
+    <small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
+    {% for item in feed.items %}
+        <h5>
+            <a href="{{ item.url }}">{{ item.title }}</a>
+        </h5>
+        <time>{{ item.date.date }}</time>
+        <p>{{ item.content }}</p>
+    {% endfor %}
 {% endfor %}
 ```
 

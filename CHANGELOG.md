@@ -1,10 +1,16 @@
-# v3.2.1
+# v3.2.2
 ## 29-05-2017
 
 1. [](#new)
     * Facilitate attributes-retrieval in non-standard tags
 2. [](#improved)
     * Add note and example to README regarding attributes
+
+# v3.2.1
+## 15-05-2017
+
+1. [](#bugfix)
+    * Dependency version-range compatibly with Grav >=1.1.17
 
 # v3.2.0
 ## 14-05-2017
