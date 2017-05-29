@@ -43,13 +43,24 @@ twig_feeds:
     end: 2
     extra_tags:
       - "itunes:duration"
+      - "itunes:image":
+        - href
 ```
 
-Which requires special handling in Twig: The returned tag can be a single array-item or contain multiple items, and if the tag contains a colon (`:`) you must treat this using Twig's `attribute()`. For example:
+This requires special handling in Twig: The returned tag can be a single array-item or contain multiple items, and if the tag contains a colon (`:`) you must treat this using Twig's `attribute()`. For example:
 
 `{{ attribute(item, 'itunes:subtitle')|first }}`
 
-This prints the first item of the `itunes:subtitle` tag, when placed within a regular loop of the feed's items.
+This prints the first item of the `itunes:subtitle` tag, when placed within a regular loop of the feed's items. Further, since v3.2.1, you can pass any tag in `extra_tags` as a list with nested attributes. In the example above, the `href`-attribute of `itunes:image` will be retrieved, and the example returns:
+
+    "itunes:duration" => array:1 [
+      0 => "01:38:53"
+    ]
+    "itunes:image" => array:1 [
+      "href" => array:1 [
+        0 => "https://ssl-static.libsyn.com/p/assets/9/8/3/2/983246828eea14c6/WTF_-_new_larger_cover.jpg"
+      ]
+    ]
 
 #### Caching
 

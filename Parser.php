@@ -116,7 +116,15 @@ class Parser
                 $data['items'][$key] = $return;
                 if (isset($args['extra_tags'])) {
                     foreach ($args['extra_tags'] as $extra) {
-                        $data['items'][$key][$extra] = $item->getTag($extra);
+                        if (!is_array($extra)) {
+                            $data['items'][$key][$extra] = $item->getTag($extra);
+                        } else {
+                            foreach ($extra as $tag => $attributes) {
+                                foreach ($attributes as $attribute) {
+                                    $data['items'][$key][$tag][$attribute] = $item->getTag($tag, $attribute);
+                                }
+                            }
+                        }
                     }
                 }
                 if (++$int >= $args['amount']) {
