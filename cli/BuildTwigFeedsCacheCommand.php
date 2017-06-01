@@ -52,7 +52,7 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
     private function config()
     {
         $config = Grav::instance()['config']->get('plugins.twigfeeds');
-        $config['locator'] = $this->getGrav()['locator'];
+        $config['locator'] = Grav::instance()['locator'];
         $config['config_file'] = $config['locator']->findResource('user://config', true) . '/plugins/twigfeeds.yaml';
         if ($config['static_cache']) {
             $config['cache_path'] = $config['locator']->findResource('user://data', true) . '/twigfeeds/';

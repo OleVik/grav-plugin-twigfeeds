@@ -46,7 +46,7 @@ class ClearTwigFeedsCacheCommand extends ConsoleCommand
     private function config()
     {
         $config = Grav::instance()['config']->get('plugins.twigfeeds');
-        $config['locator'] = $this->getGrav()['locator'];
+        $config['locator'] = Grav::instance()['locator'];
         if ($config['static_cache']) {
             $config['cache_path'] = $config['locator']->findResource('user://data', true) . '/twigfeeds/';
         } else {

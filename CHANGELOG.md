@@ -1,3 +1,10 @@
+# v3.2.3
+## 01-06-2017
+
+1. [](#bugfix)
+    * Removed Symfony/YAML from /vendor, its already in core
+    * Replaced getGrav() with Grav::instance() in CLI-commands
+
 # v3.2.2
 ## 29-05-2017
 
