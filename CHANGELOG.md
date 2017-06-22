@@ -1,3 +1,9 @@
+# v3.2.4
+## 22-06-2017
+
+1. [](#bugfix)
+    * Cache-check in Parser->parseFeed()
+
 # v3.2.3
 ## 01-06-2017
 

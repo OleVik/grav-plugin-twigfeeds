@@ -137,7 +137,7 @@ class Parser
             throw new \Exception($e);
         }
         $return = array();
-        if ($args['cache']) {
+        if ($args['cache'] === true) {
             if (empty($path)) {
                 throw new \Exception('Parser->parseFeed() has no path');
             } else {
