@@ -7,6 +7,7 @@ require __DIR__ . '/vendor/autoload.php';
 use PicoFeed\Reader\Reader;
 use PicoFeed\Config\Config;
 use PicoFeed\PicoFeedException;
+use PicoFeed\Client\InvalidCertificateException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
@@ -42,7 +43,7 @@ class Parser
      */
     public function readFeed($file)
     {
-        $feed = file_get_contents($file);
+        $feed = @file_get_contents($file);
         $json = json_decode($feed, true);
         return $json;
     }
@@ -62,10 +63,15 @@ class Parser
             $config = new Config;
             $config->setTimezone('UTC');
             $reader = new Reader($config);
-            if (!empty($args['last_modified']) && !empty($args['etag'])) {
-                $resource = $reader->download($args['source'], $args['last_modified'], $args['etag']);
-            } else {
-                $resource = $reader->download($args['source']);
+
+            try {
+                if (!empty($args['last_modified']) && !empty($args['etag'])) {
+                    $resource = $reader->download($args['source'], $args['last_modified'], $args['etag']);
+                } else {
+                    $resource = $reader->download($args['source']);
+                }
+            } catch (InvalidCertificateException $e) {
+                return null;
             }
 
             if ($resource->isModified()) {

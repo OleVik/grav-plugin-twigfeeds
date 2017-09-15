@@ -58,6 +58,17 @@ form:
         0: PLUGIN_ADMIN.DISABLED
       validate:
         type: bool
+    hide_if_sslcert_invalid:
+      type: toggle
+      label: Hide feeds if the SSL certificate is invalid
+      description: Instead of crashing down the whole website.
+      highlight: false
+      default: false
+      options:
+        1: PLUGIN_ADMIN.ENABLED
+        0: PLUGIN_ADMIN.DISABLED
+      validate:
+        type: bool
     twig_feeds:
       name: twig_feeds
       type: list

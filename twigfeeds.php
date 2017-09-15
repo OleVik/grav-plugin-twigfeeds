@@ -199,6 +199,7 @@ class TwigFeedsPlugin extends Plugin
                 if (!file_exists($path)) {
                     $debug ? $this->debug('Can\'t find ' . $data['filename'] . ', writing it') : null;
                     $call = $parser->parseFeed($data, $path);
+                    if($config['hide_if_sslcert_invalid'] && $call == null) continue;
                     $debug ? $this->debug($call['callback']) : null;
                     $content['data'][$entry]['etag'] = $call['data']['etag'];
                     $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
@@ -212,6 +213,7 @@ class TwigFeedsPlugin extends Plugin
                     } else {
                         $debug ? $this->debug($then . ' is before ' . $now . ', download ' . $entry) : null;
                         $call = $parser->parseFeed($data, $path);
+                        if($config['hide_if_sslcert_invalid'] && $call == null) continue;
                         $debug ? $this->debug($call['callback']) : null;
                         $content['data'][$entry]['etag'] = $call['data']['etag'];
                         $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
@@ -249,6 +251,7 @@ class TwigFeedsPlugin extends Plugin
                 }
                 $feed['amount'] = abs($start-$end);
                 $resource = $parser->parseFeed($feed);
+                if($config['hide_if_sslcert_invalid'] && $resource == null) continue;
                 if (isset($feed['name'])) {
                     $name = $feed['name'];
                 } elseif (isset($resource['data']['title'])) {
