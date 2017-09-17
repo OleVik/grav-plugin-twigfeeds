@@ -80,7 +80,7 @@ class Parser
                     $resource = $reader->download($args['source']);
                 }
             } catch (InvalidCertificateException $e) {
-                if ($config['silent_cert_error'] === false) {
+                if ($config['silence_security'] === false) {
                     throw new \Exception($e);
                 }
             }
