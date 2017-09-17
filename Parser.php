@@ -1,4 +1,5 @@
 <?php
+
 namespace TwigFeeds;
 
 use DateTime;
@@ -15,15 +16,17 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  * TwigFeeds Parser
  *
  * Class Parser
+ * 
  * @package Grav\Plugin\TwigFeedsPlugin
  * @license MIT License by Ole Vik
- * @since v3.0.0
+ * @since   v3.0.0
  */
 class Parser
 {
 
     /**
      * Symfony Filesystem Component
+     * 
      * @var Filesystem
      */
     public $filesystem;
@@ -38,23 +41,29 @@ class Parser
 
     /**
      * Read feed
+     * 
      * @param string $file Path to manifest
+     * 
      * @return array Decoded JSON
      */
     public function readFeed($file)
     {
-        $feed = @file_get_contents($file);
+        $feed = file_get_contents($file);
         $json = json_decode($feed, true);
         return $json;
     }
 
     /**
      * Parse and write feed
+     * 
      * @param array $args Feed settings
      * @param array $path Path JSON filename
+     * 
      * @throws PicoFeedException If PicoFeed Reader fails
      * @throws IOException If Symfony Filesystem dumpFile fails
      * @throws Exception For other errors
+     * 
+     * @return array Structured feed
      */
     public function parseFeed($args, $path = false)
     {
@@ -71,7 +80,9 @@ class Parser
                     $resource = $reader->download($args['source']);
                 }
             } catch (InvalidCertificateException $e) {
-                return null;
+                if ($config['silent_cert_error'] === false) {
+                    throw new \Exception($e);
+                }
             }
 
             if ($resource->isModified()) {

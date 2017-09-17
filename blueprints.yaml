@@ -1,5 +1,5 @@
 name: Twig Feeds
-version: 3.2.4
+version: 3.3.0-beta.1
 description: "Parse RSS and Atom feeds with Twig."
 icon: feed
 author:
@@ -19,7 +19,6 @@ form:
     enabled:
       type: toggle
       label: Plugin Status
-      highlight: 1
       default: 1
       options:
         1: PLUGIN_ADMIN.ENABLED
@@ -29,7 +28,6 @@ form:
     cache:
       type: toggle
       label: Cache Feeds
-      highlight: 1
       default: 1
       options:
         1: PLUGIN_ADMIN.ENABLED
@@ -40,7 +38,6 @@ form:
       type: toggle
       label: Static Cache
       description: Saves feeds in /user/data rather than in /cache.
-      highlight: 1
       default: 1
       options:
         1: PLUGIN_ADMIN.ENABLED
@@ -51,19 +48,17 @@ form:
       type: toggle
       label: Debug
       description: Enables Debug-mode, which logs to Grav's Debugger and log-file.
-      highlight: 1
       default: 1
       options:
         1: PLUGIN_ADMIN.ENABLED
         0: PLUGIN_ADMIN.DISABLED
       validate:
         type: bool
-    hide_if_sslcert_invalid:
+    silence_security:
       type: toggle
-      label: Hide feeds if the SSL certificate is invalid
-      description: Instead of crashing down the whole website.
-      highlight: false
-      default: false
+      label: Silence security errors
+      description: Silently ignores security errors, such as missing certificates.
+      default: 0
       options:
         1: PLUGIN_ADMIN.ENABLED
         0: PLUGIN_ADMIN.DISABLED
