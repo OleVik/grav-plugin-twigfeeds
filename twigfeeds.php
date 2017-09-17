@@ -1,4 +1,5 @@
 <?php
+
 namespace Grav\Plugin;
 
 use DateTime;
@@ -18,9 +19,9 @@ use PicoFeed\PicoFeedException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  
-require('Manifest.php');
-require('Parser.php');
-require('Utilities.php');
+require 'Manifest.php';
+require 'Parser.php';
+require 'Utilities.php';
 use TwigFeeds\Manifest;
 use TwigFeeds\Parser;
 use TwigFeeds\Utilities;
@@ -33,8 +34,9 @@ use TwigFeeds\Utilities;
  * access them for iteration in Twig-templates.
  *
  * Class TwigFeedsPlugin
+ * 
  * @package Grav\Plugin
- * @return array Feeds in Twig-array
+ * @return  array Feeds in Twig-array
  * @license MIT License by Ole Vik
  */
 class TwigFeedsPlugin extends Plugin
@@ -42,6 +44,7 @@ class TwigFeedsPlugin extends Plugin
 
     /**
      * Register events with Grav
+     * 
      * @return array
      */
     public static function getSubscribedEvents()
@@ -56,7 +59,9 @@ class TwigFeedsPlugin extends Plugin
 
     /**
      * Register cache-location with onBeforeCacheClear-event
+     * 
      * @param RocketTheme\Toolbox\Event\Event $event
+     * 
      * @return void
      */
     public function onBeforeCacheClear(Event $event)
@@ -72,6 +77,7 @@ class TwigFeedsPlugin extends Plugin
 
     /**
      * Declare config from plugin-config
+     * 
      * @return array Plugin configuration
      */
     public function config()
@@ -95,7 +101,9 @@ class TwigFeedsPlugin extends Plugin
 
     /**
      * Logs and outputs messages to debugger
+     * 
      * @param string $msg Message to output
+     * 
      * @return string Debug messages logged and output to Debugger
      */
     protected function debug($msg)
@@ -110,6 +118,7 @@ class TwigFeedsPlugin extends Plugin
 
     /**
      * Builds array of feeds for iteration, using cache-mechanism if enabled
+     * 
      * @return array Feeds
      */
     public function outputFeeds()
@@ -199,6 +208,9 @@ class TwigFeedsPlugin extends Plugin
                 if (!file_exists($path)) {
                     $debug ? $this->debug('Can\'t find ' . $data['filename'] . ', writing it') : null;
                     $call = $parser->parseFeed($data, $path);
+                    if ($config['silence_security'] && $call == null) {
+                        continue;
+                    }
                     $debug ? $this->debug($call['callback']) : null;
                     $content['data'][$entry]['etag'] = $call['data']['etag'];
                     $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
@@ -212,6 +224,9 @@ class TwigFeedsPlugin extends Plugin
                     } else {
                         $debug ? $this->debug($then . ' is before ' . $now . ', download ' . $entry) : null;
                         $call = $parser->parseFeed($data, $path);
+                        if ($config['silence_security'] && $call == null) {
+                            continue;
+                        }
                         $debug ? $this->debug($call['callback']) : null;
                         $content['data'][$entry]['etag'] = $call['data']['etag'];
                         $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
@@ -249,6 +264,9 @@ class TwigFeedsPlugin extends Plugin
                 }
                 $feed['amount'] = abs($start-$end);
                 $resource = $parser->parseFeed($feed);
+                if ($config['silence_security'] && $resource == null) {
+                    continue;
+                }
                 if (isset($feed['name'])) {
                     $name = $feed['name'];
                 } elseif (isset($resource['data']['title'])) {

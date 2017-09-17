@@ -1,4 +1,5 @@
 <?php
+
 namespace TwigFeeds;
 
 use DateTime;
@@ -7,6 +8,7 @@ require __DIR__ . '/vendor/autoload.php';
 use PicoFeed\Reader\Reader;
 use PicoFeed\Config\Config;
 use PicoFeed\PicoFeedException;
+use PicoFeed\Client\InvalidCertificateException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
@@ -14,15 +16,17 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  * TwigFeeds Parser
  *
  * Class Parser
+ * 
  * @package Grav\Plugin\TwigFeedsPlugin
  * @license MIT License by Ole Vik
- * @since v3.0.0
+ * @since   v3.0.0
  */
 class Parser
 {
 
     /**
      * Symfony Filesystem Component
+     * 
      * @var Filesystem
      */
     public $filesystem;
@@ -37,7 +41,9 @@ class Parser
 
     /**
      * Read feed
+     * 
      * @param string $file Path to manifest
+     * 
      * @return array Decoded JSON
      */
     public function readFeed($file)
@@ -49,11 +55,15 @@ class Parser
 
     /**
      * Parse and write feed
+     * 
      * @param array $args Feed settings
      * @param array $path Path JSON filename
+     * 
      * @throws PicoFeedException If PicoFeed Reader fails
      * @throws IOException If Symfony Filesystem dumpFile fails
      * @throws Exception For other errors
+     * 
+     * @return array Structured feed
      */
     public function parseFeed($args, $path = false)
     {
@@ -62,10 +72,17 @@ class Parser
             $config = new Config;
             $config->setTimezone('UTC');
             $reader = new Reader($config);
-            if (!empty($args['last_modified']) && !empty($args['etag'])) {
-                $resource = $reader->download($args['source'], $args['last_modified'], $args['etag']);
-            } else {
-                $resource = $reader->download($args['source']);
+
+            try {
+                if (!empty($args['last_modified']) && !empty($args['etag'])) {
+                    $resource = $reader->download($args['source'], $args['last_modified'], $args['etag']);
+                } else {
+                    $resource = $reader->download($args['source']);
+                }
+            } catch (InvalidCertificateException $e) {
+                if ($config['silent_cert_error'] === false) {
+                    throw new \Exception($e);
+                }
             }
 
             if ($resource->isModified()) {

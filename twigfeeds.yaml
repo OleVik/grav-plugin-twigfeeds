@@ -4,6 +4,7 @@ static_cache: false
 debug: false
 cache_time: 900
 pass_headers: false
+silence_security: false
 twig_feeds:
   - source: http://rss.nytimes.com/services/xml/rss/nyt/World.xml
     name: NY Times
