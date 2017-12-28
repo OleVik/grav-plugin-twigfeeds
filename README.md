@@ -136,4 +136,13 @@ We can also access any feed by its defined name:
 {% endfor %}
 ```
 
+Or if you want to aggregate a bunch of feeds, you could do:
+
+```
+{% set feed_items = [] %}
+{% for name, feed in twig_feeds %}
+    {% set feed_items = feed_items|merge(feed.items) %}
+{% endfor %}
+```
+
 MIT License 2017 by [Ole Vik](http://github.com/olevik).
