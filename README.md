@@ -178,10 +178,10 @@ Further, you could paginate many items like this:
 {% if totalPages > 1 %}
     <ul class="pagination">
         <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
-            <a href="{{ page.url }}page:{{ 1 }}">First</a>
+            <a href="{{ page.url }}/page:{{ 1 }}">First</a>
         </li>
         <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
-            <a href="{{ page.url }}page:{{ currentPage - 1 }}">Previous</a>
+            <a href="{{ page.url }}/page:{{ currentPage - 1 }}">Previous</a>
         </li>
         {% for i in 1..totalPages %}
             {% if (currentPage - paginationLimit) - loop.index == 0 %}
@@ -196,7 +196,7 @@ Further, you could paginate many items like this:
             {% elseif (currentPage + paginationLimit) - loop.index < 0 %}
             {% else %}
                 <li class="page-item {% if currentPage == loop.index  %} active{% endif %}">
-                    <a href="{{ page.url }}page:{{ loop.index }}">{{ loop.index }}</a>
+                    <a href="{{ page.url }}/page:{{ loop.index }}">{{ loop.index }}</a>
                 </li>
             {% endif %}
         {% endfor %}
@@ -204,7 +204,7 @@ Further, you could paginate many items like this:
             <a href="{{ page.url }}page:{{ currentPage + 1 }}">Next</a>
         </li>
         <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
-            <a href="{{ page.url }}page:{{ totalPages }}">Last</a>
+            <a href="{{ page.url }}/page:{{ totalPages }}">Last</a>
         </li>
     </ul>
 {% endif %}
