@@ -201,7 +201,7 @@ Further, you could paginate many items like this:
             {% endif %}
         {% endfor %}
         <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
-            <a href="{{ page.url }}page:{{ currentPage + 1 }}">Next</a>
+            <a href="{{ page.url }}/page:{{ currentPage + 1 }}">Next</a>
         </li>
         <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
             <a href="{{ page.url }}/page:{{ totalPages }}">Last</a>
