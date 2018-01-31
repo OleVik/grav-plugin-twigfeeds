@@ -164,7 +164,7 @@ Further, you could paginate many items like this:
     {% set currentPage = 1 %}
 {% endif %}
 {% set perPage = 5 %}
-{% set totalPages = feed_items|length / perPage %}
+{% set totalPages = (feed_items|length / perPage)|round(0, 'ceil') %}
 {% set start = currentPage * perPage - perPage %}
 {% set paginationLimit = 4 %}
 
