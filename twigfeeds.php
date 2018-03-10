@@ -135,6 +135,7 @@ class TwigFeedsPlugin extends Plugin
 
         /* Get config and check plugin status */
         $config = $this->config();
+        $systemobject = (array) $this->config->get('system');
 
         /* Import library */
         $utility = new Utilities($config);
@@ -143,6 +144,10 @@ class TwigFeedsPlugin extends Plugin
         $parser = new Parser($config);
         $cache = $config['cache'];
         $debug = $config['debug'];
+
+        if ($debug && $systemobject['debugger']['enabled']) {
+            $this->grav['debugger']->startTimer('twigfeeds', 'TwigFeeds');
+        }
 
         if ($cache) {
             /* Create Manifest */
@@ -279,5 +284,8 @@ class TwigFeedsPlugin extends Plugin
             }
         }
         $this->grav['twig']->twig_vars['twig_feeds'] = $feed_items;
+        if ($debug && $systemobject['debugger']['enabled']) {
+            $this->grav['debugger']->stopTimer('twigfeeds');
+        }
     }
 }

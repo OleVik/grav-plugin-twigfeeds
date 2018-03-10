@@ -1,3 +1,9 @@
+# v3.3.1
+## 11-03-2018
+
+1. [](#improved)
+    * In the case of a timeout, fail silently and return empty
+
 # v3.3.0
 ## 27-09-2017
 
