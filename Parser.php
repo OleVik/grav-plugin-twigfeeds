@@ -8,6 +8,7 @@ require __DIR__ . '/vendor/autoload.php';
 use PicoFeed\Reader\Reader;
 use PicoFeed\Config\Config;
 use PicoFeed\PicoFeedException;
+use PicoFeed\Client\TimeoutException;
 use PicoFeed\Client\InvalidCertificateException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
