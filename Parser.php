@@ -150,6 +150,9 @@ class Parser
             }
         } catch (PicoFeedException $e) {
             throw new \Exception($e);
+        } catch (TimeoutException $e) {
+            error_log("Connection timed out in PicoFeed, called by TwigFeed's plugin in Grav.", 0);
+            return array();
         } catch (Exception $e) {
             throw new \Exception($e);
         }
