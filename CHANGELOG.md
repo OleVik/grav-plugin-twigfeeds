@@ -1,3 +1,9 @@
+# v3.3.2
+## 03-06-2018
+
+1. [](#bugfix)
+    * Change filename-hash to use entire source-URL
+
 # v3.3.1
 ## 11-03-2018
 

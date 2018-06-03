@@ -158,7 +158,7 @@ class Manifest
         $manifest = array();
         $manifest['config'] = $feeds['config'];
         foreach ($this->twigFeeds as $feed) {
-            $manifest['data'][$feed['source']]['filename'] = hash('md5', parse_url($feed['source'], PHP_URL_HOST)) . '.json';
+            $manifest['data'][$feed['source']]['filename'] = hash('md5', $feed['source']) . '.json';
             if (isset($feed['name'])) {
                 $manifest['data'][$feed['source']]['name'] = $feed['name'];
             }
