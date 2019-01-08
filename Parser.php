@@ -34,10 +34,13 @@ class Parser
 
     /**
      * Instantiate TwigFeeds Parser
+     *
+     * @var array $config Plugin-configuration
      */
-    public function __construct()
+    public function __construct($config)
     {
         $this->filesystem = new Filesystem();
+        $this->config = $config;
     }
 
     /**
@@ -82,7 +85,7 @@ class Parser
                     $resource = $reader->download($args['source']);
                 }
             } catch (InvalidCertificateException $e) {
-                if ($config['silence_security'] === false) {
+                if ($this->config['silence_security'] === false) {
                     throw new \Exception($e);
                 }
             }

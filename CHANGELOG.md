@@ -1,3 +1,9 @@
+# v3.3.3
+## 08-01-2019
+
+1. [](#bugfix)
+    * Fix config-reference in Parser
+
 # v3.3.2
 ## 03-06-2018
 
