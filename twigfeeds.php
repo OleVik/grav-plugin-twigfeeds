@@ -251,7 +251,11 @@ class TwigFeedsPlugin extends Plugin
             foreach ($content['data'] as $source => $data) {
                 $filename = $config['cache_path'] . $data['filename'];
                 $content = $parser->readFeed($filename);
-                $feed_items[$content['name']] = $content;
+                if ($content) {
+                    $feed_items[$content['name']] = $content;
+                } else {
+                    $debug ? $this->debug('Could not find ' . $filename . ', continuing') : null;
+                }
             }
         } else {
             foreach ($config['twig_feeds'] as $feed) {

@@ -258,7 +258,7 @@ class Manifest
         }
         $feeds = array();
         foreach ($this->twigFeeds as $feed) {
-            $feeds[$feed['source']]['filename'] = hash('md5', parse_url($feed['source'], PHP_URL_HOST)) . '.json';
+            $feeds[$feed['source']]['filename'] = hash('md5', $feed['source']) . '.json';
             if (isset($feed['name'])) {
                 $feeds[$feed['source']]['name'] = $feed['name'];
             }
@@ -284,15 +284,12 @@ class Manifest
                 $feeds[$feed['source']]['extra_tags'] = $feed['extra_tags'];
             }
         }
-        $return = array(
-            'state' => ''
-        );
+        $return = array('state' => '');
         if ($manifest['data'] == $feeds) {
             $return['state'] = 'unchanged';
-            return $return;
         } else {
             $return['state'] = 'changed';
-            return $return;
         }
+        return $return;
     }
 }
