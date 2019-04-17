@@ -1,6 +1,4 @@
 # [Grav](http://getgrav.org/) Twig Feeds Plugin
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FOleVik%2Fgrav-plugin-twigfeeds.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FOleVik%2Fgrav-plugin-twigfeeds?ref=badge_shield)
-
 
 Exposes RSS and Atom feeds to Grav, making them available for use in Twig. This means you can define RSS feeds in the plugin-configuration, then access them for iteration in templates.
 
