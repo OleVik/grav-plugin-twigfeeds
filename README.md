@@ -213,3 +213,7 @@ Further, you could paginate many items like this:
 This last example is based on [this Gist](https://gist.github.com/maxpou/612359ed4af4cc5c4f06), tested with Grav v1.4.0-rc.1, plugin v3.3.0. Pages are indexed in the format `http://domain.tld/page:1`, where the `page`-parameter increases for each consecutive page.
 
 MIT License 2017 by [Ole Vik](http://github.com/olevik).
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FOleVik%2Fgrav-plugin-twigfeeds.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FOleVik%2Fgrav-plugin-twigfeeds?ref=badge_large)
