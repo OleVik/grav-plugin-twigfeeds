@@ -1,14 +1,14 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'https://github.com/audreyr/favicon-cheat-sheet',
-            'body' => [
+            'body' => array(
                 '//article[contains(@class, "entry-content")]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//h1',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

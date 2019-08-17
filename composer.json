@@ -7,7 +7,8 @@
     "naneau/semver": "^0.0.7",
     "debril/feed-io": "^4.3",
     "psr/log": "^1.1",
-    "kevinrob/guzzle-cache-middleware": "^3.2"
+    "kevinrob/guzzle-cache-middleware": "^3.2",
+    "nicolus/picofeed": "@stable"
   },
   "autoload": {
     "psr-4": {

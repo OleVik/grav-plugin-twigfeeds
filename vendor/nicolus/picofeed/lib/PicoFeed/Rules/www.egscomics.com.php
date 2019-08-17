@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.egscomics.com/index.php?id=1690',
             'title' => '/html/head/title',
-            'body' => [
-                '//img[@id="cc-comic"]',
-            ],
-        ],
-    ],
-];
+            'body' => array(
+                '//img[@id="comic"]',
+            ),
+        ),
+    ),
+);

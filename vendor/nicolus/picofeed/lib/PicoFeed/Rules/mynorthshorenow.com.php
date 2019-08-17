@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.mynorthshorenow.com/story/news/local/fox-point/2017/04/04/fox-point-building-board-approves-dunwood-commons-project/99875570/',
-            'body' => [
+            'body' => array(
                 '//div[@itemprop="articleBody"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//h1',
                 '//iframe',
                 '//span[@class="mycapture-small-btn mycapture-btn-with-text mycapture-expandable-photo-btn-small js-mycapture-btn-small"]',
@@ -21,7 +21,7 @@ return [
                 '//div[contains(@class,"gallery-asset")]',
                 '//div[contains(@class,"oembed-asset")]',
                 '//div[@class="article-print-url"]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

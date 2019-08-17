@@ -182,7 +182,6 @@ class CandidateParser implements ParserInterface
      *
      * @param string $content
      * @return string
-     * @throws \PicoFeed\Parser\XmlEntityException
      */
     public function stripGarbage($content)
     {

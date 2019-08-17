@@ -1,19 +1,19 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://fototelegraf.ru/?p=348232',
-            'body' => [
+            'body' => array(
                 '//div[@class="post-content"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//script',
                 '//form',
                 '//style',
                 '//div[@class="imageButtonsBlock"]',
                 '//div[@class="adOnPostBtwImg"]',
                 '//div[contains(@class, "post-tags")]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

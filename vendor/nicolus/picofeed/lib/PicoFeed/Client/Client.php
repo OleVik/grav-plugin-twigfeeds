@@ -4,17 +4,16 @@ namespace PicoFeed\Client;
 
 use DateTime;
 use Exception;
-use GuzzleHttp\ClientInterface;
+use LogicException;
 use PicoFeed\Logging\Logger;
 use PicoFeed\Config\Config;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Client class.
  *
  * @author  Frederic Guillot
  */
-class Client
+abstract class Client
 {
     /**
      * Flag that say if the resource have been modified.
@@ -171,27 +170,13 @@ class Client
     protected $passthrough = false;
 
     /**
-     * Http client used to make requests
-     *
-     * @var \GuzzleHttp\Client
-     */
-    private $httpClient;
-
-    /**
      * Do the HTTP request.
      *
-     * @return ResponseInterface
+     * @abstract
+     *
+     * @return array
      */
-    public function doRequest()
-    {
-        return $this->httpClient->get($this->url);
-    }
-
-    public function __construct(ClientInterface $httpClient = null)
-    {
-        $this->httpClient = $httpClient;
-    }
-
+    abstract public function doRequest();
 
     /**
      * Get client instance: curl or stream driver.
@@ -202,7 +187,13 @@ class Client
      */
     public static function getInstance()
     {
-        return new self(new \GuzzleHttp\Client([]));
+        if (function_exists('curl_init')) {
+            return new Curl();
+        } elseif (ini_get('allow_url_fopen')) {
+            return new Stream();
+        }
+
+        throw new LogicException('You must have "allow_url_fopen=1" or curl extension installed');
     }
 
     /**
@@ -228,55 +219,72 @@ class Client
             $this->url = $url;
         }
 
-        Logger::setMessage(get_called_class() . ' Fetch URL: ' . $this->url);
-        Logger::setMessage(get_called_class() . ' Etag provided: ' . $this->etag);
-        Logger::setMessage(get_called_class() . ' Last-Modified provided: ' . $this->last_modified);
+        Logger::setMessage(get_called_class().' Fetch URL: '.$this->url);
+        Logger::setMessage(get_called_class().' Etag provided: '.$this->etag);
+        Logger::setMessage(get_called_class().' Last-Modified provided: '.$this->last_modified);
 
         $response = $this->doRequest();
-        if ($response) {
-            if ($this->isPassthroughEnabled()) {
-                echo $response->getBody()->getContents();
-            };
 
-            $this->handleNotModifiedResponse($response);
-            $this->handleNormalResponse($response);
-            $this->expiration = $this->parseExpiration($response);
-        }
+        $this->status_code = $response['status'];
+        $this->handleNotModifiedResponse($response);
+        $this->handleErrorResponse($response);
+        $this->handleNormalResponse($response);
 
-
-        Logger::setMessage(get_called_class() . ' Expiration: ' . $this->expiration->format(DATE_ISO8601));
+        $this->expiration = $this->parseExpiration($response['headers']);
+        Logger::setMessage(get_called_class().' Expiration: '.$this->expiration->format(DATE_ISO8601));
 
         return $this;
     }
 
     /**
      * Handle not modified response.
-     * @param ResponseInterface $response
+     *
+     * @param array $response Client response
      */
-    protected function handleNotModifiedResponse(ResponseInterface $response)
+    protected function handleNotModifiedResponse(array $response)
     {
-        if ($response->getStatusCode() == 304) {
+        if ($response['status'] == 304) {
             $this->is_modified = false;
-        } elseif ($response->getStatusCode() == 200) {
+        } elseif ($response['status'] == 200) {
             $this->is_modified = $this->hasBeenModified($response, $this->etag, $this->last_modified);
-            $this->etag = $response->getHeader('ETag')[0] ?? null;
-            $this->last_modified = $response->getHeader('Last-Modified')[0] ?? null;
+            $this->etag = $this->getHeader($response, 'ETag');
+            $this->last_modified = $this->getHeader($response, 'Last-Modified');
         }
 
         if ($this->is_modified === false) {
-            Logger::setMessage(get_called_class() . ' Resource not modified');
+            Logger::setMessage(get_called_class().' Resource not modified');
+        }
+    }
+
+    /**
+     * Handle Http Error codes
+     *
+     * @param array $response Client response
+     * @throws ForbiddenException
+     * @throws InvalidUrlException
+     * @throws UnauthorizedException
+     */
+    protected function handleErrorResponse(array $response)
+    {
+        $status = $response['status'];
+        if ($status == 401) {
+            throw new UnauthorizedException('Wrong or missing credentials');
+        } else if ($status == 403) {
+            throw new ForbiddenException('Not allowed to access resource');
+        } else if ($status == 404) {
+            throw new InvalidUrlException('Resource not found');
         }
     }
 
     /**
      * Handle normal response.
      *
-     * @param ResponseInterface $response Client response
+     * @param array $response Client response
      */
-    protected function handleNormalResponse(ResponseInterface $response)
+    protected function handleNormalResponse(array $response)
     {
-        if ($response->getStatusCode() == 200) {
-            $this->content = $response->getBody()->getContents();
+        if ($response['status'] == 200) {
+            $this->content = $response['body'];
             $this->content_type = $this->findContentType($response);
             $this->encoding = $this->findCharset();
         }
@@ -285,12 +293,13 @@ class Client
     /**
      * Check if a request has been modified according to the parameters.
      *
-     * @param ResponseInterface $response
+     * @param array  $response
      * @param string $etag
      * @param string $lastModified
+     *
      * @return bool
      */
-    private function hasBeenModified(ResponseInterface $response, $etag, $lastModified)
+    private function hasBeenModified($response, $etag, $lastModified)
     {
         $headers = array(
             'Etag' => $etag,
@@ -300,8 +309,8 @@ class Client
         // Compare the values for each header that is present
         $presentCacheHeaderCount = 0;
         foreach ($headers as $key => $value) {
-            if (!empty($response->getHeader($key)[0])) {
-                if ($response->getHeader($key)[0] !== $value) {
+            if (isset($response['headers'][$key])) {
+                if ($response['headers'][$key] !== $value) {
                     return true;
                 }
                 ++$presentCacheHeaderCount;
@@ -320,12 +329,12 @@ class Client
     /**
      * Find content type from response headers.
      *
-     * @param ResponseInterface $response Client response
+     * @param array $response Client response
      * @return string
      */
-    public function findContentType(ResponseInterface $response)
+    public function findContentType(array $response)
     {
-        return strtolower($response->getHeader('content-type')[0]);
+        return strtolower($this->getHeader($response, 'Content-Type'));
     }
 
     /**
@@ -342,13 +351,13 @@ class Client
     /**
      * Get header value from a client response.
      *
-     * @param array $response Client response
-     * @param string $header Header name
+     * @param array  $response Client response
+     * @param string $header   Header name
      * @return string
      */
     public function getHeader(array $response, $header)
     {
-        return isset($response['headers'][$header]) ? $response['headers'][$header][0] : '';
+        return isset($response['headers'][$header]) ? $response['headers'][$header] : '';
     }
 
     /**
@@ -643,8 +652,6 @@ class Client
     public function setConfig(Config $config)
     {
         if ($config !== null) {
-            dump('Client setConfig $config');
-            dump($config);
             $this->setTimeout($config->getClientTimeout());
             $this->setUserAgent($config->getClientUserAgent());
             $this->setMaxRedirections($config->getMaxRedirections());
@@ -663,7 +670,7 @@ class Client
      * Return true if the HTTP status code is a redirection
      *
      * @access protected
-     * @param  integer $code
+     * @param  integer  $code
      * @return boolean
      */
     public function isRedirection($code)
@@ -671,25 +678,23 @@ class Client
         return $code == 301 || $code == 302 || $code == 303 || $code == 307;
     }
 
-    public function parseExpiration(ResponseInterface $response)
+    public function parseExpiration(HttpHeaders $headers)
     {
         try {
 
-            if ($cacheControl = $response->getHeader('Cache-Control')) {
-                $cacheControl = reset($cacheControl);
-                if (preg_match('/s-maxage=(\d+)/', $cacheControl, $matches)) {
+            if (isset($headers['Cache-Control'])) {
+                if (preg_match('/s-maxage=(\d+)/', $headers['Cache-Control'], $matches)) {
                     return new DateTime('+' . $matches[1] . ' seconds');
-                } else if (preg_match('/max-age=(\d+)/', $cacheControl, $matches)) {
+                } else if (preg_match('/max-age=(\d+)/', $headers['Cache-Control'], $matches)) {
                     return new DateTime('+' . $matches[1] . ' seconds');
                 }
             }
 
-            $expires = $response->getHeader('Expires');
-            if (is_array($expires) && count($expires) > 0) {
-                return new DateTime($expires[0]);
+            if (! empty($headers['Expires'])) {
+                return new DateTime($headers['Expires']);
             }
         } catch (Exception $e) {
-            Logger::setMessage('Unable to parse expiration date: ' . $e->getMessage());
+            Logger::setMessage('Unable to parse expiration date: '.$e->getMessage());
         }
 
         return new DateTime();

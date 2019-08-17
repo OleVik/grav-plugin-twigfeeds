@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.factroom.ru/life/20-facts-about-oil',
-            'body' => [
+            'body' => array(
                 '//div[@class="post"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//script',
                 '//form',
                 '//style',
@@ -21,7 +21,7 @@ return [
                 '//div[contains(@class, "source-box")]',
                 '//div[contains(@class, "under-likely-desktop")]',
                 '//div[contains(@class, "mobile-down-post")]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

@@ -1,10 +1,10 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://thecodinglove.com/post/116897934767',
-            'body' => ['//div[@class="bodytype"]'],
-            'strip' => [],
-        ],
-    ],
-];
+            'body' => array('//div[@class="bodytype"]'),
+            'strip' => array(),
+        ),
+    ),
+);

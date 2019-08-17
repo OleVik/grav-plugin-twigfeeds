@@ -1,21 +1,21 @@
 <?php
-return [
-    'grabber' => [
-        '%/news/.*%' => [
+return array(
+    'grabber' => array(
+        '%/news/.*%' => array(
             'test_url' => 'http://penny-arcade.com/news/post/2015/04/15/101-part-two',
-            'body' => [
+            'body' => array(
                 '//*[@class="postBody"]/*',
-            ],
-            'strip' => [
-            ],
-        ],
-        '%/comic/.*%' => [
+            ),
+            'strip' => array(
+            ),
+        ),
+        '%/comic/.*%' => array(
             'test_url' => 'http://penny-arcade.com/comic/2015/04/15',
-            'body' => [
+            'body' => array(
                 '//*[@id="comicFrame"]/a/img',
-            ],
-            'strip' => [
-            ],
-        ],
-    ],
-];
+            ),
+            'strip' => array(
+            ),
+        ),
+    ),
+);

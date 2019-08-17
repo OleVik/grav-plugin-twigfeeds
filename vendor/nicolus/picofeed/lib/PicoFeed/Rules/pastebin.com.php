@@ -1,13 +1,13 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://pastebin.com/ed1pP9Ak',
-            'body' => [
+            'body' => array(
                 '//div[@class="text"]',
-            ],
-            'strip' => [
-            ],
-        ],
-    ],
-];
+            ),
+            'strip' => array(
+            ),
+        ),
+    ),
+);

@@ -1,14 +1,14 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.alainonline.net/news_details.php?lang=arabic&sid=18907',
-            'body' => [
+            'body' => array(
                 '//div[@class="news_details"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//div[@class="news_details"]/div/div[last()]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

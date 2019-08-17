@@ -1,13 +1,13 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://distrowatch.com/?newsid=08355',
-            'body' => [
+            'body' => array(
                 '//td[@class="NewsText"][1]',
-            ],
-            'strip' => [
-            ],
-        ],
-    ],
-];
+            ),
+            'strip' => array(
+            ),
+        ),
+    ),
+);

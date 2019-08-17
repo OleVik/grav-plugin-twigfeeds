@@ -27,7 +27,7 @@ class Rss10 extends Parser
      * Get the path to the items XML tree.
      *
      * @param SimpleXMLElement $xml Feed xml
-     * @return SimpleXMLElement[]|SimpleXMLElement
+     * @return SimpleXMLElement[]
      */
     public function getItemsTree(SimpleXMLElement $xml)
     {
@@ -214,19 +214,6 @@ class Rss10 extends Parser
                   ?: XmlParser::getXPathResult($xml, 'channel/dc:creator', $this->namespaces);
 
         $item->setAuthor(XmlParser::getValue($author));
-    }
-
-    /**
-     * Find the item author URL.
-     *
-     * @param SimpleXMLElement      $xml   Feed
-     * @param SimpleXMLElement      $entry Feed item
-     * @param \PicoFeed\Parser\Item $item  Item object
-     */
-    public function findItemAuthorUrl(SimpleXMLElement $xml, SimpleXMLElement $entry, Item $item)
-    {
-        // There appears to be no support for author URL in the dc: terms
-        $item->setAuthorUrl('');
     }
 
     /**

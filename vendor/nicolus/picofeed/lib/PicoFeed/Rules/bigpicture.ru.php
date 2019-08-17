@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://bigpicture.ru/?p=556658',
-            'body' => [
+            'body' => array(
                 '//div[@class="article container"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//script',
                 '//form',
                 '//style',
@@ -25,7 +25,7 @@ return [
                 '//div[@id="liquidstorm-alt-html"]',
                 '//div[contains(@class, "post-tags")]',
                 '//*[contains(text(),"Смотрите также")]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

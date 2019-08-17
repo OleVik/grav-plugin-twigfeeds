@@ -1,15 +1,15 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.numerama.com/sciences/125959-recherches-ladn-recompensees-nobel-de-chimie.html',
-            'body' => [
+            'body' => array(
                 '//article',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//footer',
                 '//section[@class="related-article"]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

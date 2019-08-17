@@ -1,11 +1,11 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.monsieur-le-chien.fr/index.php?planche=672',
-            'body' => [
+            'body' => array(
                 '//img[starts-with(@src, "i/planches/")]',
-            ],
-        ]
-    ]
-];
+            ),
+        )
+    )
+);

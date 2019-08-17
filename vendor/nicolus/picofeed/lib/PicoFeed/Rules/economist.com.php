@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.economist.com/blogs/buttonwood/2017/02/mixed-signals?fsrc=rss',
-            'body' => [
+            'body' => array(
                 '//article',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//span[@class="blog-post__siblings-list-header "]',
                 '//h1',
                 '//aside',
@@ -19,7 +19,7 @@ return [
                 '//div[contains(@class,"latest-updates-panel__container")]',
                 '//div[contains(@class,"blog-post__asideable-content")]',
                 '//div[@aria-label="Advertisement"]'
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

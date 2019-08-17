@@ -1,15 +1,15 @@
 <?php
-return [
-    'grabber' => [
-        '%/comics.*%' => [
+return array(
+    'grabber' => array(
+        '%/comics.*%' => array(
             'test_url' => 'http://www.vgcats.com/comics/?strip_id=358',
-            'body' => ['//*[@align="center"]/img'],
-            'strip' => [],
-        ],
-        '%/super.*%' => [
+            'body' => array('//*[@align="center"]/img'),
+            'strip' => array(),
+        ),
+        '%/super.*%' => array(
             'test_url' => 'http://www.vgcats.com/super/?strip_id=84',
-            'body' => ['//*[@align="center"]/p/img'],
-            'strip' => [],
-        ],
-    ],
-];
+            'body' => array('//*[@align="center"]/p/img'),
+            'strip' => array(),
+        ),
+    ),
+);

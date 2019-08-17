@@ -1,10 +1,10 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://chaoslife.findchaos.com/pets-in-the-wild',
-            'body' => ['//div[@id="comic"]'],
-            'strip' => [],
-        ],
-    ],
-];
+            'body' => array('//div[@id="comic"]'),
+            'strip' => array(),
+        ),
+    ),
+);

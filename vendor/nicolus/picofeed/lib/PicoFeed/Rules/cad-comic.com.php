@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%/cad/.+%' => [
+return array(
+    'grabber' => array(
+        '%/cad/.+%' => array(
             'test_url' => 'http://www.cad-comic.com/cad/20150417',
-            'body' => [
+            'body' => array(
                 '//*[@id="content"]/img',
-            ],
-            'strip' => [],
-        ],
-    ],
-];
+            ),
+            'strip' => array(),
+        ),
+    ),
+);

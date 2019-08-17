@@ -1,6 +1,7 @@
 name: Twig Feeds
 version: 4.0.0-beta.1
-description: "Parse RSS and Atom feeds with Twig."
+testing: true
+description: "Parse RSS, Atom, and JSON feeds with Twig."
 icon: feed
 author:
   name: Ole Vik

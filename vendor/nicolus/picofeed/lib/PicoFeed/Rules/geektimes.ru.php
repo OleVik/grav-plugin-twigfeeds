@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'https://geektimes.ru/post/289151/',
-            'body' => [
-                "//div[contains(concat(' ',normalize-space(@class),' '),' content ')]"
-            ],
-            'strip' => [],
-        ],
-    ],
-];
+            'body' => array(
+            "//div[contains(concat(' ',normalize-space(@class),' '),' content ')]"
+            ),
+            'strip' => array(),
+        ),
+    ),
+);

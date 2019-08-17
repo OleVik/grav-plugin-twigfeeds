@@ -1,4 +1,16 @@
 <?php
+/**
+ * TwigFeeds Plugin, Utilities API
+ *
+ * PHP version 7
+ *
+ * @category   Extensions
+ * @package    Grav
+ * @subpackage Presentation
+ * @author     Ole Vik <git@olevik.net>
+ * @license    http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link       https://github.com/OleVik/grav-plugin-twigfeeds
+ */
 namespace Grav\Plugin\TwigFeedsPlugin;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -8,12 +20,15 @@ use Naneau\SemVer\Parser as SemVerParser;
 use Naneau\SemVer\Compare as SemVerCompare;
 
 /**
- * TwigFeeds Helper Utilities
+ * TwigFeeds Utilities
  *
  * Class Utilities
- * @package Grav\Plugin\TwigFeedsPlugin
- * @license MIT License by Ole Vik
- * @since v3.0.0
+ *
+ * @category Extensions
+ * @package  Grav\Plugin\TwigFeedsPlugin
+ * @author   Ole Vik <git@olevik.net>
+ * @license  http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link     https://github.com/OleVik/grav-plugin-twigfeeds
  */
 class Utilities
 {
@@ -65,8 +80,11 @@ class Utilities
 
     /**
      * Clears caches
+     *
      * @param array $paths Paths to caches
+     *
      * @return string Status of operation
+     *
      * @throws IOException If Symfony Filesystem remove() fails
      */
     public function bustCache($paths = false)
@@ -94,8 +112,10 @@ class Utilities
 
     /**
      * Fetch the plugin version from the blueprints or manifest
+     *
      * @param array $path Path to file
      * @param array $mode 'blueprint' or 'manifest'
+     *
      * @return string Retrieved version
      */
     public function getVersion($path, $mode = 'blueprint')
@@ -113,11 +133,13 @@ class Utilities
 
     /**
      * Compares two semantic versions
+     *
      * @param string $old Old version, in SemVer format
      * @param string $new New version, in SemVer format
+     *
      * @return array Comparative version information
      */
-    function compareSemVer($old, $new)
+    public function compareSemVer($old, $new)
     {
         $versions = array();
         $versions['old']['version'] = $old;

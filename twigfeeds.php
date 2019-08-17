@@ -24,7 +24,7 @@ use Grav\Common\Page\Page;
 use RocketTheme\Toolbox\Event\Event;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
- use Grav\Plugin\TwigFeedsPlugin\API\Parser;
+use Grav\Plugin\TwigFeedsPlugin\API\Parser;
 use Grav\Plugin\TwigFeedsPlugin\API\Manifest;
 use Grav\Plugin\TwigFeedsPlugin\Utilities;
 
@@ -64,7 +64,7 @@ class TwigFeedsPlugin extends Plugin
     /**
      * Register cache-location with onBeforeCacheClear-event
      *
-     * @param RocketTheme\Toolbox\Event\Event $event
+     * @param RocketTheme\Toolbox\Event\Event $event Event-handler
      *
      * @return void
      */
@@ -138,7 +138,7 @@ class TwigFeedsPlugin extends Plugin
         $cache = $config['cache'];
         $debug = $config['debug'];
 
-        if ($debug && (array) $this->config->get('system')['enabled']) {
+        if ($debug && (array) $this->config->get('system.debugger.enabled')) {
             $this->grav['debugger']->startTimer('twigfeeds', 'TwigFeeds');
         }
 
@@ -210,7 +210,7 @@ class TwigFeedsPlugin extends Plugin
                         continue;
                     }
                     $debug ? $this->debug($call['callback']) : null;
-                    $content['data'][$entry]['etag'] = $call['data']['etag'];
+                    // $content['data'][$entry]['etag'] = $call['data']['etag'];
                     $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
                     $content['data'][$entry]['last_checked'] = $utility->now;
                     $content['data'][$entry]['last_checked_date'] = $utility->humanDate($utility->now);
@@ -226,7 +226,7 @@ class TwigFeedsPlugin extends Plugin
                             continue;
                         }
                         $debug ? $this->debug($call['callback']) : null;
-                        $content['data'][$entry]['etag'] = $call['data']['etag'];
+                        // $content['data'][$entry]['etag'] = $call['data']['etag'];
                         $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
                         $content['data'][$entry]['last_checked'] = $utility->now;
                         $content['data'][$entry]['last_checked_date'] = $utility->humanDate($utility->now);
@@ -276,6 +276,7 @@ class TwigFeedsPlugin extends Plugin
                 } else {
                     $name = $feed['source'];
                 }
+                $feed_items[$name] = $feed;
                 if (isset($resource['data']) && !empty($resource['data'])) {
                     $feed_items[$name] = array_merge($feed, $resource['data']);
                 }
@@ -283,7 +284,7 @@ class TwigFeedsPlugin extends Plugin
             }
         }
         $this->grav['twig']->twig_vars['twig_feeds'] = $feed_items;
-        if ($debug && (array) $this->config->get('system')['enabled']) {
+        if ($debug && (array) $this->config->get('system.debugger.enabled')) {
             $this->grav['debugger']->stopTimer('twigfeeds');
         }
     }

@@ -1,5 +1,6 @@
 !.gitignore
 vendor/.git
+.php_cs_cache
 
 # Created by https://www.gitignore.io/api/node,bower,sass,windows
 

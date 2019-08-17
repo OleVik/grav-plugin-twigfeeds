@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://arstechnica.com/tech-policy/2015/09/judge-warners-2m-happy-birthday-copyright-is-bogus/',
-            'body' => [
+            'body' => array(
                 '//article',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//h4[@class="post-upperdek"]',
                 '//h1',
                 '//ul[@class="lSPager lSGallery"]',
@@ -18,8 +18,8 @@ return [
                 '//section[@class="article-author"]',
                 '//*[contains(@id,"social-")]',
                 '//div[contains(@id,"footer")]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);
 

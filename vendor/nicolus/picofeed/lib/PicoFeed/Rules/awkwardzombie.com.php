@@ -1,10 +1,10 @@
 <?php
-return [
-    'grabber' => [
-        '%/index.php.*comic=.*%' => [
+return array(
+    'grabber' => array(
+        '%/index.php.*comic=.*%' => array(
             'test_url' => 'http://www.awkwardzombie.com/index.php?comic=041315',
-            'body' => ['//*[@id="comic"]/img'],
-            'strip' => [],
-        ],
-    ],
-];
+            'body' => array('//*[@id="comic"]/img'),
+            'strip' => array(),
+        ),
+    ),
+);

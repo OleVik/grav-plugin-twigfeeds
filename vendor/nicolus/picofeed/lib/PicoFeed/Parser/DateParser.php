@@ -74,8 +74,7 @@ class DateParser extends Base
             }
 
             $date = $this->getValidDate($format, $truncated_value);
-            // Ignore dates before 1970, it's likely not the right format
-            if ($date !== false && $date->getTimestamp() > 0) {
+            if ($date !== false) {
                 return $date;
             }
         }

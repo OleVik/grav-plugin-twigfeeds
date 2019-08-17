@@ -44,19 +44,13 @@ class Reader extends Base
     {
         $url = $this->prependScheme($url);
 
-        $client = new Client($this->httpClient);
-
-        dump('Reader download() $this->httpClient');
-        dump($this->httpClient);
-        dump('Reader download() $this->config');
-        dump($this->config);
-        return $client
-            ->setConfig($this->config)
-            ->setLastModified($last_modified)
-            ->setEtag($etag)
-            ->setUsername($username)
-            ->setPassword($password)
-            ->execute($url);
+        return Client::getInstance()
+                        ->setConfig($this->config)
+                        ->setLastModified($last_modified)
+                        ->setEtag($etag)
+                        ->setUsername($username)
+                        ->setPassword($password)
+                        ->execute($url);
     }
 
     /**

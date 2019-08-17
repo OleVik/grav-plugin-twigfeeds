@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://takprosto.cc/kokteyl-dlya-pohudeniya-v-domashnih-usloviyah/',
-            'body' => [
+            'body' => array(
                 '//div[contains(@class, "entry-contentt")]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//script',
                 '//form',
                 '//style',
@@ -15,7 +15,7 @@ return [
                 '//*[contains(@class, "essb_links")]',
                 '//*[contains(@rel, "nofollow")]',
                 '//*[contains(@class, "ads")]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

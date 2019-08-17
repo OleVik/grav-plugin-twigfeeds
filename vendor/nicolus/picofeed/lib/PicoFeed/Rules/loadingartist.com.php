@@ -1,8 +1,8 @@
 <?php
-return [
-    'filter' => [
-        '%.*%' => [
+return array(
+    'filter' => array(
+        '%.*%' => array(
             '%-150x150%' => '',
-        ],
-    ],
-];
+        ),
+    ),
+);

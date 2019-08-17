@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.pixelbeat.org/programming/sigpipe_handling.html#1425573246',
-            'body' => [
+            'body' => array(
                 '//div[@class="contentText"]',
-            ],
-            'strip' => [],
-        ],
-    ],
-];
+            ),
+            'strip' => array(),
+        ),
+    ),
+);

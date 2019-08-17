@@ -1,13 +1,13 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://buttersafe.com/2015/04/21/the-incredible-flexible-man/',
-            'body' => [
+            'body' => array(
                 '//div[@id="comic"]',
                 '//div[@class="post-comic"]',
-            ],
-            'strip' => [],
-        ],
-    ],
-];
+            ),
+            'strip' => array(),
+        ),
+    ),
+);

@@ -1,13 +1,13 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.kanpai.fr/japon/comment-donner-lheure-en-japonais.html',
-            'body' => [
+            'body' => array(
                 '//div[@class="single-left"]',
-            ],
-            'strip' => [
-            ],
-        ],
-    ],
-];
+            ),
+            'strip' => array(
+            ),
+        ),
+    ),
+);

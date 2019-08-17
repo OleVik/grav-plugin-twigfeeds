@@ -1,4 +1,16 @@
 <?php
+/**
+ * TwigFeeds Plugin, Manifest API
+ *
+ * PHP version 7
+ *
+ * @category   Extensions
+ * @package    Grav
+ * @subpackage Presentation
+ * @author     Ole Vik <git@olevik.net>
+ * @license    http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link       https://github.com/OleVik/grav-plugin-twigfeeds
+ */
 namespace Grav\Plugin\TwigFeedsPlugin\API;
 
 use DateTime;
@@ -9,10 +21,13 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 /**
  * TwigFeeds Manifest
  *
- * Class Parser
- * @package Grav\Plugin\TwigFeedsPlugin
- * @license MIT License by Ole Vik
- * @since v3.0.0
+ * Class Manifest
+ *
+ * @category Extensions
+ * @package  Grav\Plugin\TwigFeedsPlugin
+ * @author   Ole Vik <git@olevik.net>
+ * @license  http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link     https://github.com/OleVik/grav-plugin-twigfeeds
  */
 class Manifest
 {
@@ -27,7 +42,6 @@ class Manifest
     /**
      * True if static cache is enabled
      *
-     * 
      * @var bool
      */
     public $staticCache;
@@ -115,8 +129,11 @@ class Manifest
 
     /**
      * Clears caches
+     *
      * @param array $paths Paths to caches to clear
+     *
      * @return string Status of operation
+     *
      * @throws IOException If Symfony Filesystem remove() fails
      */
     public function bustCache($paths = false)
@@ -144,7 +161,9 @@ class Manifest
 
     /**
      * Read manifest
+     *
      * @param string $file Path to manifest-file
+     *
      * @return array Decoded JSON
      */
     public function readManifest($file)
@@ -159,9 +178,12 @@ class Manifest
 
     /**
      * Build manifest
+     *
      * @param array $manifestFile Path to manifest-file
-     * @param array $feeds Manifest-data
+     * @param array $feeds        Manifest-data
+     *
      * @return string Status of operation
+     *
      * @throws IOException If Symfony Filesystem dumpFile() fails
      */
     public function writeManifest($manifestFile, $feeds)
@@ -211,9 +233,12 @@ class Manifest
 
     /**
      * Update manifest
+     *
      * @param array $manifestFile Path to manifest-file
-     * @param array $manifest Manifest-data
+     * @param array $manifest     Manifest-data
+     *
      * @return string Status of operation
+     *
      * @throws IOException If Symfony Filesystem dumpFile() fails
      */
     public function updateManifest($manifestFile, $manifest)
@@ -228,7 +253,9 @@ class Manifest
 
     /**
      * Create manifest structure
+     *
      * @param string $file Path to manifest-file
+     *
      * @return array Manifest structure
      */
     public function manifestStructure($file)
@@ -256,7 +283,9 @@ class Manifest
 
     /**
      * Compare manifest and settings
+     *
      * @param array $manifest Manifest
+     *
      * @return array 'state' for state of operation
      */
     public function compare($manifest)

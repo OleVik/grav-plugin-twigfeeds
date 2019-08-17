@@ -151,7 +151,6 @@ abstract class Parser implements ParserInterface
             $item->namespaces = $this->used_namespaces;
 
             $this->findItemAuthor($xml, $entry, $item);
-            $this->findItemAuthorUrl($xml, $entry, $item);
 
             $this->findItemUrl($entry, $item);
             $this->checkItemUrl($feed, $item);

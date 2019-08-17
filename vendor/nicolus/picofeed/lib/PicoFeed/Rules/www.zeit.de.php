@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%^/zeit-magazin.*%' => [
+return array(
+    'grabber' => array(
+        '%^/zeit-magazin.*%' => array(
             'test_url' => 'http://www.zeit.de/zeit-magazin/2015/15/pegida-kathrin-oertel-lutz-bachmann',
-            'body' => [
+            'body' => array(
                 '//article[@class="article"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//header/div/h1',
                 '//header/div/div[@class="article__head__subtitle"]',
                 '//header/div/div[@class="article__column__author"]',
@@ -20,14 +20,14 @@ return [
                 '//div[@id="js-social-services"]',
                 '//section[@id="js-comments"]',
                 '//aside',
-            ],
-        ],
-        '%.*%' => [
+            ),
+        ),
+        '%.*%' => array(
             'test_url' => 'http://www.zeit.de/politik/ausland/2015-04/thessaloniki-krise-griechenland-yannis-boutaris/',
-            'body' => [
+            'body' => array(
                 '//div[@class="article-body"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//*[@class="articleheader"]',
                 '//*[@class="excerpt"]',
                 '//div[contains(@class, "ad")]',
@@ -35,7 +35,7 @@ return [
                 '//*[@class="articlemeta"]',
                 '//*[@class="articlemeta-clear"]',
                 '//*[@class="zol_inarticletools"]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

@@ -1,4 +1,16 @@
 <?php
+/**
+ * TwigFeeds Plugin, Clear Cache CLI
+ *
+ * PHP version 7
+ *
+ * @category   Extensions
+ * @package    Grav
+ * @subpackage Presentation
+ * @author     Ole Vik <git@olevik.net>
+ * @license    http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link       https://github.com/OleVik/grav-plugin-twigfeeds
+ */
 namespace Grav\Plugin\Console;
 
 use Grav\Common\Grav;
@@ -6,20 +18,25 @@ use Grav\Common\GravTrait;
 use Grav\Console\ConsoleCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use TwigFeeds\Utilities;
+use Grav\Plugin\TwigFeedsPlugin\Utilities;
 
 /**
  * TwigFeeds Clear Cache Command
  *
  * Class ClearTwigFeedsCacheCommand
- * @package Grav\Plugin\TwigFeedsPlugin
- * @license MIT License by Ole Vik
- * @since v3.0.0
+ *
+ * @category Extensions
+ * @package  Grav\Plugin\TwigFeedsPlugin
+ * @author   Ole Vik <git@olevik.net>
+ * @license  http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link     https://github.com/OleVik/grav-plugin-twigfeeds
  */
 class ClearTwigFeedsCacheCommand extends ConsoleCommand
 {
     /**
      * Declare command alias, description, and options
+     *
+     * @return void
      */
     protected function configure()
     {
@@ -32,6 +49,8 @@ class ClearTwigFeedsCacheCommand extends ConsoleCommand
 
     /**
      * Runs functions to clear cache
+     *
+     * @return void
      */
     protected function serve()
     {
@@ -41,6 +60,7 @@ class ClearTwigFeedsCacheCommand extends ConsoleCommand
 
     /**
      * Declare config from plugin-config
+     *
      * @return array Plugin configuration
      */
     private function config()
@@ -58,10 +78,14 @@ class ClearTwigFeedsCacheCommand extends ConsoleCommand
 
     /**
      * Removes cache
-     * @param array Plugin configuration
+     *
+     * @param array $config Plugin configuration
+     *
+     * @return void
      */
     private function removeCache($config)
     {
+        include __DIR__ . '/../vendor/autoload.php';
         $this->output->writeln('');
         $this->output->writeln('<magenta>Clearing cached TwigFeeds data</magenta>');
         $this->output->writeln('');

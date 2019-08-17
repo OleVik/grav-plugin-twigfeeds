@@ -4,23 +4,13 @@
 require_once 'vendor/autoload.php';
 
 use PicoFeed\Config\Config;
-use PicoFeed\Parser\Feed;
 use PicoFeed\Reader\Favicon;
 use PicoFeed\Scraper\Scraper;
 use PicoFeed\Reader\Reader;
 use PicoFeed\Logging\Logger;
 use PicoFeed\PicoFeedException;
 
-
-if (class_exists('\Monolog\Logger')) {
-    $log = new \Monolog\Logger('log');
-    $handler = new Monolog\Handler\StreamHandler('debug.log', \Monolog\Logger::DEBUG);
-    $log->pushHandler($handler);
-    Logger::setLogger($log);
-    printf("Monolog found, logs will be written in debug.log.\n");
-} else {
-    printf("Monolog is not installed, we won't log anything.\n");
-}
+Logger::enable();
 
 function get_feed($url, $disable_filtering = false)
 {
@@ -47,7 +37,7 @@ function get_feed($url, $disable_filtering = false)
     }
 }
 
-function get_item(Feed $feed, $item_id)
+function get_item($feed, $item_id)
 {
     foreach ($feed->items as $item) {
         if ($item->getId() === $item_id) {
@@ -64,6 +54,12 @@ function dump_feed($url)
 {
     $feed = get_feed($url);
     echo $feed;
+}
+
+function debug_feed($url)
+{
+    get_feed($url);
+    print_r(Logger::getMessages());
 }
 
 function dump_item($url, $item_id)
@@ -90,7 +86,7 @@ function grabber($url)
     $grabber->setUrl($url);
     $grabber->execute();
 
-//    print_r(Logger::getMessages());
+    print_r(Logger::getMessages());
     echo "============= CONTENT ================\n";
     echo $grabber->getRelevantContent().PHP_EOL;
     echo "============= FILTERED ================\n";
@@ -118,6 +114,9 @@ if ($argc === 4) {
         case 'feed':
             dump_feed($argv[2]);
             die;
+        case 'debug':
+            debug_feed($argv[2]);
+            die;
         case 'grabber':
             grabber($argv[2]);
             die;
@@ -129,6 +128,7 @@ if ($argc === 4) {
 
 printf("Usage:\n");
 printf("%s feed <feed-url>\n", $argv[0]);
+printf("%s debug <feed-url>\n", $argv[0]);
 printf("%s item <feed-url> <item-id>\n", $argv[0]);
 printf("%s nofilter <feed-url> <item-id>\n", $argv[0]);
 printf("%s grabber <url>\n", $argv[0]);

@@ -1,21 +1,21 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'https://ymatuhin.ru/tools/git-default-editor/',
-            'body' => [
+            'body' => array(
                 '//section',
-            ],
-            'strip' => [
-                "//script",
-                "//style",
-                "//h1",
-                "//time",
-                "//aside",
-                "/html/body/section/ul",
-                "//amp-iframe",
-                "/html/body/section/h4"
-            ],
-        ]
-    ]
-];
+            ),
+            'strip' => array(
+              "//script",
+              "//style",
+              "//h1",
+              "//time",
+              "//aside",
+              "/html/body/section/ul",
+              "//amp-iframe",
+              "/html/body/section/h4"          
+            ),
+        )
+    )
+);

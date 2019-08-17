@@ -1,4 +1,16 @@
 <?php
+/**
+ * TwigFeeds Plugin, Build Cache CLI
+ *
+ * PHP version 7
+ *
+ * @category   Extensions
+ * @package    Grav
+ * @subpackage Presentation
+ * @author     Ole Vik <git@olevik.net>
+ * @license    http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link       https://github.com/OleVik/grav-plugin-twigfeeds
+ */
 namespace Grav\Plugin\Console;
 
 use DateTime;
@@ -7,22 +19,27 @@ use Grav\Common\GravTrait;
 use Grav\Console\ConsoleCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use TwigFeeds\Manifest;
-use TwigFeeds\Parser;
-use TwigFeeds\Utilities;
+use Grav\Plugin\TwigFeedsPlugin\API\Parser;
+use Grav\Plugin\TwigFeedsPlugin\API\Manifest;
+use Grav\Plugin\TwigFeedsPlugin\Utilities;
 
 /**
  * TwigFeeds Build Cache Command
  *
  * Class BuildTwigFeedsCacheCommand
- * @package Grav\Plugin\TwigFeedsPlugin
- * @license MIT License by Ole Vik
- * @since v3.0.0
+ *
+ * @category Extensions
+ * @package  Grav\Plugin\TwigFeedsPlugin
+ * @author   Ole Vik <git@olevik.net>
+ * @license  http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link     https://github.com/OleVik/grav-plugin-twigfeeds
  */
 class BuildTwigFeedsCacheCommand extends ConsoleCommand
 {
     /**
      * Declare command alias, description, and options
+     *
+     * @return void
      */
     protected function configure()
     {
@@ -37,6 +54,8 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
 
     /**
      * Runs functions to build cache
+     *
+     * @return void
      */
     protected function serve()
     {
@@ -47,6 +66,7 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
 
     /**
      * Declare config from plugin-config
+     *
      * @return array Plugin configuration
      */
     private function config()
@@ -65,7 +85,10 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
 
     /**
      * Builds manifest
-     * @param array Plugin configuration
+     *
+     * @param array $config Plugin configuration
+     *
+     * @return void
      */
     private function buildManifest($config)
     {
@@ -73,7 +96,9 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
         $this->output->writeln('<magenta>Building TwigFeeds manifest</magenta>');
         $this->output->writeln('');
 
-        $manifest = new Manifest($config);
+        include __DIR__ . '/../vendor/autoload.php';
+        $utility = new Utilities($config);
+        $manifest = new Manifest($config, $utility);
 
         $manifestFile = $config['cache_path'] . 'manifest.json';
         if (!file_exists($manifestFile)) {
@@ -103,7 +128,10 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
 
     /**
      * Builds cache
-     * @param array Plugin configuration
+     *
+     * @param array $config Plugin configuration
+     *
+     * @return void
      */
     private function buildCache($config)
     {
@@ -111,8 +139,9 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
         $this->output->writeln('<magenta>Building TwigFeeds cache</magenta>');
         $this->output->writeln('');
 
+        include __DIR__ . '/../vendor/autoload.php';
         $utility = new Utilities($config);
-        $manifest = new Manifest($config);
+        $manifest = new Manifest($config, $utility);
         $parser = new Parser($config);
         $manifestFile = $config['cache_path'] . 'manifest.json';
         $content = $manifest->readManifest($manifestFile);

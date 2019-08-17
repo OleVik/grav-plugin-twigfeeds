@@ -1,15 +1,15 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://online.wsj.com/article/SB10001424127887324108204579023143974408428.html',
-            'body' => [
+            'body' => array(
                 '//div[@class="articlePage"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//*[@id="articleThumbnail_2"]',
                 '//*[@class="socialByline"]',
-            ]
-        ]
-    ]
-];
+            )
+        )
+    )
+);

@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'https://www.scrumalliance.org/community/articles/2015/march/an-introduction-to-agile-project-intake?feed=articles',
-            'body' => [
+            'body' => array(
                 '//div[@class="article_content"]',
-            ],
-            'strip' => [],
-        ],
-    ],
-];
+            ),
+            'strip' => array(),
+        ),
+    ),
+);

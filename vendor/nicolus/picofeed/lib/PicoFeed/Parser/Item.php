@@ -55,13 +55,6 @@ class Item
     public $author = '';
 
     /**
-     * Item author URL.
-     *
-     * @var string
-     */
-    public $authorUrl = '';
-
-    /**
      * Item date.
      *
      * @var \DateTime
@@ -180,10 +173,10 @@ class Item
             $output .= 'Item::'.$property.' = '.$this->$property.PHP_EOL;
         }
 
-        $publishedDate = $this->publishedDate !== null ? $this->publishedDate->format(DATE_RFC822) : null;
-        $updatedDate = $this->updatedDate !== null ? $this->updatedDate->format(DATE_RFC822) : null;
+        $publishedDate = $this->publishedDate != null ? $this->publishedDate->format(DATE_RFC822) : null;
+        $updatedDate = $this->updatedDate != null ? $this->updatedDate->format(DATE_RFC822) : null;
 
-        $categoryString = $this->categories !== null ? implode(',', $this->categories) : null;
+        $categoryString = $this->categories != null ? implode(',', $this->categories) : null;
 
         $output .= 'Item::date = '.$this->date->format(DATE_RFC822).PHP_EOL;
         $output .= 'Item::publishedDate = '.$publishedDate.PHP_EOL;
@@ -343,16 +336,6 @@ class Item
     }
 
     /**
-     * Get author URL.
-     *
-     * @return string
-     */
-    public function getAuthorUrl()
-    {
-        return $this->authorUrl;
-    }
-
-    /**
      * Return true if the item is "Right to Left".
      *
      * @return bool
@@ -395,18 +378,6 @@ class Item
     public function setAuthor($author)
     {
         $this->author = $author;
-        return $this;
-    }
-
-    /**
-     * Set author URL.
-     *
-     * @param string $authorUrl
-     * @return Item
-     */
-    public function setAuthorUrl($authorUrl)
-    {
-        $this->authorUrl = $authorUrl;
         return $this;
     }
 

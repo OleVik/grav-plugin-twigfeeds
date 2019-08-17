@@ -164,7 +164,14 @@ class Html
      */
     public function filterRules($content)
     {
-        $loader = new RuleLoader($this->config);
+        // the constructor should require a config, then this if can be removed
+        if ($this->config === null) {
+            $config = new Config();
+        } else {
+            $config = $this->config;
+        }
+
+        $loader = new RuleLoader($config);
         $rules = $loader->getRules($this->website);
 
         $url = new Url($this->website);

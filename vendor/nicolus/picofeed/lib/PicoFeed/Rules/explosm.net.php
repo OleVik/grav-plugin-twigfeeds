@@ -1,13 +1,13 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://explosm.net/comics/3803/',
-            'body' => [
+            'body' => array(
                 '//div[@id="comic-container"]',
-            ],
-            'strip' => [
-            ],
-        ],
-    ],
-];
+            ),
+            'strip' => array(
+            ),
+        ),
+    ),
+);

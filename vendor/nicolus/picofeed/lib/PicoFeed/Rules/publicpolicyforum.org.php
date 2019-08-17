@@ -1,15 +1,15 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'https://publicpolicyforum.org/blog/going-extra-mile',
-            'body' => [
+            'body' => array(
                 '//div[contains(@class,"field-name-post-date")]',
                 '//div[contains(@class,"field-name-body")]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//img[@src="http://publicpolicyforum.org/sites/default/files/logo3.jpg"]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

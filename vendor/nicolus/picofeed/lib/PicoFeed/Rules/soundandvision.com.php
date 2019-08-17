@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.soundandvision.com/content/james-guthrie-mixing-roger-waters-and-pink-floyd-51',
-            'body' => [
+            'body' => array(
                 '//div[@id="left"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//div[@class="meta"]',
                 '//div[@class="ratingsbox"]',
                 '//h1',
@@ -15,7 +15,7 @@ return [
                 '//comment-links',
                 '//div[@class="book-navigation"]',
                 '//div[@class="comment-links"]',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

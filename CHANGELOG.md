@@ -2,7 +2,12 @@
 ## XX-08-2019
 
 1. [](#new)
-    * Refactor: Replace PicoFeed with FeedIO
+    * Refactor: Replaced PicoFeed with FeedIO
+    * The `extra_tags` option has been deprecated
+    * A `request_options` option has been added
+2. [](#improved)
+    * Error-handling
+    - Use PSR-4 for autoloading
 
 # v3.3.4
 ## 16-01-2019

@@ -1,14 +1,14 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://www.linux.org/threads/lua-the-scripting-interpreter.8352/',
-            'body' => [
+            'body' => array(
                 '//div[@class="messageContent"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//aside',
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);

@@ -105,7 +105,7 @@ class Parser
                     );
                 }
             } catch (InvalidCertificateException $e) {
-                if ($this->config['silence_security'] != 'true') {
+                if ($this->config['silence_security'] != true) {
                     throw new \Exception($e);
                 }
             } catch (ReadErrorException $e) {

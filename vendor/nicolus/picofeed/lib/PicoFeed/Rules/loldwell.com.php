@@ -1,10 +1,10 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://loldwell.com/?comic=food-math-101',
-            'body' => ['//*[@id="comic"]'],
-            'strip' => [],
-        ],
-    ],
-];
+            'body' => array('//*[@id="comic"]'),
+            'strip' => array(),
+        ),
+    ),
+);

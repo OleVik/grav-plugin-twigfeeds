@@ -1,12 +1,12 @@
 <?php
-return [
-    'grabber' => [
-        '%.*%' => [
+return array(
+    'grabber' => array(
+        '%.*%' => array(
             'test_url' => 'http://international.thenewslens.com/post/255032/',
-            'body' => [
+            'body' => array(
                 '//div[@class="article-section"]',
-            ],
-            'strip' => [
+            ),
+            'strip' => array(
                 '//div[contains(@class,"ad-")]',
                 '//div[@class="article-title-box"]',
                 '//div[@class="function-box"]',
@@ -15,7 +15,7 @@ return [
                 '//footer',
                 '//div[@class="article-infoBot-box"]',
                 '//div[contains(@class,"standard-container")]'
-            ],
-        ],
-    ],
-];
+            ),
+        ),
+    ),
+);
