@@ -1,5 +1,16 @@
 <?php
-
+/**
+ * TwigFeeds Plugin
+ *
+ * PHP version 7
+ *
+ * @category   Extensions
+ * @package    Grav
+ * @subpackage Presentation
+ * @author     Ole Vik <git@olevik.net>
+ * @license    http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link       https://github.com/OleVik/grav-plugin-twigfeeds
+ */
 namespace Grav\Plugin;
 
 use DateTime;
@@ -11,21 +22,12 @@ use Grav\Common\Uri;
 use Grav\Common\Taxonomy;
 use Grav\Common\Page\Page;
 use RocketTheme\Toolbox\Event\Event;
-
-require __DIR__ . '/vendor/autoload.php';
-use PicoFeed\Reader\Reader;
-use PicoFeed\Config\Config;
-use PicoFeed\PicoFeedException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
- 
-require 'Manifest.php';
-require 'Parser.php';
-require 'Utilities.php';
-use TwigFeeds\Manifest;
-use TwigFeeds\Parser;
-use TwigFeeds\Utilities;
- 
+ use Grav\Plugin\TwigFeedsPlugin\API\Parser;
+use Grav\Plugin\TwigFeedsPlugin\API\Manifest;
+use Grav\Plugin\TwigFeedsPlugin\Utilities;
+
 /**
  * Parse RSS and Atom feeds with Twig
  *
@@ -34,17 +36,19 @@ use TwigFeeds\Utilities;
  * access them for iteration in Twig-templates.
  *
  * Class TwigFeedsPlugin
- * 
- * @package Grav\Plugin
- * @return  array Feeds in Twig-array
- * @license MIT License by Ole Vik
+ *
+ * @category Extensions
+ * @package  Grav\Plugin
+ * @author   Ole Vik <git@olevik.net>
+ * @license  http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link     https://github.com/OleVik/grav-plugin-twigfeeds
  */
 class TwigFeedsPlugin extends Plugin
 {
 
     /**
      * Register events with Grav
-     * 
+     *
      * @return array
      */
     public static function getSubscribedEvents()
@@ -59,9 +63,9 @@ class TwigFeedsPlugin extends Plugin
 
     /**
      * Register cache-location with onBeforeCacheClear-event
-     * 
+     *
      * @param RocketTheme\Toolbox\Event\Event $event
-     * 
+     *
      * @return void
      */
     public function onBeforeCacheClear(Event $event)
@@ -77,17 +81,12 @@ class TwigFeedsPlugin extends Plugin
 
     /**
      * Declare config from plugin-config
-     * 
+     *
      * @return array Plugin configuration
      */
     public function config()
     {
-        $pluginsobject = (array) $this->config->get('plugins');
-        if (isset($pluginsobject) && $pluginsobject['twigfeeds']['enabled']) {
-            $config = $pluginsobject['twigfeeds'];
-        } else {
-            return;
-        }
+        $config = (array) $this->config->get('plugins.twigfeeds');
         $config['locator'] = $this->grav['locator'];
         $config['config_file'] = $config['locator']->findResource('user://config', true) . '/plugins/twigfeeds.yaml';
         if ($config['static_cache']) {
@@ -101,9 +100,9 @@ class TwigFeedsPlugin extends Plugin
 
     /**
      * Logs and outputs messages to debugger
-     * 
+     *
      * @param string $msg Message to output
-     * 
+     *
      * @return string Debug messages logged and output to Debugger
      */
     protected function debug($msg)
@@ -118,34 +117,28 @@ class TwigFeedsPlugin extends Plugin
 
     /**
      * Builds array of feeds for iteration, using cache-mechanism if enabled
-     * 
+     *
      * @return array Feeds
      */
     public function outputFeeds()
     {
-        /* Check if Admin-interface */
-        if ($this->isAdmin()) {
+        if ($this->isAdmin() || $this->config()['enabled'] != true) {
             return;
         }
-
-        /* Check if `twig_feeds is already set */
         if (isset($this->grav['twig']->twig_vars['twig_feeds'])) {
             return;
         }
-
-        /* Get config and check plugin status */
         $config = $this->config();
-        $systemobject = (array) $this->config->get('system');
 
-        /* Import library */
+        include __DIR__ . '/vendor/autoload.php';
         $utility = new Utilities($config);
         $config['now'] = $utility->now;
-        $manifest = new Manifest($config);
+        $manifest = new Manifest($config, $utility);
         $parser = new Parser($config);
         $cache = $config['cache'];
         $debug = $config['debug'];
 
-        if ($debug && $systemobject['debugger']['enabled']) {
+        if ($debug && (array) $this->config->get('system')['enabled']) {
             $this->grav['debugger']->startTimer('twigfeeds', 'TwigFeeds');
         }
 
@@ -283,12 +276,14 @@ class TwigFeedsPlugin extends Plugin
                 } else {
                     $name = $feed['source'];
                 }
-                $feed_items[$name] = $resource['data'];
+                if (isset($resource['data']) && !empty($resource['data'])) {
+                    $feed_items[$name] = array_merge($feed, $resource['data']);
+                }
                 $debug ? $this->debug($resource['data']) : null;
             }
         }
         $this->grav['twig']->twig_vars['twig_feeds'] = $feed_items;
-        if ($debug && $systemobject['debugger']['enabled']) {
+        if ($debug && (array) $this->config->get('system')['enabled']) {
             $this->grav['debugger']->stopTimer('twigfeeds');
         }
     }

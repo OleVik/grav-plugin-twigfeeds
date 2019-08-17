@@ -1,10 +1,18 @@
 {
-	"config": {
-		"preferred-install": "dist"
-	},
-	"require": {
-		"fguillot/picofeed": "^0.1.31",
-		"symfony/filesystem": "^3.2",
-		"naneau/semver": "^0.0.7"
-	}
+  "config": {
+    "preferred-install": "dist"
+  },
+  "require": {
+    "symfony/filesystem": "^3.2",
+    "naneau/semver": "^0.0.7",
+    "debril/feed-io": "^4.3",
+    "psr/log": "^1.1",
+    "kevinrob/guzzle-cache-middleware": "^3.2"
+  },
+  "autoload": {
+    "psr-4": {
+      "Grav\\Plugin\\TwigFeedsPlugin\\": "classes/",
+      "Grav\\Plugin\\TwigFeedsPlugin\\API\\": "classes/"
+    }
+  }
 }

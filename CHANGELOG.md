@@ -1,3 +1,9 @@
+# v4.0.0-beta.1
+## XX-08-2019
+
+1. [](#new)
+    * Refactor: Replace PicoFeed with FeedIO
+
 # v3.3.4
 ## 16-01-2019
 

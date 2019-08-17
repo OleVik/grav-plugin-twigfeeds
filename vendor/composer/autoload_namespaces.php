@@ -6,7 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'ZendXml\\' => array($vendorDir . '/zendframework/zendxml/library'),
-    'PicoFeed' => array($vendorDir . '/fguillot/picofeed/lib'),
     'Naneau\\SemVer\\' => array($vendorDir . '/naneau/semver/src'),
 );

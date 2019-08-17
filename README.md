@@ -13,6 +13,16 @@ You should now have all the plugin files under
 
 The plugin is enabled by default, and can be disabled by copying `user/plugins/twigfeeds/twigfeeds.yaml` into `user/config/plugins/twigfeeds.yaml` and setting `enabled: false`.
 
+## Changes in v4.0.0
+
+PicoFeed was deprecated long ago, and hasn't been properly maintained in most forks. This caused some errors to be persistent, that could not be resolved without forking and patching the library, which the creator of this plugin was unwilling to do. Thus, though the API in PHP remains largely intact, it has changed in Twig.
+
+**You will need to revise your templates to make sure everything works as expected, some properties will have different names than before.**
+
+- The `extra_tags` option has been deprecated, all tags are now included by default
+- A `request_options` option has been added, which allows you to [pass options to the Guzzle Client](http://docs.guzzlephp.org/en/stable/request-options.html)
+- The plugin now uses PSR-4 for autoloading
+
 ### Settings and Usage
 
 | Variable | Default | Options | Note |
@@ -23,7 +33,7 @@ The plugin is enabled by default, and can be disabled by copying `user/plugins/t
 | `debug` | `false` | `true` or `false` | Enables or disables debug-mode. |
 | `cache_time` | 900 | integer | Default time, in seconds, to wait before caching data again. |
 | `pass_headers` | `false` | `true` or `false` | Enables or disables passing ETag and Last Modified headers. |
-| `twig_feeds` | List | List: `source`, `name`, `start`, `end`, `cache_time`, `extra_tags` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again.; `extra_tags`: List of additional tags to include from the feed. |
+| `twig_feeds` | List | List: `source`, `name`, `start`, `end`, `cache_time` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again. |
 
 In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
 
@@ -91,7 +101,7 @@ The `buildcache`-command builds the cache, by default to the active cache locati
 
 Consider the following settings in `user/config/plugins/twigfeeds.yaml`:
 
-```
+```yaml
 enabled: true
 twig_feeds:
   - source: http://rss.nytimes.com/services/xml/rss/nyt/World.xml
@@ -104,7 +114,7 @@ twig_feeds:
 
 This retrieves World News from The New York Times and UK News from the BBC, which we can use in any Twig-template like this:
 
-```
+```html
 {% for name, feed in twig_feeds %}
     <h4>Feed name: {{ name }}</h4>
     <small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
@@ -122,7 +132,7 @@ This will iterate over each feed and output the name, retrieved title (as a link
 
 We can also access any feed by its defined name:
 
-```
+```html
 {% for name, feed in twig_feeds if name == 'NY Times' %}
     <h4>Feed name: {{ name }}</h4>
     <small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
@@ -138,7 +148,7 @@ We can also access any feed by its defined name:
 
 Or if you want to aggregate a bunch of feeds, you could do:
 
-```
+```html
 {% set feed_items = [] %}
 {% for name, feed in twig_feeds %}
     {% set feed_items = feed_items|merge(feed.items) %}
@@ -147,7 +157,7 @@ Or if you want to aggregate a bunch of feeds, you could do:
 
 Further, you could paginate many items like this:
 
-```
+```html
 {% set index = 1 %}
 {% set feed_items = [] %}
 {% for name, feed in twig_feeds %}
