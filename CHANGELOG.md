@@ -8,6 +8,7 @@
 2. [](#improved)
     * Error-handling
     - Use PSR-4 for autoloading
+    - Translations
 
 # v3.3.4
 ## 16-01-2019

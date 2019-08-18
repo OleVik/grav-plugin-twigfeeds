@@ -1,11 +1,13 @@
 enabled: true
 cache: true
 static_cache: false
-debug: false
+debug: true
 cache_time: 900
 pass_headers: false
 silence_security: false
 request_options:
+  allow_redirects: true
+  connect_timeout: 30
   timeout: 30
   http_errors: false
 twig_feeds:

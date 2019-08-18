@@ -17,7 +17,9 @@ The plugin is enabled by default, and can be disabled by copying `user/plugins/t
 
 PicoFeed was deprecated long ago, and hasn't been properly maintained in most forks. This caused some errors to be persistent, that could not be resolved without forking and patching the library, which the creator of this plugin was unwilling to do. Thus, though the API in PHP remains largely intact, it has changed in Twig.
 
-**You will need to revise your templates to make sure everything works as expected, some properties will have different names than before.** To get an idea of what the data looks like, use `{{ dump(twig_feeds) }}` in a Twig-template. Changes to options:
+**You will need to revise your templates to make sure everything works as expected, some properties will have different names than before.** To get an idea of what the data looks like, use `{{ dump(twig_feeds) }}` in a Twig-template and inspect the debugger. Most notably, `item.url` is now `item.link`, `item.content` is `item.description`, and `item.date.date` is `item.lastModified`. The change is not backwards-compatible, so update your templates as needed.
+
+More details on the specification the new library, FeedIo, uses [is available here](https://github.com/alexdebril/feed-io/blob/master/doc/specifications-support.md). Changes to options:
 
 - The `extra_tags` option has been deprecated, all tags are now included by default
 - A `request_options` option has been added, which allows you to [pass options to the Guzzle Client](http://docs.guzzlephp.org/en/stable/request-options.html)
@@ -33,7 +35,7 @@ PicoFeed was deprecated long ago, and hasn't been properly maintained in most fo
 | `debug` | `false` | `true` or `false` | Enables or disables debug-mode. |
 | `cache_time` | 900 | integer | Default time, in seconds, to wait before caching data again. |
 | `pass_headers` | `false` | `true` or `false` | Enables or disables passing ETag and Last Modified headers. |
-| `request_options` | List: `timeout`, `http_errors` | List | Options to use with the Guzzle Client, see [their docs](http://docs.guzzlephp.org/en/stable/request-options.html). `timeout` defaults to `30`, `http_errors` to `false. |
+| `request_options` | List: `timeout`, `http_errors` | List | Options to use with the Guzzle Client, see [their docs](http://docs.guzzlephp.org/en/stable/request-options.html). `timeout` defaults to `30`, `http_errors` to `false`. |
 | `twig_feeds` | List | List: `source`, `name`, `start`, `end`, `cache_time` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again. |
 
 In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
@@ -100,8 +102,8 @@ This retrieves World News from The New York Times and UK News from the BBC, whic
         <h5>
             <a href="{{ item.link }}">{{ item.title }}</a>
         </h5>
-        <time>{{ item.date.date }}</time>
-        <p>{{ item.content }}</p>
+        <time>{{ item.lastModified }}</time>
+        <p>{{ item.description }}</p>
     {% endfor %}
 {% endfor %}
 ```
@@ -118,8 +120,8 @@ We can also access any feed by its defined name:
         <h5>
             <a href="{{ item.link }}">{{ item.title }}</a>
         </h5>
-        <time>{{ item.date.date }}</time>
-        <p>{{ item.content }}</p>
+        <time>{{ item.lastModified }}</time>
+        <p>{{ item.description }}</p>
     {% endfor %}
 {% endfor %}
 ```
@@ -142,7 +144,7 @@ Further, you could paginate many items like this:
     {% for item in feed.items %}
         {% set index = index + 1 %}
         {% set item = item|merge({ 'retrievedTitle': feed.title }) %}
-        {% set item = item|merge({ 'sortDate': item.date.date }) %}
+        {% set item = item|merge({ 'sortDate': item.lastModified }) %}
         {% set feed_items = feed_items|merge({ (index): (item) }) %}
     {% endfor %}
 {% endfor %}
@@ -160,16 +162,16 @@ Further, you could paginate many items like this:
     <h5>
         <a href="{{ item.link }}">{{ item.retrievedTitle }} - {{ item.title }}</a>
     </h5>
-    <time>{{ item.date.date }}</time>
+    <time>{{ item.lastModified }}</time>
 {% endfor %}
 
 {% if totalPages > 1 %}
     <ul class="pagination">
         <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
-            <a href="{{ page.link }}/page:{{ 1 }}">First</a>
+            <a href="{{ page.url(true) }}/page:{{ 1 }}">First</a>
         </li>
         <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
-            <a href="{{ page.link }}/page:{{ currentPage - 1 }}">Previous</a>
+            <a href="{{ page.url(true) }}/page:{{ currentPage - 1 }}">Previous</a>
         </li>
         {% for i in 1..totalPages %}
             {% if (currentPage - paginationLimit) - loop.index == 0 %}
@@ -184,15 +186,15 @@ Further, you could paginate many items like this:
             {% elseif (currentPage + paginationLimit) - loop.index < 0 %}
             {% else %}
                 <li class="page-item {% if currentPage == loop.index  %} active{% endif %}">
-                    <a href="{{ page.link }}/page:{{ loop.index }}">{{ loop.index }}</a>
+                    <a href="{{ page.url(true) }}/page:{{ loop.index }}">{{ loop.index }}</a>
                 </li>
             {% endif %}
         {% endfor %}
         <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
-            <a href="{{ page.link }}/page:{{ currentPage + 1 }}">Next</a>
+            <a href="{{ page.url(true) }}/page:{{ currentPage + 1 }}">Next</a>
         </li>
         <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
-            <a href="{{ page.link }}/page:{{ totalPages }}">Last</a>
+            <a href="{{ page.url(true) }}/page:{{ totalPages }}">Last</a>
         </li>
     </ul>
 {% endif %}

@@ -15,93 +15,147 @@ dependencies:
   - { name: grav, version: ">=1.6" }
 
 form:
-  validation: loose
+  validation: strict
   fields:
-    enabled:
-      type: toggle
-      label: Plugin Status
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
-    cache:
-      type: toggle
-      label: Cache Feeds
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
-    static_cache:
-      type: toggle
-      label: Static Cache
-      description: Saves feeds in /user/data rather than in /cache.
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
-    debug:
-      type: toggle
-      label: Debug
-      description: Enables Debug-mode, which logs to Grav's Debugger and log-file.
-      default: 1
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
-    silence_security:
-      type: toggle
-      label: Silence security errors
-      description: Silently ignores security errors, such as missing certificates.
-      default: 0
-      options:
-        1: PLUGIN_ADMIN.ENABLED
-        0: PLUGIN_ADMIN.DISABLED
-      validate:
-        type: bool
-    twig_feeds:
-      name: twig_feeds
-      type: list
-      array: true
-      style: vertical
-      label: Feeds
+    tabs:
+      type: tabs
+      active: 1
       fields:
-        .source:
-          type: text
-          label: Source
-          description: URL to RSS or Atom feed.
-          validate:
-            required: true
-        .name:
-          type: text
-          label: Name
-          description: Name of the feed.
-        .start:
-          type: text
-          label: Item start
-          description: Start of feed results. Must be a number between 0 and 500.
-          validate:
-            type: int
-            min: 0
-            max: 500
-        .end:
-          type: text
-          label: Item end
-          description: End of feed results. Must be a number between 0 and 500.
-          validate:
-            type: int
-            min: 0
-            max: 500
-        .cache_time:
-          type: text
-          label: Cache Time
-          description: Time, in seconds, to wait before caching data again.
-          validate:
-            type: int
-            min: 0
+        options:
+          type: tab
+          title: PLUGIN_TWIGFEEDS.ADMIN.TABS.OPTIONS
+          fields:
+            enabled:
+              type: toggle
+              label: PLUGIN_ADMIN.PLUGIN_STATUS
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+              validate:
+                type: bool
+            cache:
+              type: toggle
+              label: Cache Feeds
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+              validate:
+                type: bool
+            static_cache:
+              type: toggle
+              label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.STATIC_CACHE.LABEL
+              description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.STATIC_CACHE.DESCRIPTION
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+              validate:
+                type: bool
+            debug:
+              type: toggle
+              label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.DEBUG.LABEL
+              description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.DEBUG.DESCRIPTION
+              default: 1
+              options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+              validate:
+                type: bool
+            silence_security:
+              type: toggle
+              label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.SILENCE_SECURITY.LABEL
+              description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.SILENCE_SECURITY.DESCRIPTION
+              default: 0
+              options:
+                1: PLUGIN_ADMIN.ENABLED
+                0: PLUGIN_ADMIN.DISABLED
+              validate:
+                type: bool
+            twig_feeds:
+              name: twig_feeds
+              type: list
+              array: true
+              style: vertical
+              label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.LABEL
+              fields:
+                .source:
+                  type: text
+                  label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.SOURCE.LABEL
+                  description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.SOURCE.DESCRIPTION
+                  validate:
+                    required: true
+                .name:
+                  type: text
+                  label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.NAME.LABEL
+                  description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.NAME.DESCRIPTION
+                .start:
+                  type: text
+                  label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.START.LABEL
+                  description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.START.DESCRIPTION
+                  validate:
+                    type: int
+                    min: 0
+                    max: 500
+                .end:
+                  type: text
+                  label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.END.LABEL
+                  description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.END.DESCRIPTION
+                  validate:
+                    type: int
+                    min: 0
+                    max: 500
+                .cache_time:
+                  type: text
+                  label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CACHE_TIME.LABEL
+                  description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CACHE_TIME.DESCRIPTION
+                  validate:
+                    type: int
+                    min: 0
+        request:
+          type: tab
+          title: PLUGIN_TWIGFEEDS.ADMIN.TABS.REQUEST
+          fields:
+            request_options.allow_redirects:
+              type: toggle
+              label: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.ALLOW_REDIRECTS.LABEL
+              description: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.ALLOW_REDIRECTS.DESCRIPTION
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: bool
+            request_options.connect_timeout:
+              type: number
+              label: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.CONNECT_TIMEOUT.LABEL
+              description: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.CONNECT_TIMEOUT.DESCRIPTION
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: int
+                min: 0
+                max: 360
+                step: 0.5
+            request_options.http_errors:
+              type: toggle
+              label: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.HTTP_ERRORS.LABEL
+              description: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.HTTP_ERRORS.DESCRIPTION
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: bool
+            request_options.timeout:
+              type: number
+              label: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.TIMEOUT.LABEL
+              description: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.TIMEOUT.DESCRIPTION
+              options:
+                1: PLUGIN_ADMIN.YES
+                0: PLUGIN_ADMIN.NO
+              validate:
+                type: int
+                min: 0
+                max: 360
+                step: 0.5

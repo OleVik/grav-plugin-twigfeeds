@@ -36,7 +36,6 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  */
 class Parser
 {
-
     /**
      * Symfony Filesystem Component
      *
@@ -164,6 +163,7 @@ class Parser
             $data['items'] = array();
             $int = 0;
             foreach ($result->toArray()['items'] as $item) {
+                $item['lastModified'] = self::getItemDate($item, $lastModified);
                 $data['items'][] = $item;
                 if (++$int >= $args['amount']) {
                     break;
@@ -187,5 +187,27 @@ class Parser
         }
         $return['data'] = $data;
         return $return;
+    }
+
+    /**
+     * Find Item date
+     *
+     * @param array $item         Feed Item
+     * @param int   $lastModified Feed Modified date
+     *
+     * @return int Modified date
+     */
+    public static function getItemDate($item, $lastModified)
+    {
+        if (isset($item['lastModified']) && !empty($item['lastModified'])) {
+            return $item['lastModified'];
+        } elseif (isset($item['elements']['dc:date']) && !empty($item['elements']['dc:date'])) {
+            return $item['elements']['dc:date'];
+        } elseif (isset($lastModified) && !empty($lastModified)) {
+            return $lastModified;
+        } else {
+            $dateTime = new DateTime('now');
+            return $dateTime->getTimestamp();
+        }
     }
 }
