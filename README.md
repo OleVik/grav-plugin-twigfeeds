@@ -35,8 +35,8 @@ More details on the specification the new library, FeedIo, uses [is available he
 | `debug` | `false` | `true` or `false` | Enables or disables debug-mode. |
 | `cache_time` | 900 | integer | Default time, in seconds, to wait before caching data again. |
 | `pass_headers` | `false` | `true` or `false` | Enables or disables passing ETag and Last Modified headers. |
-| `request_options` | List: `allow_redirects: true`, `connect_timeout: 30`, `timeout: 30`, `http_errors: false` | List: `allow_redirects`, `connect_timeout`, `timeout`, `http_errors` | Options to use with the Guzzle Client, see [their docs](http://docs.guzzlephp.org/en/stable/request-options.html). |
-| `twig_feeds` | List: ... | List: `source`, `name`, `start`, `end`, `cache_time` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again. |
+| `request_options` | List:  `allow_redirects: true`  `connect_timeout: 30`  `timeout: 30`  `http_errors: false` | List:  `allow_redirects`  `connect_timeout`  `timeout`  `http_errors` | Options to use with the Guzzle Client, see [their docs](http://docs.guzzlephp.org/en/stable/request-options.html). |
+| `twig_feeds` | List: ... | List:  `source`  `name`  `start`  `end`  `cache_time` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again. |
 
 In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
 
