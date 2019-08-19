@@ -14,6 +14,7 @@
 namespace Grav\Plugin\TwigFeedsPlugin\API;
 
 use DateTime;
+use DateTimeZone;
 use FeedIo\FeedIo;
 use FeedIo\Adapter\Guzzle\Client;
 use FeedIo\Formatter\JsonFormatter;
@@ -93,10 +94,13 @@ class Parser
             $logger = new NullLogger();
             $feedIo = new \FeedIo\FeedIo($client, $logger);
             try {
-                if (!empty($args['last_modified'])/*  && !empty($args['etag']) */) {
+                if ($this->config['pass_headers'] == true && !empty($args['last_modified'])) {
                     $resource = $feedIo->readSince(
                         $args['source'],
-                        new \DateTime($args['last_modified'])
+                        new \DateTime(
+                            $args['last_modified']['date'],
+                            new DateTimeZone($args['last_modified']['timezone'])
+                        )
                     );
                 } else {
                     $resource = $feedIo->read(
@@ -129,33 +133,37 @@ class Parser
                 throw new \Exception($e);
             }
 
-            if ($resource->getResponse()->isModified()) {
-                $result = $resource->getFeed();
-                $title = $resource->getFeed()->getTitle();
+            if ($this->config['pass_headers'] == true) {
+                if (isset($args['etag']) && !empty($args['etag'])) {
+                    if ($args['etag'] === $resource->getResponse()->getHeaders()['ETag'][0]) {
+                        return;
+                    }
+                }
+            }
+            $result = $resource->getFeed();
+            if (count($result->toArray()['items']) < 1) {
+                return;
+            }
+            
+            if (!empty($resource->getResponse()->getLastModified())) {
+                $lastModified = $resource->getResponse()->getLastModified();
             } else {
-                $title = $args['title'];
+                $lastModified = new DateTime('now');
             }
-            /* Fallback */
-            if (!isset($result)) {
-                $result = $resource->getFeed();
-                $title = $result->getTitle();
+            $timestamp = $lastModified->getTimestamp();
+            if (isset($resource->getResponse()->getHeaders()['ETag'])) {
+                $data['etag'] = $resource->getResponse()->getHeaders()['ETag'][0];
             }
-            // $etag = $resource->getEtag();
-            $lastModified = $resource->getResponse()->getLastModified();
-            if (!empty($lastModified)) {
-                $dateObject = $lastModified;
+            if (!empty($result->getTitle())) {
+                $data['title'] = $result->getTitle();
             } else {
-                $dateObject = new DateTime('now');
+                $data['title'] = $args['title'];
             }
-            $timestamp = $dateObject->getTimestamp();
-
-            $data['title'] = $title;
             if (isset($args['name'])) {
                 $data['name'] = $args['name'];
             } else {
                 $data['name'] = $title;
             }
-            // $data['etag'] = $etag;
             $data['last_modified'] = $lastModified;
             $data['timestamp'] = $timestamp;
             $data['last_checked'] = $args['now'];
@@ -163,7 +171,7 @@ class Parser
             $data['items'] = array();
             $int = 0;
             foreach ($result->toArray()['items'] as $item) {
-                $item['lastModified'] = self::getItemDate($item, $lastModified);
+                $item['lastModified'] = self::getItemDate($item, $lastModified->format('c'));
                 $data['items'][] = $item;
                 if (++$int >= $args['amount']) {
                     break;
@@ -205,9 +213,7 @@ class Parser
             return $item['elements']['dc:date'];
         } elseif (isset($lastModified) && !empty($lastModified)) {
             return $lastModified;
-        } else {
-            $dateTime = new DateTime('now');
-            return $dateTime->getTimestamp();
         }
+        return null;
     }
 }

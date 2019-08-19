@@ -210,7 +210,9 @@ class TwigFeedsPlugin extends Plugin
                         continue;
                     }
                     $debug ? $this->debug($call['callback']) : null;
-                    // $content['data'][$entry]['etag'] = $call['data']['etag'];
+                    if (isset($call['data']['etag'])) {
+                        $content['data'][$entry]['etag'] = $call['data']['etag'];
+                    }
                     $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
                     $content['data'][$entry]['last_checked'] = $utility->now;
                     $content['data'][$entry]['last_checked_date'] = $utility->humanDate($utility->now);
@@ -226,7 +228,9 @@ class TwigFeedsPlugin extends Plugin
                             continue;
                         }
                         $debug ? $this->debug($call['callback']) : null;
-                        // $content['data'][$entry]['etag'] = $call['data']['etag'];
+                        if (isset($call['data']['etag'])) {
+                            $content['data'][$entry]['etag'] = $call['data']['etag'];
+                        }
                         $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
                         $content['data'][$entry]['last_checked'] = $utility->now;
                         $content['data'][$entry]['last_checked_date'] = $utility->humanDate($utility->now);
