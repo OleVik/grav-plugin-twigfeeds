@@ -209,11 +209,15 @@ class TwigFeedsPlugin extends Plugin
                     if ($config['silence_security'] && $call == null) {
                         continue;
                     }
-                    $debug ? $this->debug($call['callback']) : null;
+                    if ($debug && isset($call['callback'])) {
+                        $this->debug($call['callback']);
+                    }
                     if (isset($call['data']['etag'])) {
                         $content['data'][$entry]['etag'] = $call['data']['etag'];
                     }
-                    $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
+                    if (isset($call['data']['last_modified'])) {
+                        $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
+                    }
                     $content['data'][$entry]['last_checked'] = $utility->now;
                     $content['data'][$entry]['last_checked_date'] = $utility->humanDate($utility->now);
                 } else {
@@ -227,11 +231,15 @@ class TwigFeedsPlugin extends Plugin
                         if ($config['silence_security'] && $call == null) {
                             continue;
                         }
-                        $debug ? $this->debug($call['callback']) : null;
+                        if ($debug && isset($call['callback'])) {
+                            $this->debug($call['callback']);
+                        }
                         if (isset($call['data']['etag'])) {
                             $content['data'][$entry]['etag'] = $call['data']['etag'];
                         }
-                        $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
+                        if (isset($call['data']['last_modified'])) {
+                            $content['data'][$entry]['last_modified'] = $call['data']['last_modified'];
+                        }
                         $content['data'][$entry]['last_checked'] = $utility->now;
                         $content['data'][$entry]['last_checked_date'] = $utility->humanDate($utility->now);
                     }
