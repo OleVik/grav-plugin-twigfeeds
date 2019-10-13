@@ -1,3 +1,9 @@
+# v4.0.0
+## 13-10-2019
+
+1. [](#new)
+    * Stable release of 4.0.0 refactor
+
 # v4.0.0-beta.1
 ## 01-10-2019
 
