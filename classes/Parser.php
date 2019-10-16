@@ -162,7 +162,7 @@ class Parser
             if (isset($args['name'])) {
                 $data['name'] = $args['name'];
             } else {
-                $data['name'] = $title;
+                $data['name'] = $args['title'];
             }
             $data['last_modified'] = $lastModified;
             $data['timestamp'] = $timestamp;
