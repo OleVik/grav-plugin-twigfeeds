@@ -1,16 +1,11 @@
 <?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace FeedIo\Parser;
 
 use FeedIo\Feed\Item;
+use FeedIo\Feed\Item\Author;
+use FeedIo\Feed\ItemInterface;
+use FeedIo\Feed\NodeInterface;
 use FeedIo\FeedInterface;
 use FeedIo\ParserAbstract;
 use FeedIo\Reader\Document;
@@ -28,8 +23,10 @@ class JsonParser extends ParserAbstract
         $data = $document->getJsonAsArray();
         $feed->setTitle($this->readOffset($data, 'title'));
         $feed->setDescription($this->readOffset($data, 'description'));
-        $feed->setLink($this->readOffset($data, 'feed_url'));
-        $feed->setUrl($this->readOffset($data, 'home_page_url'));
+        $feed->setLink($this->readOffset($data, 'home_page_url'));
+        $feed->setUrl($this->readOffset($data, 'feed_url'));
+        $feed->setLogo($this->readOffset($data, 'icon'));
+        $this->readAuthor($feed, $data);
 
         if (array_key_exists('items', $data)) {
             $this->parseItems($data['items'], $feed);
@@ -70,7 +67,11 @@ class JsonParser extends ParserAbstract
             $item->setTitle($this->readOffset($dataItem, 'title'));
             $item->setLastModified(new \DateTime($this->readOffset($dataItem, 'date_published')));
             $contentHtml = $this->readOffset($dataItem, 'content_html');
-            $item->setDescription($this->readOffset($dataItem, 'content_text', $contentHtml));
+            $item->setContent($this->readOffset($dataItem, 'content_text', $contentHtml));
+            $item->setSummary($this->readOffset($dataItem, 'summary'));
+            $item->setLink($this->readOffset($dataItem, 'url'));
+            $this->readAuthor($item, $dataItem);
+            $this->readMedias($item, $dataItem);
             $feed->add($item);
         }
 
@@ -90,5 +91,42 @@ class JsonParser extends ParserAbstract
         }
 
         return $default;
+    }
+
+    protected function readMedias(ItemInterface $item, array $data): void
+    {
+        if (array_key_exists('attachments', $data)) {
+            foreach ($data['attachments'] as $attachment) {
+                $media = new Item\Media();
+                $media
+                    ->setType($attachment['mime_type'])
+                    ->setUrl($attachment['url'])
+                    ->setLength($attachment['size_in_bytes'] ?? null)
+                    ->setTitle($attachment['title'] ?? null);
+                $item->addMedia($media);
+            }
+        }
+    }
+
+    protected function readAuthor(NodeInterface $node, array $data): void
+    {
+        if (array_key_exists('author', $data)) {
+            $author = $this->extractAuthor($data['author']);
+            $node->setAuthor($author);
+        }
+        if (array_key_exists('authors', $data) && is_array($data['authors'])) {
+            $author = $this->extractAuthor(reset($data['authors']));
+            $node->setAuthor($author);
+        }
+    }
+
+    protected function extractAuthor(array $data): Author
+    {
+        $author = new Author();
+        $author->setName($this->readOffset($data, 'name'));
+        $author->setUri($this->readOffset($data, 'url'));
+        $author->setEmail($this->readOffset($data, 'email'));
+
+        return $author;
     }
 }

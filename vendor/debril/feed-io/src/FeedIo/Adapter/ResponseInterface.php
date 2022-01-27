@@ -1,12 +1,4 @@
 <?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace FeedIo\Adapter;
 
@@ -21,6 +13,18 @@ interface ResponseInterface
      * @return string
      */
     public function getBody() : ? string;
+
+    /**
+     * request's duration in seconds
+     *
+     * @return float
+     */
+    public function getDuration(): float;
+
+    /**
+     * @return int
+     */
+    public function getStatusCode(): int;
 
     /**
      * @return \DateTime

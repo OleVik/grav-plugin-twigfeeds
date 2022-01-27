@@ -1,18 +1,17 @@
 # guzzle-cache-middleware
 
-[![Latest Stable Version](https://poser.pugx.org/kevinrob/guzzle-cache-middleware/v/stable)](https://packagist.org/packages/kevinrob/guzzle-cache-middleware) [![Total Downloads](https://poser.pugx.org/kevinrob/guzzle-cache-middleware/downloads)](https://packagist.org/packages/kevinrob/guzzle-cache-middleware) [![License](https://poser.pugx.org/kevinrob/guzzle-cache-middleware/license)](https://packagist.org/packages/kevinrob/guzzle-cache-middleware)  
-[![Build Status](https://travis-ci.org/Kevinrob/guzzle-cache-middleware.svg?branch=master)](https://travis-ci.org/Kevinrob/guzzle-cache-middleware) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Kevinrob/guzzle-cache-middleware/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Kevinrob/guzzle-cache-middleware/?branch=master) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/077ec9d6-9362-43be-83c9-cf1db2c9c802/mini.png)](https://insight.sensiolabs.com/projects/077ec9d6-9362-43be-83c9-cf1db2c9c802)  
-[![Dependency Status](https://www.versioneye.com/php/kevinrob:guzzle-cache-middleware/badge.png)](https://www.versioneye.com/php/kevinrob:guzzle-cache-middleware) [![Code Coverage](https://scrutinizer-ci.com/g/Kevinrob/guzzle-cache-middleware/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Kevinrob/guzzle-cache-middleware/?branch=master)  
+[![Latest Stable Version](https://poser.pugx.org/kevinrob/guzzle-cache-middleware/v/stable)](https://packagist.org/packages/kevinrob/guzzle-cache-middleware) [![Total Downloads](https://poser.pugx.org/kevinrob/guzzle-cache-middleware/downloads)](https://packagist.org/packages/kevinrob/guzzle-cache-middleware) [![License](https://poser.pugx.org/kevinrob/guzzle-cache-middleware/license)](https://packagist.org/packages/kevinrob/guzzle-cache-middleware)
+![Tests](https://github.com/Kevinrob/guzzle-cache-middleware/workflows/Tests/badge.svg) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Kevinrob/guzzle-cache-middleware/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Kevinrob/guzzle-cache-middleware/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Kevinrob/guzzle-cache-middleware/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Kevinrob/guzzle-cache-middleware/?branch=master)
 
 
-A HTTP Cache for [Guzzle](https://github.com/guzzle/guzzle) 6. It's a simple Middleware to be added in the HandlerStack.
+A HTTP Cache for [Guzzle](https://github.com/guzzle/guzzle) 6+. It's a simple Middleware to be added in the HandlerStack.
 
 ## Goals
 - RFC 7234 compliance
 - Performance and transparency
 - Assured compatibility with PSR-7
 
-## Storage interfaces build-in
+## Built-in storage interfaces
 - [Doctrine cache](https://github.com/doctrine/cache)
 - [Laravel cache](https://laravel.com/docs/5.2/cache)
 - [Flysystem](https://github.com/thephpleague/flysystem)
@@ -23,13 +22,13 @@ A HTTP Cache for [Guzzle](https://github.com/guzzle/guzzle) 6. It's a simple Mid
 
 `composer require kevinrob/guzzle-cache-middleware`
 
-or add it the your `composer.json` and make a `composer update kevinrob/guzzle-cache-middleware`.
+or add it the your `composer.json` and run `composer update kevinrob/guzzle-cache-middleware`.
 
 # Why?
 Performance. It's very common to do some HTTP calls to an API for rendering a page and it takes times to do it.
 
 # How?
-With a simple Middleware added at the top of the `HandlerStack` of Guzzle6.
+With a simple Middleware added at the top of the `HandlerStack` of Guzzle.
 
 ```php
 use GuzzleHttp\Client;
@@ -64,12 +63,12 @@ $stack->push(
         new FilesystemCache('/tmp/')
       )
     )
-  ), 
+  ),
   'cache'
 );
 ```
 
-You can use `ChainCache` for using multiple `CacheProvider`. With that provider, you have to sort the different cache from the faster to the slower. Like that, you can have a very fast cache.
+You can use `ChainCache` for using multiple `CacheProvider` instances. With that provider, you have to sort the different caches from the faster to the slower. Like that, you can have a very fast cache.
 ```php
 [...]
 use Doctrine\Common\Cache\ChainCache;
@@ -129,7 +128,7 @@ $stack->push(
         new Local('/path/to/cache')
       )
     )
-  ), 
+  ),
   'cache'
 );
 ```
@@ -171,7 +170,7 @@ $stack->push(
         new FilesystemCache('/tmp/')
       )
     )
-  ), 
+  ),
   'private-cache'
 );
 
@@ -185,13 +184,13 @@ $stack->push(
         )
       )
     )
-  ), 
+  ),
   'shared-cache'
 );
 ```
 
 ## Greedy caching
-In some cases servers might send insufficient or no at all caching headers.
+In some cases servers might send insufficient or no caching headers at all.
 Using the greedy caching strategy allows defining an expiry TTL on your own while
 disregarding any possibly present caching headers:
 ```php
@@ -210,9 +209,9 @@ $stack->push(
         new FilesystemCache('/tmp/')
       ),
       1800, // the TTL in seconds
-      new KeyValueHttpHeader(['Authorization']) // Optionnal - specify the headers that can change the cache key
+      new KeyValueHttpHeader(['Authorization']) // Optional - specify the headers that can change the cache key
     )
-  ), 
+  ),
   'greedy-cache'
 );
 ```
@@ -289,5 +288,5 @@ With this example:
 See [Guzzle Cache](https://www.drupal.org/project/guzzle_cache) module.
 
 # Links that talk about the project
-- [Speeding Up APIs/Apps/Smart Toasters with HTTP Response Caching](https://blog.apisyouwonthate.com/speeding-up-apis-apps-smart-toasters-with-http-response-caching-a67becf829c6)
+- [Speeding Up APIs/Apps/Smart Toasters with HTTP Response Caching](https://apisyouwonthate.com/blog/speeding-up-apis-apps-smart-toasters-with-http-response-caching)
 - [Caching HTTP-Requests with Guzzle 6 and PSR-6](http://a.kabachnik.info/caching-http-requests-with-guzzle-6-and-psr-6.html)

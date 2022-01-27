@@ -26,7 +26,7 @@ class ReaderTest extends TestCase
      */
     protected $object;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->object = new Reader(
             $this->getClientMock(),
@@ -52,9 +52,10 @@ class ReaderTest extends TestCase
      */
     protected function getFaultyClientMock()
     {
+        $response = $this->createMock('Psr\Http\Message\ResponseInterface');
         $client = $this->createMock('FeedIo\Adapter\ClientInterface');
         $client->expects($this->any())->method('getResponse')->will(
-            $this->throwException(new ServerErrorException())
+            $this->throwException(new ServerErrorException($response, 0))
         );
 
         return $client;
@@ -76,22 +77,12 @@ class ReaderTest extends TestCase
         $domDocument = new \DOMDocument();
         $domDocument->load($file, LIBXML_NOBLANKS | LIBXML_COMPACT);
         $standard->expects($this->any())->method('getMainElement')->will($this->returnValue(
-                $domDocument->documentElement->getElementsByTagName('channel')->item(0)
-            ));
+            $domDocument->documentElement->getElementsByTagName('channel')->item(0)
+        ));
 
         $parser = new XmlParser($standard, new NullLogger());
 
         return $parser;
-    }
-
-    /**
-     * @covers \FeedIo\Reader::addParser
-     */
-    public function testAddParser()
-    {
-        $parser = $this->getParser();
-        $this->object->addParser($parser);
-        $this->assertAttributeEquals(array($parser), 'parsers', $this->object);
     }
 
     public function testGetAccurateParser()
@@ -102,11 +93,9 @@ class ReaderTest extends TestCase
         $this->assertInstanceOf('\FeedIo\ParserAbstract', $parser);
     }
 
-    /**
-     * @expectedException \FeedIo\Reader\NoAccurateParserException
-     */
     public function testGetAccurateParserFailure()
     {
+        $this->expectException('\FeedIo\Reader\NoAccurateParserException');
         $this->object->getAccurateParser(new Document(''));
     }
 
@@ -143,16 +132,13 @@ class ReaderTest extends TestCase
         $feed = new Feed();
         $this->object->addParser($this->getParser());
         $result = $this->object->read('fakeurl', $feed);
-        $this->assertEquals(new \DateTime('@0'), $result->getModifiedSince());
+        $this->assertEquals(new \DateTime('1800-01-01'), $result->getModifiedSince());
     }
 
-    /**
-     * @covers \FeedIo\Reader::read
-     * @expectedException \FeedIo\Reader\ReadErrorException
-     */
     public function testReadException()
     {
         $reader = new Reader($this->getFaultyClientMock(), new NullLogger());
+        $this->expectException('\FeedIo\Reader\ReadErrorException');
         $reader->read('fault', new Feed());
     }
 

@@ -1,12 +1,4 @@
 <?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace FeedIo\Command;
 
@@ -17,6 +9,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Class DiscoverCommand
+ * @codeCoverageIgnore
+ */
 class DiscoverCommand extends Command
 {
     protected function configure()
@@ -41,5 +37,7 @@ class DiscoverCommand extends Command
         foreach ($feeds as $feed) {
             $output->writeln("<info>found : {$feed}</info>");
         }
+
+        return 0;
     }
 }

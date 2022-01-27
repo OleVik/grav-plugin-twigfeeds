@@ -1,18 +1,8 @@
 <?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace FeedIo\Feed;
 
-use FeedIo\Feed\Item\Author;
 use FeedIo\Feed\Item\MediaInterface;
-use FeedIo\Feed\Item\AuthorInterface;
 
 /**
  * Describes an Item instance
@@ -61,24 +51,28 @@ interface ItemInterface extends NodeInterface
     public function newMedia() : MediaInterface;
 
     /**
-     * returns the author attribute
+     * Returns the item's summary. Valid for JSONFeed and Atom formats only
      *
-     * @return AuthorInterface
+     * @return string|null
      */
-    public function getAuthor() : ? AuthorInterface;
+    public function getSummary(): ?string;
 
     /**
-     * sets $author to the object's attributes
-     *
-     * @param  AuthorInterface $author
+     * @param string|null $summary
      * @return ItemInterface
      */
-    public function setAuthor(AuthorInterface $author = null) : ItemInterface;
+    public function setSummary(string $summary = null): ItemInterface;
 
     /**
-     * returns a new AuthorInterface
+     * Returns the item's content. Valid for JSONFeed and Atom formats only
      *
-     * @return AuthorInterface
+     * @return string|null
      */
-    public function newAuthor() : AuthorInterface;
+    public function getContent(): ?string;
+
+    /**
+     * @param string|null $content
+     * @return ItemInterface
+     */
+    public function setContent(string $content = null): ItemInterface;
 }

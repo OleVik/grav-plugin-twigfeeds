@@ -1,24 +1,19 @@
 <?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 
 namespace FeedIo\Standard;
 
 use DOMDocument;
 use FeedIo\Reader\Document;
 use FeedIo\Rule\Author;
+use FeedIo\Rule\Content;
 use FeedIo\Rule\Description;
+use FeedIo\Rule\Image;
 use FeedIo\Rule\Language;
 use FeedIo\Rule\Link;
 use FeedIo\Rule\PublicId;
 use FeedIo\Rule\Media;
 use FeedIo\Rule\Category;
+use FeedIo\Rule\Logo;
 use FeedIo\RuleSet;
 
 class Rss extends XmlAbstract
@@ -44,7 +39,7 @@ class Rss extends XmlAbstract
      */
     const DATE_NODE_TAGNAME = 'pubDate';
 
-    protected $mandatoryFields = ['channel'];
+    protected array $mandatoryFields = ['channel'];
 
     /**
      * Formats the document according to the standard's specification
@@ -55,6 +50,7 @@ class Rss extends XmlAbstract
     {
         $rss = $document->createElement(static::ROOT_NODE_TAGNAME);
         $rss->setAttribute('version', static::VERSION);
+
         $channel = $document->createElement(static::CHANNEL_NODE_TAGNAME);
         $rss->appendChild($channel);
         $document->appendChild($rss);
@@ -69,6 +65,9 @@ class Rss extends XmlAbstract
      */
     public function canHandle(Document $document) : bool
     {
+        if (!isset($document->getDOMDocument()->documentElement->tagName)) {
+            return false;
+        }
         return static::ROOT_NODE_TAGNAME === $document->getDOMDocument()->documentElement->tagName;
     }
 
@@ -87,7 +86,9 @@ class Rss extends XmlAbstract
     public function buildFeedRuleSet() : RuleSet
     {
         $ruleSet = $this->buildBaseRuleSet();
-        $ruleSet->add(new Language());
+        $ruleSet
+            ->add(new Description())
+            ->add(new Language());
 
         return $ruleSet;
     }
@@ -101,7 +102,9 @@ class Rss extends XmlAbstract
         $ruleSet
             ->add(new Author(), ['dc:creator'])
             ->add(new PublicId())
-            ->add(new Media(), ['media:thumbnail'])
+            ->add(new Image())
+            ->add(new Content())
+            ->add(new Media(), ['media:thumbnail', 'media:group', 'media:content'])
             ;
 
         return $ruleSet;
@@ -115,9 +118,10 @@ class Rss extends XmlAbstract
         $ruleSet = parent::buildBaseRuleSet();
         $ruleSet
             ->add(new Link())
-            ->add(new Description(), ['content:encoded'])
-            ->add($this->getModifiedSinceRule(static::DATE_NODE_TAGNAME), ['lastBuildDate', 'lastPubDate'])
-            ->add(new Category());
+            ->add(new Category())
+            ->add(new Logo())
+            ->add($this->getModifiedSinceRule(static::DATE_NODE_TAGNAME), ['dc:date', 'lastBuildDate', 'lastPubDate'])
+        ;
 
         return $ruleSet;
     }
