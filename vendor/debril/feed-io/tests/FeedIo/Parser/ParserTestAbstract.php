@@ -27,7 +27,7 @@ abstract class ParserTestAbstract extends TestCase
      */
     abstract public function getStandard();
 
-    public function setUp()
+    public function setUp(): void
     {
         $standard = $this->getStandard();
         $this->object = new Parser($standard, new NullLogger());
@@ -74,7 +74,7 @@ abstract class ParserTestAbstract extends TestCase
         $this->assertInstanceOf('\FeedIo\Feed\ItemInterface', $item);
         if ($item instanceof \FeedIo\Feed\ItemInterface) {
             $this->assertNotEmpty($item->getTitle());
-            $this->assertNotEmpty($item->getDescription());
+            $this->assertNotEmpty($item->getContent());
             $this->assertNotEmpty($item->getPublicId());
             $this->assertNotEmpty($item->getLastModified());
             $this->assertNotEmpty($item->getLink());

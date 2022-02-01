@@ -1,12 +1,6 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Feed\Node;
 
@@ -35,44 +29,43 @@ use PharIo\Manifest\ElementCollection;
  */
 interface ElementInterface
 {
-
     /**
      * @return string
      */
-    public function getName() : string;
+    public function getName(): string;
 
     /**
      * @param  string $name
      * @return ElementInterface
      */
-    public function setName(string $name) : ElementInterface;
+    public function setName(string $name): ElementInterface;
 
     /**
      * @return string
      */
-    public function getValue() : ? string;
+    public function getValue(): ?string;
 
     /**
      * @param  string $value
      * @return ElementInterface
      */
-    public function setValue(string $value = null) : ElementInterface;
+    public function setValue(string $value = null): ElementInterface;
 
     /**
      * @param  string $name
      * @return string
      */
-    public function getAttribute(string $name) : ? string;
+    public function getAttribute(string $name): ?string;
 
     /**
      * @return iterable
      */
-    public function getAttributes() : iterable;
+    public function getAttributes(): iterable;
 
     /**
      * @param  string $name
      * @param  string $value
      * @return ElementInterface
      */
-    public function setAttribute(string $name, string $value = null) : ElementInterface;
+    public function setAttribute(string $name, string $value = null): ElementInterface;
 }

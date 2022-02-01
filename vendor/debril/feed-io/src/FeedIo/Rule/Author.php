@@ -1,12 +1,6 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Rule;
 
@@ -16,7 +10,7 @@ use FeedIo\RuleAbstract;
 
 class Author extends RuleAbstract
 {
-    const NODE_NAME = 'author';
+    public const NODE_NAME = 'author';
 
     /**
      * Sets the accurate $item property according to the DomElement content
@@ -24,7 +18,7 @@ class Author extends RuleAbstract
      * @param  NodeInterface $node
      * @param  \DOMElement   $element
      */
-    public function setProperty(NodeInterface $node, \DOMElement $element) : void
+    public function setProperty(NodeInterface $node, \DOMElement $element): void
     {
         if ($node instanceof ItemInterface) {
             $author = $node->newAuthor();
@@ -39,7 +33,7 @@ class Author extends RuleAbstract
      * @param NodeInterface $node
      * @return bool
      */
-    protected function hasValue(NodeInterface $node) : bool
+    protected function hasValue(NodeInterface $node): bool
     {
         return $node instanceof ItemInterface && !! $node->getAuthor();
     }
@@ -51,7 +45,7 @@ class Author extends RuleAbstract
      * @param \DOMElement $rootElement
      * @param NodeInterface $node
      */
-    protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node) : void
+    protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node): void
     {
         $rootElement->appendChild($document->createElement($this->getNodeName(), $node->getAuthor()->getName()));
     }

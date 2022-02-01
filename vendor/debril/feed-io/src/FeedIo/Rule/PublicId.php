@@ -1,10 +1,7 @@
-<?php declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: alex
- * Date: 22/11/14
- * Time: 11:24
- */
+<?php
+
+declare(strict_types=1);
+
 namespace FeedIo\Rule;
 
 use FeedIo\Feed\NodeInterface;
@@ -12,13 +9,13 @@ use FeedIo\RuleAbstract;
 
 class PublicId extends RuleAbstract
 {
-    const NODE_NAME = 'guid';
+    public const NODE_NAME = 'guid';
 
     /**
      * @param  NodeInterface $node
      * @param  \DOMElement   $element
      */
-    public function setProperty(NodeInterface $node, \DOMElement $element) : void
+    public function setProperty(NodeInterface $node, \DOMElement $element): void
     {
         $node->setPublicId($element->nodeValue);
     }
@@ -26,7 +23,7 @@ class PublicId extends RuleAbstract
     /**
      * @inheritDoc
      */
-    protected function hasValue(NodeInterface $node) : bool
+    protected function hasValue(NodeInterface $node): bool
     {
         return !! $node->getPublicId();
     }
@@ -34,7 +31,7 @@ class PublicId extends RuleAbstract
     /**
      * @inheritDoc
      */
-    protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node) : void
+    protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node): void
     {
         $rootElement->appendChild($document->createElement($this->getNodeName(), $node->getPublicId()));
     }

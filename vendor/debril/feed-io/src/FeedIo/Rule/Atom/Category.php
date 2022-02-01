@@ -1,12 +1,6 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Rule\Atom;
 
@@ -15,12 +9,11 @@ use FeedIo\Feed\NodeInterface;
 
 class Category extends \FeedIo\Rule\Category
 {
-
     /**
      * @param  NodeInterface $node
      * @param  \DOMElement   $element
      */
-    public function setProperty(NodeInterface $node, \DOMElement $element) : void
+    public function setProperty(NodeInterface $node, \DOMElement $element): void
     {
         $category = $node->newCategory();
         $category->setScheme($this->getAttributeValue($element, 'scheme'))
@@ -35,7 +28,7 @@ class Category extends \FeedIo\Rule\Category
      * @param  CategoryInterface $category
      * @return \DomElement
      */
-    public function createCategoryElement(\DomDocument $document, CategoryInterface $category) : \DOMElement
+    public function createCategoryElement(\DomDocument $document, CategoryInterface $category): \DOMElement
     {
         $element = $document->createElement($this->getNodeName());
         $this->setNonEmptyAttribute($element, 'scheme', $category->getScheme());

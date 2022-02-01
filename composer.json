@@ -5,10 +5,9 @@
   "require": {
     "symfony/filesystem": "^3.2",
     "naneau/semver": "^0.0.7",
-    "debril/feed-io": "^4.3",
+    "debril/feed-io": "^5.0.4",
     "psr/log": "^1.1",
-    "kevinrob/guzzle-cache-middleware": "^3.2",
-    "nicolus/picofeed": "@stable"
+    "kevinrob/guzzle-cache-middleware": "^3.2"
   },
   "autoload": {
     "psr-4": {

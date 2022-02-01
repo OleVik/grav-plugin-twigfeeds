@@ -1,12 +1,6 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Feed\Node;
 
@@ -16,37 +10,36 @@ namespace FeedIo\Feed\Node;
  */
 interface CategoryInterface
 {
+    /**
+     * @return null|string
+     */
+    public function getTerm(): ?string;
+
+    /**
+     * @param string|null $term
+     * @return CategoryInterface
+     */
+    public function setTerm(string $term = null): CategoryInterface;
 
     /**
      * @return null|string
      */
-    public function getTerm() : ? string;
+    public function getScheme(): ?string;
 
     /**
-     * @param  string $term
+     * @param string|null $scheme
      * @return CategoryInterface
      */
-    public function setTerm(string $term = null) : CategoryInterface;
+    public function setScheme(string $scheme = null): CategoryInterface;
 
     /**
      * @return null|string
      */
-    public function getScheme() : ? string;
+    public function getLabel(): ?string;
 
     /**
-     * @param  string $scheme
+     * @param string|null $label
      * @return CategoryInterface
      */
-    public function setScheme(string $scheme = null) : CategoryInterface;
-
-    /**
-     * @return null|string
-     */
-    public function getLabel() : ? string;
-
-    /**
-     * @param  string $label
-     * @return CategoryInterface
-     */
-    public function setLabel(string $label = null) : CategoryInterface;
+    public function setLabel(string $label = null): CategoryInterface;
 }

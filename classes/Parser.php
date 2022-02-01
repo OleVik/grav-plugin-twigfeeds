@@ -1,4 +1,5 @@
 <?php
+
 /**
  * TwigFeeds Plugin, Parser API
  *
@@ -11,6 +12,7 @@
  * @license    http://www.opensource.org/licenses/mit-license.html MIT License
  * @link       https://github.com/OleVik/grav-plugin-twigfeeds
  */
+
 namespace Grav\Plugin\TwigFeedsPlugin\API;
 
 use DateTime;
@@ -78,7 +80,6 @@ class Parser
      * @param array $args Feed settings
      * @param array $path Path JSON filename
      *
-     * @throws PicoFeedException If PicoFeed Reader fails
      * @throws IOException If Symfony Filesystem dumpFile fails
      * @throws TimeoutException In case of a timeout
      * @throws Exception For other errors
@@ -144,7 +145,7 @@ class Parser
             if (count($result->toArray()['items']) < 1) {
                 return;
             }
-            
+
             if (!empty($resource->getResponse()->getLastModified())) {
                 $lastModified = $resource->getResponse()->getLastModified();
             } else {

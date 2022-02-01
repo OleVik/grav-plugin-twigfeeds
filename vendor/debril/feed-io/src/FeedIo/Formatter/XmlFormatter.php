@@ -1,16 +1,14 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Formatter;
 
+use DOMDocument;
+use DOMElement;
+use FeedIo\Feed\ElementsAwareInterface;
 use FeedIo\Feed\NodeInterface;
+use FeedIo\Feed\StyleSheet;
 use FeedIo\FeedInterface;
 use FeedIo\Rule\OptionalField;
 use FeedIo\RuleSet;
@@ -26,26 +24,12 @@ use FeedIo\FormatterInterface;
  */
 class XmlFormatter implements FormatterInterface
 {
-
-    /**
-     * @var XmlAbstract
-     */
-    protected $standard;
-
-    /**
-     * @param XmlAbstract $standard
-     */
-    public function __construct(XmlAbstract $standard)
-    {
-        $this->standard = $standard;
+    public function __construct(
+        protected XmlAbstract $standard
+    ) {
     }
 
-    /**
-     * @param  \DOMDocument  $document
-     * @param  FeedInterface $feed
-     * @return XmlFormatter
-     */
-    public function setHeaders(\DOMDocument $document, FeedInterface $feed) : XmlFormatter
+    public function setHeaders(DOMDocument $document, FeedInterface $feed): XmlFormatter
     {
         $rules = $this->standard->getFeedRuleSet();
         $mainElement = $this->standard->getMainElement($document);
@@ -54,12 +38,7 @@ class XmlFormatter implements FormatterInterface
         return $this;
     }
 
-    /**
-     * @param  \DOMDocument  $document
-     * @param  NodeInterface $node
-     * @return XmlFormatter
-     */
-    public function addItem(\DOMDocument $document, NodeInterface $node) : XmlFormatter
+    public function addItem(DOMDocument $document, NodeInterface $node): XmlFormatter
     {
         $domItem = $document->createElement($this->standard->getItemNodeName());
         $rules = $this->standard->getItemRuleSet();
@@ -70,13 +49,7 @@ class XmlFormatter implements FormatterInterface
         return $this;
     }
 
-    /**
-     * @param RuleSet $ruleSet
-     * @param \DOMDocument $document
-     * @param \DOMElement $rootElement
-     * @param NodeInterface $node
-     */
-    public function buildElements(RuleSet $ruleSet, \DOMDocument $document, \DOMElement $rootElement, NodeInterface $node) : void
+    public function buildElements(RuleSet $ruleSet, DOMDocument $document, DOMElement $rootElement, NodeInterface $node): void
     {
         $rules = $this->getAllRules($ruleSet, $node);
 
@@ -85,34 +58,25 @@ class XmlFormatter implements FormatterInterface
         }
     }
 
-    /**
-     * @param  RuleSet              $ruleSet
-     * @param  NodeInterface        $node
-     * @return iterable
-     */
-    public function getAllRules(RuleSet $ruleSet, NodeInterface $node) : iterable
+    public function getAllRules(RuleSet $ruleSet, NodeInterface $node): iterable
     {
         $rules = $ruleSet->getRules();
-        $optionalFields = $node->listElements();
-        foreach ($optionalFields as $optionalField) {
-            $rules[] = new OptionalField($optionalField);
+        if ($node instanceof ElementsAwareInterface) {
+            $optionalFields = $node->listElements();
+            foreach ($optionalFields as $optionalField) {
+                $rules[$optionalField] = new OptionalField($optionalField);
+            }
         }
 
         return $rules;
     }
 
-    /**
-     * @return \DOMDocument
-     */
-    public function getEmptyDocument() : \DOMDocument
+    public function getEmptyDocument(): DOMDocument
     {
-        return new \DOMDocument('1.0', 'utf-8');
+        return new DOMDocument('1.0', 'utf-8');
     }
 
-    /**
-     * @return \DOMDocument
-     */
-    public function getDocument() : \DOMDocument
+    public function getDocument(): DOMDocument
     {
         $document = $this->getEmptyDocument();
 
@@ -123,36 +87,55 @@ class XmlFormatter implements FormatterInterface
      * @param  FeedInterface $feed
      * @return string
      */
-    public function toString(FeedInterface $feed) : string
+    public function toString(FeedInterface $feed): string
     {
         $document = $this->toDom($feed);
 
         return $document->saveXML();
     }
 
-    /**
-     * @param  FeedInterface $feed
-     * @return \DomDocument
-     */
-    public function toDom(FeedInterface $feed) : \DOMDocument
+    public function toDom(FeedInterface $feed): DOMDocument
     {
         $document = $this->getDocument();
 
         $this->setHeaders($document, $feed);
         $this->setItems($document, $feed);
+        $this->setNS($document, $feed);
+        $this->setStyleSheet($document, $feed);
 
         return $document;
     }
 
-    /**
-     * @param  \DOMDocument  $document
-     * @param  FeedInterface $feed
-     * @return XmlFormatter
-     */
-    public function setItems(\DOMDocument $document, FeedInterface $feed) : XmlFormatter
+    public function setNS(DOMDocument $document, FeedInterface $feed)
+    {
+        $firstChild = $document->firstChild;
+        if ($firstChild instanceof DOMElement) {
+            foreach ($feed->getNS() as $namespace => $dtd) {
+                $firstChild->setAttributeNS(
+                    'http://www.w3.org/2000/xmlns/', // xmlns namespace URI
+                    'xmlns:'.$namespace,
+                    $dtd
+                );
+            }
+        }
+    }
+
+    public function setItems(DOMDocument $document, FeedInterface $feed): XmlFormatter
     {
         foreach ($feed as $item) {
             $this->addItem($document, $item);
+        }
+
+        return $this;
+    }
+
+    public function setStyleSheet(DOMDocument $document, FeedInterface $feed): XmlFormatter
+    {
+        $styleSheet = $feed->getStyleSheet();
+        if ($styleSheet instanceof StyleSheet) {
+            $attributes = sprintf('type="%s" href="%s"', $styleSheet->getType(), $styleSheet->getHref());
+            $xsl = $document->createProcessingInstruction('xml-stylesheet', $attributes);
+            $document->insertBefore($xsl, $document->firstChild);
         }
 
         return $this;

@@ -19,6 +19,7 @@ use Psr\Http\Message\ResponseInterface;
 class CacheMiddleware
 {
     const HEADER_RE_VALIDATION = 'X-Kevinrob-GuzzleCache-ReValidation';
+    const HEADER_INVALIDATION = 'X-Kevinrob-GuzzleCache-Invalidation';
     const HEADER_CACHE_INFO = 'X-Kevinrob-Cache';
     const HEADER_CACHE_HIT = 'HIT';
     const HEADER_CACHE_MISS = 'MISS';
@@ -113,8 +114,12 @@ class CacheMiddleware
         return function (RequestInterface $request, array $options) use (&$handler) {
             if (!isset($this->httpMethods[strtoupper($request->getMethod())])) {
                 // No caching for this method allowed
+
                 return $handler($request, $options)->then(
-                    function (ResponseInterface $response) {
+                    function (ResponseInterface $response) use ($request) {
+                        // Invalidate cache after a call of non-safe method on the same URI
+                        $response = $this->invalidateCache($request, $response);
+
                         return $response->withHeader(self::HEADER_CACHE_INFO, self::HEADER_CACHE_MISS);
                     }
                 );
@@ -250,7 +255,7 @@ class CacheMiddleware
         // If the body is not seekable, we have to replace it by a seekable one
         if (!$response->getBody()->isSeekable()) {
             $response = $response->withBody(
-                \GuzzleHttp\Psr7\stream_for($response->getBody()->getContents())
+                \GuzzleHttp\Psr7\Utils::streamFor($response->getBody()->getContents())
             );
         }
 
@@ -359,5 +364,19 @@ class CacheMiddleware
     public static function getMiddleware(CacheStrategyInterface $cacheStorage = null)
     {
         return new self($cacheStorage);
+    }
+
+    /**
+     * @param RequestInterface $request
+     *
+     * @param ResponseInterface $response
+     *
+     * @return ResponseInterface
+     */
+    private function invalidateCache(RequestInterface $request, ResponseInterface $response)
+    {
+        $this->cacheStorage->delete($request);
+
+        return $response->withHeader(self::HEADER_INVALIDATION, true);
     }
 }

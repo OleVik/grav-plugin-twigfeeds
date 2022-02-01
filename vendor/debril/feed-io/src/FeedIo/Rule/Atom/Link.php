@@ -1,12 +1,6 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Rule\Atom;
 
@@ -15,15 +9,25 @@ use FeedIo\Rule\Link as BaseLink;
 
 class Link extends BaseLink
 {
-    const NODE_NAME = 'link';
+    public const NODE_NAME = 'link';
 
     /**
      * @param  NodeInterface $node
      * @param  \DOMElement   $element
      */
-    public function setProperty(NodeInterface $node, \DOMElement $element) : void
+    public function setProperty(NodeInterface $node, \DOMElement $element): void
     {
         if ($element->hasAttribute('href')) {
+            $this->selectAlternateLink($node, $element);
+        }
+    }
+
+    protected function selectAlternateLink(NodeInterface $node, \DOMElement $element): void
+    {
+        if (
+        ($element->hasAttribute('rel') && $element->getAttribute('rel') == 'alternate')
+        || is_null($node->getLink())
+        ) {
             $node->setLink($element->getAttribute('href'));
         }
     }
@@ -31,7 +35,7 @@ class Link extends BaseLink
     /**
      * @inheritDoc
      */
-    protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node) : void
+    protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node): void
     {
         $element = $document->createElement(static::NODE_NAME);
         $element->setAttribute('href', $node->getLink());

@@ -13,17 +13,19 @@
     }
   ],
   "require": {
-    "php": ">=5.5.0"
+    "php": ">=5.5.0",
+    "guzzlehttp/guzzle": "^6.0 || ^7.0",
+    "guzzlehttp/psr7": "^1.7.0 || ^2.0.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "^4.0 || ^5.0",
-    "guzzlehttp/guzzle": "^6.0",
+    "phpunit/phpunit": "^4.8.36 || ^5.0",
     "doctrine/cache": "^1.0",
     "league/flysystem": "^1.0",
     "psr/cache": "^1.0",
     "cache/array-adapter": "^0.4 || ^0.5 || ^1.0",
     "illuminate/cache": "^5.0",
-    "cache/simple-cache-bridge": "^0.1 || ^1.0"
+    "cache/simple-cache-bridge": "^0.1 || ^1.0",
+    "symfony/phpunit-bridge": "^4.4 || ^5.0"
   },
   "autoload": {
     "psr-4": {
@@ -36,11 +38,14 @@
     }
   },
   "suggest": {
-    "guzzlehttp/guzzle": "For using this library. It was created for Guzzle6. (but you can use it with any PSR-7 HTTP Client)",
-    "doctrine/cache": "This library have a lot of ready-to-use cache storage (to be use with Kevinrob\\GuzzleCache\\Storage\\DoctrineCacheStorage)",
-    "league/flysystem": "To be use with Kevinrob\\GuzzleCache\\Storage\\FlysystemStorage",
-    "psr/cache": "To be use with Kevinrob\\GuzzleCache\\Storage\\Psr6CacheStorage",
-    "psr/simple-cache": "To be use with Kevinrob\\GuzzleCache\\Storage\\Psr16CacheStorage",
-    "laravel/framework": "To be use with Kevinrob\\GuzzleCache\\Storage\\LaravelCacheStorage"
+    "guzzlehttp/guzzle": "For using this library. It was created for Guzzle6 (but you can use it with any PSR-7 HTTP client).",
+    "doctrine/cache": "This library has a lot of ready-to-use cache storage (to be used with Kevinrob\\GuzzleCache\\Storage\\DoctrineCacheStorage).",
+    "league/flysystem": "To be used with Kevinrob\\GuzzleCache\\Storage\\FlysystemStorage",
+    "psr/cache": "To be used with Kevinrob\\GuzzleCache\\Storage\\Psr6CacheStorage",
+    "psr/simple-cache": "To be used with Kevinrob\\GuzzleCache\\Storage\\Psr16CacheStorage",
+    "laravel/framework": "To be used with Kevinrob\\GuzzleCache\\Storage\\LaravelCacheStorage"
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
   }
 }

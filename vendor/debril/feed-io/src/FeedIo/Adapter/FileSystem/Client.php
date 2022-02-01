@@ -1,15 +1,10 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Adapter\FileSystem;
 
+use DateTime;
 use FeedIo\Adapter\ClientInterface;
 use FeedIo\Adapter\NotFoundException;
 use FeedIo\Adapter\ResponseInterface;
@@ -19,22 +14,21 @@ use FeedIo\Adapter\ResponseInterface;
  */
 class Client implements ClientInterface
 {
-
     /**
      * @param  string                            $path
      * @param  \DateTime                         $modifiedSince
      * @throws \FeedIo\Adapter\NotFoundException
      * @return \FeedIo\Adapter\ResponseInterface
      */
-    public function getResponse(string $path, \DateTime $modifiedSince) : ResponseInterface
+    public function getResponse(string $path, DateTime $modifiedSince = null): ResponseInterface
     {
         if (file_exists($path)) {
             return new Response(
                 file_get_contents($path),
-                new \DateTime('@'.filemtime($path))
-                );
+                new DateTime('@'.filemtime($path))
+            );
         }
 
-        throw new NotFoundException($path);
+        throw new NotFoundException();
     }
 }

@@ -1,55 +1,48 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Adapter\FileSystem;
 
+use DateTime;
 use FeedIo\Adapter\ResponseInterface;
 
-/**
- *
- */
 class Response implements ResponseInterface
 {
+    public function __construct(
+        protected string $fileContent,
+        protected DateTime $lastModified
+    ) {
+    }
 
     /**
-     * @var string
+     * @return float
      */
-    protected $fileContent;
-
-    /**
-     * @var \DateTime
-     */
-    protected $lastModified;
-
-    /**
-     * @param string    $fileContent
-     * @param \DateTime $lastModified
-     */
-    public function __construct(string $fileContent, \DateTime $lastModified)
+    public function getDuration(): float
     {
-        $this->fileContent  = $fileContent;
-        $this->lastModified = $lastModified;
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode(): int
+    {
+        return 0;
     }
 
     /**
     * @return boolean
     */
-    public function isModified() : bool
+    public function isModified(): bool
     {
         return true;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getBody() : ? string
+    public function getBody(): ?string
     {
         return $this->fileContent;
     }
@@ -57,7 +50,7 @@ class Response implements ResponseInterface
     /**
      * @return iterable
      */
-    public function getHeaders() : iterable
+    public function getHeaders(): iterable
     {
         return [];
     }
@@ -66,15 +59,15 @@ class Response implements ResponseInterface
      * @param  string $name
      * @return iterable
      */
-    public function getHeader(string $name) : iterable
+    public function getHeader(string $name): iterable
     {
         return [];
     }
 
     /**
-     * @return \DateTime
+     * @return DateTime|null
      */
-    public function getLastModified() : ?\DateTime
+    public function getLastModified(): ?DateTime
     {
         return $this->lastModified;
     }

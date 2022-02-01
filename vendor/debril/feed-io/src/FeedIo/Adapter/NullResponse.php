@@ -1,12 +1,6 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Adapter;
 
@@ -15,11 +9,23 @@ namespace FeedIo\Adapter;
  */
 class NullResponse implements ResponseInterface
 {
+    public function getDuration(): float
+    {
+        return 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatusCode(): int
+    {
+        return 0;
+    }
 
     /**
      * @return string
      */
-    public function getBody() : ? string
+    public function getBody(): ?string
     {
         return null;
     }
@@ -27,7 +33,7 @@ class NullResponse implements ResponseInterface
     /**
     * @return boolean
     */
-    public function isModified() : bool
+    public function isModified(): bool
     {
         return true;
     }
@@ -35,7 +41,7 @@ class NullResponse implements ResponseInterface
     /**
      * @return \DateTime
      */
-    public function getLastModified() : ?\DateTime
+    public function getLastModified(): ?\DateTime
     {
         return new \DateTime('@0');
     }
@@ -43,7 +49,7 @@ class NullResponse implements ResponseInterface
     /**
      * @return iterable
      */
-    public function getHeaders() : iterable
+    public function getHeaders(): iterable
     {
         return [];
     }
@@ -52,7 +58,7 @@ class NullResponse implements ResponseInterface
      * @param  string       $name
      * @return iterable
      */
-    public function getHeader(string $name) : iterable
+    public function getHeader(string $name): iterable
     {
         return [];
     }

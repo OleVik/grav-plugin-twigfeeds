@@ -1,56 +1,45 @@
-<?php declare(strict_types=1);
-/**
- * Created by PhpStorm.
- * User: alex
- * Date: 26/10/14
- * Time: 00:26
- */
+<?php
+
+declare(strict_types=1);
+
 namespace FeedIo\Rule;
 
+use DomDocument;
+use DOMElement;
 use FeedIo\Feed\NodeInterface;
-use FeedIo\RuleAbstract;
+use FeedIo\FeedInterface;
 
-class Description extends RuleAbstract
+class Description extends TextAbstract
 {
-    const NODE_NAME = 'description';
+    public const NODE_NAME = 'description';
 
     /**
      * @param  NodeInterface $node
-     * @param  \DOMElement   $element
+     * @param  DOMElement   $element
      */
-    public function setProperty(NodeInterface $node, \DOMElement $element) : void
+    public function setProperty(NodeInterface $node, DOMElement $element): void
     {
-        $string = '';
-        if ($element->firstChild && $element->firstChild->nodeType == XML_CDATA_SECTION_NODE) {
-            $string = $element->firstChild->textContent;
-        } else {
-            foreach ($element->childNodes as $childNode) {
-                $string .= $element->ownerDocument->saveXML($childNode);
-            }
+        if ($node instanceof FeedInterface) {
+            $node->setDescription($this->getProcessedContent($element, $node));
         }
-
-        $node->setDescription(htmlspecialchars_decode($string));
     }
 
     /**
      * @inheritDoc
      */
-    protected function hasValue(NodeInterface $node) : bool
+    protected function hasValue(NodeInterface $node): bool
     {
-        return !! $node->getDescription();
+        if ($node instanceof FeedInterface) {
+            return !! $node->getDescription();
+        }
+        return false;
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node) : void
+    protected function addElement(DomDocument $document, DOMElement $rootElement, NodeInterface $node): void
     {
-        $description = htmlspecialchars($node->getDescription());
-        $element = $document->createElement($this->getNodeName(), $description);
-        if ($description !== $node->getDescription() && $this->getNodeName() != 'description') {
-            $element->setAttribute('type', 'html');
+        if ($node instanceof FeedInterface) {
+            $element = $this->generateElement($document, $node->getDescription());
+            $rootElement->appendChild($element);
         }
-
-        $rootElement->appendChild($element);
     }
 }

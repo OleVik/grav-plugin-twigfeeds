@@ -1,30 +1,22 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Feed;
 
+use ArrayIterator;
 use FeedIo\Feed\Node\Element;
 use FeedIo\Feed\Node\ElementInterface;
 use FeedIo\Feed\Node\ElementIterator;
 
 trait ElementsAwareTrait
 {
-    /**
-     * @var \ArrayIterator
-     */
-    protected $elements;
+    protected ArrayIterator $elements;
 
     /**
      * initialize the elements property before use
      */
-    protected function initElements() : void
+    protected function initElements(): void
     {
         $this->elements = new \ArrayIterator();
     }
@@ -32,7 +24,7 @@ trait ElementsAwareTrait
     /**
      * @return ElementInterface
      */
-    public function newElement() : ElementInterface
+    public function newElement(): ElementInterface
     {
         return new Element();
     }
@@ -41,7 +33,7 @@ trait ElementsAwareTrait
      * @param  string $name element name
      * @return ElementIterator
      */
-    public function getElementIterator(string $name) : ElementIterator
+    public function getElementIterator(string $name): ElementIterator
     {
         return new ElementIterator($this->elements, $name);
     }
@@ -50,7 +42,7 @@ trait ElementsAwareTrait
      * @param  string $name element name
      * @return boolean true if the element exists
      */
-    public function hasElement(string $name) : bool
+    public function hasElement(string $name): bool
     {
         $filter = $this->getElementIterator($name);
 
@@ -72,7 +64,7 @@ trait ElementsAwareTrait
      * Returns all the item's optional elements
      * @return iterable
      */
-    public function getAllElements() : iterable
+    public function getAllElements(): iterable
     {
         return $this->elements;
     }
@@ -81,7 +73,7 @@ trait ElementsAwareTrait
      * Returns the item's optional elements tag names
      * @return iterable
      */
-    public function listElements() : iterable
+    public function listElements(): iterable
     {
         foreach ($this->elements as $element) {
             yield ($element->getName());
@@ -91,7 +83,7 @@ trait ElementsAwareTrait
     /**
      * @return \Generator
      */
-    public function getElementsGenerator() : \Generator
+    public function getElementsGenerator(): \Generator
     {
         $elements = $this->getAllElements();
 

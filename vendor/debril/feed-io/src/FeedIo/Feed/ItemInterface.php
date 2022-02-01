@@ -1,18 +1,10 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Feed;
 
-use FeedIo\Feed\Item\Author;
 use FeedIo\Feed\Item\MediaInterface;
-use FeedIo\Feed\Item\AuthorInterface;
 
 /**
  * Describes an Item instance
@@ -30,55 +22,58 @@ use FeedIo\Feed\Item\AuthorInterface;
  */
 interface ItemInterface extends NodeInterface
 {
-
     /**
      * adds $media to the object's attributes
      *
      * @param  MediaInterface $media
      * @return ItemInterface
      */
-    public function addMedia(MediaInterface $media) : ItemInterface;
+    public function addMedia(MediaInterface $media): ItemInterface;
 
     /**
      * returns the current object's medias
      *
      * @return iterable
      */
-    public function getMedias() : iterable;
+    public function getMedias(): iterable;
 
     /**
      * returns true if at least one MediaInterface exists in the object's attributes
      *
      * @return boolean
      */
-    public function hasMedia() : bool;
+    public function hasMedia(): bool;
 
     /**
      * returns a new MediaInterface
      *
      * @return MediaInterface
      */
-    public function newMedia() : MediaInterface;
+    public function newMedia(): MediaInterface;
 
     /**
-     * returns the author attribute
+     * Returns the item's summary. Valid for JSONFeed and Atom formats only
      *
-     * @return AuthorInterface
+     * @return string|null
      */
-    public function getAuthor() : ? AuthorInterface;
+    public function getSummary(): ?string;
 
     /**
-     * sets $author to the object's attributes
-     *
-     * @param  AuthorInterface $author
+     * @param string|null $summary
      * @return ItemInterface
      */
-    public function setAuthor(AuthorInterface $author = null) : ItemInterface;
+    public function setSummary(string $summary = null): ItemInterface;
 
     /**
-     * returns a new AuthorInterface
+     * Returns the item's content. Valid for JSONFeed and Atom formats only
      *
-     * @return AuthorInterface
+     * @return string|null
      */
-    public function newAuthor() : AuthorInterface;
+    public function getContent(): ?string;
+
+    /**
+     * @param string|null $content
+     * @return ItemInterface
+     */
+    public function setContent(string $content = null): ItemInterface;
 }

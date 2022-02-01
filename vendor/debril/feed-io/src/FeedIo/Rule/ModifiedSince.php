@@ -1,27 +1,22 @@
-<?php declare(strict_types=1);
-/*
- * This file is part of the feed-io package.
- *
- * (c) Alexandre Debril <alex.debril@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+<?php
+
+declare(strict_types=1);
 
 namespace FeedIo\Rule;
 
+use InvalidArgumentException;
 use FeedIo\Feed\NodeInterface;
 use FeedIo\DateRuleAbstract;
 
 class ModifiedSince extends DateRuleAbstract
 {
-    const NODE_NAME = 'pubDate';
+    public const NODE_NAME = 'pubDate';
 
     /**
      * @param  NodeInterface $node
      * @param  \DOMElement   $element
      */
-    public function setProperty(NodeInterface $node, \DOMElement $element) : void
+    public function setProperty(NodeInterface $node, \DOMElement $element): void
     {
         $node->setLastModified($this->getDateTimeBuilder()->convertToDateTime($element->nodeValue));
     }
@@ -29,7 +24,7 @@ class ModifiedSince extends DateRuleAbstract
     /**
      * @inheritDoc
      */
-    protected function hasValue(NodeInterface $node) : bool
+    protected function hasValue(NodeInterface $node): bool
     {
         return true;
     }
@@ -37,9 +32,9 @@ class ModifiedSince extends DateRuleAbstract
     /**
      * @inheritDoc
      */
-    protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node) : void
+    protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node): void
     {
-        $date = is_null($node->getLastModified()) ? new \DateTime():$node->getLastModified();
+        $date = is_null($node->getLastModified()) ? new \DateTime() : $node->getLastModified();
 
         $rootElement->appendChild($document->createElement(
             $this->getNodeName(),
