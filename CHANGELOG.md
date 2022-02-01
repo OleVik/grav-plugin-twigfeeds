@@ -2,7 +2,7 @@
 ## 02-02-2022
 
 1. [](#new)
-    * Major-version bump of FeedIO [#30](https://github.com/OleVik/grav-plugin-twigfeeds/issues/30) [#31](https://github.com/OleVik/grav-plugin-twigfeeds/pull/31)
+    * Major-version bump of FeedIO [#30](https://github.com/OleVik/grav-plugin-twigfeeds/issues/30) [#31](https://github.com/OleVik/grav-plugin-twigfeeds/pull/31), thanks @lesion
     * Remove PicoFeed-legacy [#ca09a6b](https://github.com/OleVik/grav-plugin-twigfeeds/pull/31/commits/ca09a6b0c65be52adbc6441b2c7b200e4acba4b9)
 
 # v4.0.1
