@@ -3,7 +3,7 @@
 /**
  * TwigFeeds Plugin, Parser API
  *
- * PHP version 7
+ * PHP version 8
  *
  * @category   Extensions
  * @package    Grav
@@ -17,14 +17,11 @@ namespace Grav\Plugin\TwigFeedsPlugin\API;
 
 use DateTime;
 use DateTimeZone;
-use FeedIo\FeedIo;
 use FeedIo\Adapter\Guzzle\Client;
-use FeedIo\Formatter\JsonFormatter;
 use FeedIo\Reader\ReadErrorException;
 use GuzzleHttp\Client as GuzzleClient;
 use Psr\Log\NullLogger;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 /**
  * TwigFeeds Parser

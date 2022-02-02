@@ -14,5 +14,6 @@
       "Grav\\Plugin\\TwigFeedsPlugin\\": "classes/",
       "Grav\\Plugin\\TwigFeedsPlugin\\API\\": "classes/"
     }
-  }
+  },
+  "platform-check": false
 }

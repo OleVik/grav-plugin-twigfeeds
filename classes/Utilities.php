@@ -1,8 +1,9 @@
 <?php
+
 /**
  * TwigFeeds Plugin, Utilities API
  *
- * PHP version 7
+ * PHP version 8
  *
  * @category   Extensions
  * @package    Grav
@@ -11,6 +12,7 @@
  * @license    http://www.opensource.org/licenses/mit-license.html MIT License
  * @link       https://github.com/OleVik/grav-plugin-twigfeeds
  */
+
 namespace Grav\Plugin\TwigFeedsPlugin;
 
 use Symfony\Component\Filesystem\Filesystem;
@@ -102,8 +104,7 @@ class Utilities
                 } catch (IOExceptionInterface $e) {
                     throw new \Exception($e);
                 }
-                return 'Removed ' . $path;
-                ;
+                return 'Removed ' . $path;;
             } else {
                 return 'Not a directory: ' . $path;
             }

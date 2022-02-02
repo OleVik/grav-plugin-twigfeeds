@@ -1,8 +1,9 @@
 <?php
+
 /**
  * TwigFeeds Plugin
  *
- * PHP version 7
+ * PHP version 8
  *
  * @category   Extensions
  * @package    Grav
@@ -11,19 +12,11 @@
  * @license    http://www.opensource.org/licenses/mit-license.html MIT License
  * @link       https://github.com/OleVik/grav-plugin-twigfeeds
  */
+
 namespace Grav\Plugin;
 
-use DateTime;
-use Grav\Common\Grav;
-use Grav\Common\Data;
-use Grav\Common\Cache;
 use Grav\Common\Plugin;
-use Grav\Common\Uri;
-use Grav\Common\Taxonomy;
-use Grav\Common\Page\Page;
 use RocketTheme\Toolbox\Event\Event;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 use Grav\Plugin\TwigFeedsPlugin\API\Parser;
 use Grav\Plugin\TwigFeedsPlugin\API\Manifest;
 use Grav\Plugin\TwigFeedsPlugin\Utilities;
@@ -54,12 +47,39 @@ class TwigFeedsPlugin extends Plugin
     public static function getSubscribedEvents()
     {
         return [
-            'onBeforeCacheClear' => ['onBeforeCacheClear', 0],
-            'onTwigSiteVariables' => ['outputFeeds', 0],
-            'onTwigPageVariables' => ['outputFeeds', 0]
+            'onPluginsInitialized' => ['onPluginsInitialized', 0]
         ];
     }
 
+    /**
+     * Composer autoload.
+     *
+     * @return \Composer\Autoload\ClassLoader
+     */
+    public function autoload(): \Composer\Autoload\ClassLoader
+    {
+        return include __DIR__ . '/vendor/autoload.php';
+    }
+
+    /**
+     * Initialize the plugin and events
+     *
+     * @return void
+     */
+    public function onPluginsInitialized()
+    {
+        if (version_compare(PHP_VERSION, '8.0.0') < 0) {
+            $this->grav['log']->error('TwigFeeds-plugin v5 requires PHP v8 or above');
+            return;
+        }
+        $this->enable(
+            [
+                'onBeforeCacheClear' => ['onBeforeCacheClear', 0],
+                'onTwigSiteVariables' => ['outputFeeds', 0],
+                'onTwigPageVariables' => ['outputFeeds', 0]
+            ]
+        );
+    }
 
     /**
      * Register cache-location with onBeforeCacheClear-event
@@ -130,7 +150,6 @@ class TwigFeedsPlugin extends Plugin
         }
         $config = $this->config();
 
-        include __DIR__ . '/vendor/autoload.php';
         $utility = new Utilities($config);
         $config['now'] = $utility->now;
         $manifest = new Manifest($config, $utility);
@@ -276,7 +295,7 @@ class TwigFeedsPlugin extends Plugin
                 } else {
                     $end = 50;
                 }
-                $feed['amount'] = abs($start-$end);
+                $feed['amount'] = abs($start - $end);
                 $resource = $parser->parseFeed($feed);
                 if ($config['silence_security'] && $resource == null) {
                     continue;

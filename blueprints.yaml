@@ -11,7 +11,7 @@ keywords: avatar, avatars, identicon, identicons
 bugs: https://github.com/olevik/grav-plugin-twigfeeds/issues
 license: MIT
 dependencies:
-  - { name: grav, version: ">=1.6" }
+  - { name: grav, version: ">=1.7" }
 
 form:
   validation: strict
