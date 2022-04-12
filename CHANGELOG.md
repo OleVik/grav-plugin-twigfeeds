@@ -2,14 +2,14 @@
 ## 12-04-2022
 
 1. [](#bugfix)
-    * Debug-parameter [#33], thanks @hughbris
-    * Testing-parameter [#32], thanks @hughbris
+    * Debug-parameter (#33), thanks @hughbris
+    * Testing-parameter (#32), thanks @hughbris
 
 # v5.0.0-beta.1
 ## 02-02-2022
 
 1. [](#new)
-    * Major-version bump of FeedIO [#30](https://github.com/OleVik/grav-plugin-twigfeeds/issues/30) [#31](https://github.com/OleVik/grav-plugin-twigfeeds/pull/31), thanks @lesion
+    * Major-version bump of FeedIO (#30, #31), thanks @lesion
 2. [](#improved)
     * Require PHP v8
     * Require Grav v1.7
