@@ -1,3 +1,10 @@
+# v5.0.0-beta.2
+## 12-04-2022
+
+1. [](#bugfix)
+    * Debug-parameter
+    * Testing-parameter
+
 # v5.0.0-beta.1
 ## 02-02-2022
 
