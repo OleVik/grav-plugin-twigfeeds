@@ -2,8 +2,8 @@
 ## 12-04-2022
 
 1. [](#bugfix)
-    * Debug-parameter
-    * Testing-parameter
+    * Debug-parameter [#33], thanks @hughbris
+    * Testing-parameter [#32], thanks @hughbris
 
 # v5.0.0-beta.1
 ## 02-02-2022
