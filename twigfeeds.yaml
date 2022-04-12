@@ -1,7 +1,7 @@
 enabled: true
 cache: true
 static_cache: false
-debug: true
+debug: false
 cache_time: 900
 pass_headers: false
 silence_security: false
