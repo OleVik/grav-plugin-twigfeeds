@@ -1,6 +1,5 @@
 name: Twig Feeds
-version: 5.0.0-beta.2
-testing: true
+version: 5.0.0
 description: "Parse RSS, Atom, and JSON feeds with Twig."
 icon: feed
 author:
