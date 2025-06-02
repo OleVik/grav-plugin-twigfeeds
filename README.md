@@ -202,7 +202,46 @@ Further, you could paginate many items like this:
 
 This last example is based on [this Gist](https://gist.github.com/maxpou/612359ed4af4cc5c4f06), tested with Grav v1.4.0-rc.1, plugin v3.3.0. Pages are indexed in the format `http://domain.tld/page:1`, where the `page`-parameter increases for each consecutive page.
 
-MIT License 2019 by [Ole Vik](http://github.com/olevik).
+##### Adding and utilizing additional metadata
+
+You can add a category-property to your feeds, to sort, filter, and otherwise manipulate them. From [a post on the Discourse-forum](https://discourse.getgrav.org/t/twigfeeds-rss-feed-labelling-categorisation/) by [Penworks](https://github.com/Penworks).
+
+In `user/plugins/twigfeeds/blueprints.yaml`, add:
+
+```yaml
+.category:
+  type: text
+  label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.LABEL
+  description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.DESCRIPTION
+```
+
+In `user/plugins/twigfeeds/languages.yaml`, add:
+
+```yaml
+CATEGORY:
+ LABEL: Category
+ DESCRIPTION: A name for the category, eg people or news
+```
+
+In `user/config/plugins/twigfeeds.yaml`, add:
+
+```yaml
+enabled: true
+twig_feeds:
+  - source: http://rss.nytimes.com/services/xml/rss/nyt/World.xml
+    start: 0
+    end: 2
+    category: apples
+  - source: http://feeds.bbci.co.uk/news/uk/rss.xml
+    start: 0
+    end: 2
+    category: oranges
+```
+
+In iteration, `{{ feed.category }}` is now available.
 
 ## License
+
+MIT License 2019-2025 by [Ole Vik](http://github.com/olevik).
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FOleVik%2Fgrav-plugin-twigfeeds.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FOleVik%2Fgrav-plugin-twigfeeds?ref=badge_large)
