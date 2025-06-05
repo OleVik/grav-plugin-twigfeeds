@@ -206,7 +206,7 @@ This last example is based on [this Gist](https://gist.github.com/maxpou/612359e
 
 You can add a category-property to your feeds, to sort, filter, and otherwise manipulate them. From [a post on the Discourse-forum](https://discourse.getgrav.org/t/twigfeeds-rss-feed-labelling-categorisation/) by [Penworks](https://github.com/Penworks).
 
-In `user/plugins/twigfeeds/blueprints.yaml`, add:
+Create `user/config/plugins/twigfeeds/blueprints.yaml` and add:
 
 ```yaml
 .category:
@@ -215,7 +215,7 @@ In `user/plugins/twigfeeds/blueprints.yaml`, add:
   description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.DESCRIPTION
 ```
 
-In `user/plugins/twigfeeds/languages.yaml`, add:
+Create `user/config/plugins/twigfeeds/languages.yaml` and add:
 
 ```yaml
 CATEGORY:
@@ -223,7 +223,7 @@ CATEGORY:
  DESCRIPTION: A name for the category, eg people or news
 ```
 
-In `user/config/plugins/twigfeeds.yaml`, add:
+In `user/config/plugins/twigfeeds.yaml`, add additional properties:
 
 ```yaml
 enabled: true
