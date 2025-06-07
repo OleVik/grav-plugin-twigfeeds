@@ -1,0 +1,47 @@
+form:
+  request:
+    type: tab
+    title: PLUGIN_TWIGFEEDS.ADMIN.TABS.REQUEST
+    fields:
+      request_options.allow_redirects:
+        type: toggle
+        label: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.ALLOW_REDIRECTS.LABEL
+        description: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.ALLOW_REDIRECTS.DESCRIPTION
+        options:
+          1: PLUGIN_ADMIN.YES
+          0: PLUGIN_ADMIN.NO
+        validate:
+          type: bool
+      request_options.connect_timeout:
+        type: number
+        label: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.CONNECT_TIMEOUT.LABEL
+        description: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.CONNECT_TIMEOUT.DESCRIPTION
+        options:
+          1: PLUGIN_ADMIN.YES
+          0: PLUGIN_ADMIN.NO
+        validate:
+          type: int
+          min: 0
+          max: 360
+          step: 0.5
+      request_options.http_errors:
+        type: toggle
+        label: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.HTTP_ERRORS.LABEL
+        description: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.HTTP_ERRORS.DESCRIPTION
+        options:
+          1: PLUGIN_ADMIN.YES
+          0: PLUGIN_ADMIN.NO
+        validate:
+          type: bool
+      request_options.timeout:
+        type: number
+        label: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.TIMEOUT.LABEL
+        description: PLUGIN_TWIGFEEDS.ADMIN.REQUEST.TIMEOUT.DESCRIPTION
+        options:
+          1: PLUGIN_ADMIN.YES
+          0: PLUGIN_ADMIN.NO
+        validate:
+          type: int
+          min: 0
+          max: 360
+          step: 0.5

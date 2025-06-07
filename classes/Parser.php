@@ -159,19 +159,23 @@ class Parser
             }
             if (isset($args['name'])) {
                 $data['name'] = $args['name'];
-            } else {
+            } elseif (isset($args['title'])) {
                 $data['name'] = $args['title'];
             }
             $data['last_modified'] = $lastModified;
             $data['timestamp'] = $timestamp;
             $data['last_checked'] = $args['now'];
-            $data['amount'] = $args['amount'];
+            if (isset($args['amount'])) {
+                $amount = $args['amount'];
+            } else {
+                $amount = 50;
+            }
             $data['items'] = array();
             $int = 0;
             foreach ($result->toArray()['items'] as $item) {
                 $item['lastModified'] = self::getItemDate($item, $lastModified->format('c'));
                 $data['items'][] = $item;
-                if (++$int >= $args['amount']) {
+                if (++$int >= $amount) {
                     break;
                 }
             }

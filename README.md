@@ -13,7 +13,7 @@ You should now have all the plugin files under
 
 The plugin is enabled by default, and can be disabled by copying `user/plugins/twigfeeds/twigfeeds.yaml` into `user/config/plugins/twigfeeds.yaml` and setting `enabled: false`.
 
-## Changes in v4.0.0
+## Changes in v4
 
 PicoFeed was deprecated long ago, and hasn't been properly maintained in most forks. This caused some errors to be persistent, that could not be resolved without forking and patching the library, which the creator of this plugin was unwilling to do. Thus, though the API in PHP remains largely intact, it has changed in Twig.
 
@@ -25,18 +25,22 @@ More details on the specification the new library, FeedIo, uses [is available he
 - A `request_options` option has been added, which allows you to [pass options to the Guzzle Client](http://docs.guzzlephp.org/en/stable/request-options.html)
 - The plugin now uses PSR-4 for autoloading
 
+## Changes in v5
+
+The plugin now HP version 8 or higher, following PicoFeed's update, and Grav version 1.7 or higher. The blueprints are now destructured into separate files which can be appended to or overridden by the local user, allowing for additions such as metadata per feed, see an example below.
+
 ### Settings and Usage
 
-| Variable | Default | Options | Note |
-|----------------|---------|----------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------|
-| `enabled` | `true` | `true` or `false` | Enables or disables plugin entirely. |
-| `cache` | `true` | `true` or `false` | Enables or disables cache-mechanism. |
-| `static_cache` | `false` | `true` or `false` | Makes cache-data persist beyond Grav's cache. |
-| `debug` | `false` | `true` or `false` | Enables or disables debug-mode. |
-| `cache_time` | 900 | integer | Default time, in seconds, to wait before caching data again. |
-| `pass_headers` | `false` | `true` or `false` | Enables or disables passing ETag and Last Modified headers. |
-| `request_options` | List:  `allow_redirects: true`  `connect_timeout: 30`  `timeout: 30`  `http_errors: false` | List:  `allow_redirects`  `connect_timeout`  `timeout`  `http_errors` | Options to use with the Guzzle Client, see [their docs](http://docs.guzzlephp.org/en/stable/request-options.html). |
-| `twig_feeds` | List: ... | List:  `source`  `name`  `start`  `end`  `cache_time` | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again. |
+| Variable          | Default                                                                                | Options                                                           | Note                                                                                                                                                                                                                 |
+| ----------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled`         | `true`                                                                                 | `true` or `false`                                                 | Enables or disables plugin entirely.                                                                                                                                                                                 |
+| `cache`           | `true`                                                                                 | `true` or `false`                                                 | Enables or disables cache-mechanism.                                                                                                                                                                                 |
+| `static_cache`    | `false`                                                                                | `true` or `false`                                                 | Makes cache-data persist beyond Grav's cache.                                                                                                                                                                        |
+| `debug`           | `false`                                                                                | `true` or `false`                                                 | Enables or disables debug-mode.                                                                                                                                                                                      |
+| `cache_time`      | 900                                                                                    | integer                                                           | Default time, in seconds, to wait before caching data again.                                                                                                                                                         |
+| `pass_headers`    | `false`                                                                                | `true` or `false`                                                 | Enables or disables passing ETag and Last Modified headers.                                                                                                                                                          |
+| `request_options` | List: `allow_redirects: true` `connect_timeout: 30` `timeout: 30` `http_errors: false` | List: `allow_redirects` `connect_timeout` `timeout` `http_errors` | Options to use with the Guzzle Client, see [their docs](http://docs.guzzlephp.org/en/stable/request-options.html).                                                                                                   |
+| `twig_feeds`      | List: ...                                                                              | List: `source` `name` `start` `end` `cache_time`                  | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again. |
 
 In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
 
@@ -57,7 +61,7 @@ Since v4.0.0 all tags, including non-standard ones, are retrieved. Eg., `itunes:
 The `cache`-option relies on [Entity tags](https://en.wikipedia.org/wiki/HTTP_ETag) (ETags) and [Last Modified](https://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers/) headers. If the feed does not return these, then the cache is invalidated upon checking for new content. When set, the plugin checks whether the feed has modified content, and then stores the content locally in Grav's cache for subsequent use. This is superseded by `cache_time`, thus ETag and Last Modified headers are only checked if the time since the feed was last checked plus `cache_time` exceeds the current time.
 
 #### Returned values
-			
+
 The plugin makes 8 properties available to each of the feeds in the `twig_feeds`-array. These are:
 
 - `title`: The retrieved title of the feed.
@@ -96,16 +100,18 @@ This retrieves World News from The New York Times and UK News from the BBC, whic
 
 ```html
 {% for name, feed in twig_feeds %}
-    <h4>Feed name: {{ name }}</h4>
-    <small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
-    {% for item in feed.items %}
-        <h5>
-            <a href="{{ item.link }}">{{ item.title }}</a>
-        </h5>
-        <time>{{ item.lastModified }}</time>
-        <p>{{ item.description }}</p>
-    {% endfor %}
-{% endfor %}
+<h4>Feed name: {{ name }}</h4>
+<small
+  >Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{
+  feed.amount }} item(s)</small
+>
+{% for item in feed.items %}
+<h5>
+  <a href="{{ item.link }}">{{ item.title }}</a>
+</h5>
+<time>{{ item.lastModified }}</time>
+<p>{{ item.description }}</p>
+{% endfor %} {% endfor %}
 ```
 
 This will iterate over each feed and output the name, retrieved title (as a link), amount of items, and the first two items in each feed.
@@ -114,134 +120,153 @@ We can also access any feed by its defined name:
 
 ```html
 {% for name, feed in twig_feeds if name == 'NY Times' %}
-    <h4>Feed name: {{ name }}</h4>
-    <small>Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{ feed.amount }} item(s)</small>
-    {% for item in feed.items %}
-        <h5>
-            <a href="{{ item.link }}">{{ item.title }}</a>
-        </h5>
-        <time>{{ item.lastModified }}</time>
-        <p>{{ item.description }}</p>
-    {% endfor %}
-{% endfor %}
+<h4>Feed name: {{ name }}</h4>
+<small
+  >Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{
+  feed.amount }} item(s)</small
+>
+{% for item in feed.items %}
+<h5>
+  <a href="{{ item.link }}">{{ item.title }}</a>
+</h5>
+<time>{{ item.lastModified }}</time>
+<p>{{ item.description }}</p>
+{% endfor %} {% endfor %}
 ```
 
 Or if you want to aggregate a bunch of feeds, you could do:
 
 ```html
-{% set feed_items = [] %}
-{% for name, feed in twig_feeds %}
-    {% set feed_items = feed_items|merge(feed.items) %}
-{% endfor %}
+{% set feed_items = [] %} {% for name, feed in twig_feeds %} {% set feed_items =
+feed_items|merge(feed.items) %} {% endfor %}
 ```
 
 Further, you could paginate many items like this:
 
 ```html
-{% set index = 1 %}
-{% set feed_items = [] %}
-{% for name, feed in twig_feeds %}
-    {% for item in feed.items %}
-        {% set index = index + 1 %}
-        {% set item = item|merge({ 'retrievedTitle': feed.title }) %}
-        {% set item = item|merge({ 'sortDate': item.lastModified }) %}
-        {% set feed_items = feed_items|merge({ (index): (item) }) %}
-    {% endfor %}
-{% endfor %}
-{% if uri.param('page') %}
-    {% set currentPage = uri.param('page') %}
-{% else %}
-    {% set currentPage = 1 %}
-{% endif %}
-{% set perPage = 5 %}
-{% set totalPages = (feed_items|length / perPage)|round(0, 'ceil') %}
-{% set start = currentPage * perPage - perPage %}
-{% set paginationLimit = 4 %}
-
-{% for index, item in feed_items|sort_by_key('sortDate')|reverse|slice(start, perPage) %}
-    <h5>
-        <a href="{{ item.link }}">{{ item.retrievedTitle }} - {{ item.title }}</a>
-    </h5>
-    <time>{{ item.lastModified }}</time>
-{% endfor %}
-
-{% if totalPages > 1 %}
-    <ul class="pagination">
-        <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
-            <a href="{{ page.url(true) }}/page:{{ 1 }}">First</a>
-        </li>
-        <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
-            <a href="{{ page.url(true) }}/page:{{ currentPage - 1 }}">Previous</a>
-        </li>
-        {% for i in 1..totalPages %}
-            {% if (currentPage - paginationLimit) - loop.index == 0 %}
-                <li class="page-item">
-                    <span>&hellip;</span>
-                </li>
-            {% elseif (currentPage + paginationLimit) - loop.index == 0 %}
-                <li class="page-item">
-                    <span>&hellip;</span>
-                </li>
-            {% elseif (currentPage - paginationLimit) - loop.index > 0 %}
-            {% elseif (currentPage + paginationLimit) - loop.index < 0 %}
-            {% else %}
-                <li class="page-item {% if currentPage == loop.index  %} active{% endif %}">
-                    <a href="{{ page.url(true) }}/page:{{ loop.index }}">{{ loop.index }}</a>
-                </li>
-            {% endif %}
-        {% endfor %}
-        <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
-            <a href="{{ page.url(true) }}/page:{{ currentPage + 1 }}">Next</a>
-        </li>
-        <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
-            <a href="{{ page.url(true) }}/page:{{ totalPages }}">Last</a>
-        </li>
-    </ul>
+{% set index = 1 %} {% set feed_items = [] %} {% for name, feed in twig_feeds %}
+{% for item in feed.items %} {% set index = index + 1 %} {% set item =
+item|merge({ 'retrievedTitle': feed.title }) %} {% set item = item|merge({
+'sortDate': item.lastModified }) %} {% set feed_items = feed_items|merge({
+(index): (item) }) %} {% endfor %} {% endfor %} {% if uri.param('page') %} {%
+set currentPage = uri.param('page') %} {% else %} {% set currentPage = 1 %} {%
+endif %} {% set perPage = 5 %} {% set totalPages = (feed_items|length /
+perPage)|round(0, 'ceil') %} {% set start = currentPage * perPage - perPage %}
+{% set paginationLimit = 4 %} {% for index, item in
+feed_items|sort_by_key('sortDate')|reverse|slice(start, perPage) %}
+<h5>
+  <a href="{{ item.link }}">{{ item.retrievedTitle }} - {{ item.title }}</a>
+</h5>
+<time>{{ item.lastModified }}</time>
+{% endfor %} {% if totalPages > 1 %}
+<ul class="pagination">
+  <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
+    <a href="{{ page.url(true) }}/page:{{ 1 }}">First</a>
+  </li>
+  <li class="page-item {% if currentPage <= 1 %}disabled{% endif %}">
+    <a href="{{ page.url(true) }}/page:{{ currentPage - 1 }}">Previous</a>
+  </li>
+  {% for i in 1..totalPages %} {% if (currentPage - paginationLimit) -
+  loop.index == 0 %}
+  <li class="page-item">
+    <span>&hellip;</span>
+  </li>
+  {% elseif (currentPage + paginationLimit) - loop.index == 0 %}
+  <li class="page-item">
+    <span>&hellip;</span>
+  </li>
+  {% elseif (currentPage - paginationLimit) - loop.index > 0 %} {% elseif
+  (currentPage + paginationLimit) - loop.index < 0 %} {% else %}
+  <li class="page-item {% if currentPage == loop.index  %} active{% endif %}">
+    <a href="{{ page.url(true) }}/page:{{ loop.index }}">{{ loop.index }}</a>
+  </li>
+  {% endif %} {% endfor %}
+  <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
+    <a href="{{ page.url(true) }}/page:{{ currentPage + 1 }}">Next</a>
+  </li>
+  <li class="page-item {% if currentPage >= totalPages %}disabled{% endif %}">
+    <a href="{{ page.url(true) }}/page:{{ totalPages }}">Last</a>
+  </li>
+</ul>
 {% endif %}
 ```
 
 This last example is based on [this Gist](https://gist.github.com/maxpou/612359ed4af4cc5c4f06), tested with Grav v1.4.0-rc.1, plugin v3.3.0. Pages are indexed in the format `http://domain.tld/page:1`, where the `page`-parameter increases for each consecutive page.
 
-##### Adding and utilizing additional metadata
+##### Taxonomy: Adding and utilizing additional metadata
 
-You can add a category-property to your feeds, to sort, filter, and otherwise manipulate them. From [a post on the Discourse-forum](https://discourse.getgrav.org/t/twigfeeds-rss-feed-labelling-categorisation/) by [Penworks](https://github.com/Penworks).
+Since version 5.1.0, you can add taxonomy like a category- or tag-property to your feeds, to sort, filter, and otherwise manipulate the feeds themselves. Based on [a post on the Discourse-forum](https://discourse.getgrav.org/t/twigfeeds-rss-feed-labelling-categorisation/) by [Penworks](https://github.com/Penworks).
 
-Create `user/config/plugins/twigfeeds/blueprints.yaml` and add:
+Create `user/blueprints/plugins/twigfeeds/options.yaml` add `.category` and `.tags`:
 
 ```yaml
-.category:
-  type: text
-  label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.LABEL
-  description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.DESCRIPTION
+extends@:
+  type: options
+  context: blueprints://plugins/twigfeeds
+
+form:
+  options:
+    fields:
+      twig_feeds:
+        fields:
+          .category:
+            type: selectize
+            label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.LABEL
+            description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.DESCRIPTION
+            validate:
+              type: commalist
+          .tags:
+            type: selectize
+            label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.LABEL
+            description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.DESCRIPTION
+            validate:
+              type: commalist
 ```
 
-Create `user/config/plugins/twigfeeds/languages.yaml` and add:
+Most [Blueprint Form Fields](https://learn.getgrav.org/17/forms/blueprints/fields-available) will work, though `taxonomy` appears to fail.
+
+Create `user/languages/en.yaml` if you don't have it already, and add:
 
 ```yaml
-CATEGORY:
- LABEL: Category
- DESCRIPTION: A name for the category, eg people or news
+PLUGIN_TWIGFEEDS:
+  ADMIN:
+    OPTIONS:
+      TWIG_FEEDS:
+        CATEGORY:
+          LABEL: Categories
+          DESCRIPTION: A broader grouping of metadata, like 'news' or 'people'
+        TAGS:
+          LABEL: Tags
+          DESCRIPTION: A narrower grouping of metadata, like 'Leipzig' or 'Manchester'
 ```
 
 In `user/config/plugins/twigfeeds.yaml`, add additional properties:
 
 ```yaml
 enabled: true
+
 twig_feeds:
-  - source: http://rss.nytimes.com/services/xml/rss/nyt/World.xml
+  - source: "http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+    name: "NY Times"
     start: 0
     end: 2
-    category: apples
-  - source: http://feeds.bbci.co.uk/news/uk/rss.xml
-    start: 0
-    end: 2
-    category: oranges
+    cache_time: null
+    category:
+      - news
+      - people
+  - source: "http://feeds.bbci.co.uk/news/uk/rss.xml"
+    name: null
+    start: null
+    end: 4
+    cache_time: 3600
+    category:
+      - news
+    tags:
+      - Manchester
 ```
 
-In iteration, `{{ feed.category }}` is now available.
+In iteration, `{{ feed.config.category }}` and `{{ feed.config.tags }}` are now available.
 
 ## License
 
 MIT License 2019-2025 by [Ole Vik](http://github.com/olevik).
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FOleVik%2Fgrav-plugin-twigfeeds.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FOleVik%2Fgrav-plugin-twigfeeds?ref=badge_large)

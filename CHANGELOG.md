@@ -1,3 +1,13 @@
+# v5.1.0-beta.1
+## 07-06-2025
+
+1. [](#new)
+    * Refactor blueprints to allow for easier overrides
+    * Add Feed-config to `twig_feeds`
+1. [](#bugfix)
+    * Parsed feed regression
+    * Amount as argument and as property
+
 # v5.0.0
 ## 30-05-2025
 

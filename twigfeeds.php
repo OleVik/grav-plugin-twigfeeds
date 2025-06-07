@@ -61,6 +61,10 @@ class TwigFeedsPlugin extends Plugin
         return include __DIR__ . '/vendor/autoload.php';
     }
 
+    public $features = [
+        'blueprints' => 10,
+    ];
+
     /**
      * Initialize the plugin and events
      *
@@ -149,7 +153,6 @@ class TwigFeedsPlugin extends Plugin
             return;
         }
         $config = $this->config();
-
         $utility = new Utilities($config);
         $config['now'] = $utility->now;
         $manifest = new Manifest($config, $utility);
@@ -275,6 +278,10 @@ class TwigFeedsPlugin extends Plugin
             foreach ($content['data'] as $source => $data) {
                 $filename = $config['cache_path'] . $data['filename'];
                 $content = $parser->readFeed($filename);
+                $feedConfig = array_filter($config['twig_feeds'], function ($key) use ($source) {
+                    return $key['source'] === $source;
+                });
+                $content['config'] = $feedConfig[array_key_first($feedConfig)];
                 if ($content) {
                     $feed_items[$content['name']] = $content;
                 } else {
@@ -307,7 +314,7 @@ class TwigFeedsPlugin extends Plugin
                 } else {
                     $name = $feed['source'];
                 }
-                $feed_items[$name] = $feed;
+                $feed['amount'] = count($resource['data']['items']);
                 if (isset($resource['data']) && !empty($resource['data'])) {
                     $feed_items[$name] = array_merge($feed, $resource['data']);
                 }
