@@ -277,17 +277,24 @@ class TwigFeedsPlugin extends Plugin
         if ($cache) {
             foreach ($content['data'] as $source => $data) {
                 $filename = $config['cache_path'] . $data['filename'];
-                $content = $parser->readFeed($filename);
+                $fileContent = $parser->readFeed($filename);
                 $feedConfig = array_filter($config['twig_feeds'], function ($key) use ($source) {
                     return $key['source'] === $source;
                 });
-                $content['config'] = $feedConfig[array_key_first($feedConfig)];
-                if ($content) {
-                    $feed_items[$content['name']] = $content;
+                $fileContent['config'] = $feedConfig[array_key_first($feedConfig)];
+                if ($fileContent) {
+                    if (isset($fileContent['title'])) {
+                        $name = $fileContent['title'];
+                    } elseif (isset($fileContent['name'])) {
+                        $name = $fileContent['name'];
+                    } else {
+                        $name = $source;
+                    }
+                    $feed_items[$name] = $fileContent;
                 } else {
                     $debug ? $this->debug('Could not find ' . $filename . ', continuing') : null;
                 }
-            }
+          }
         } else {
             foreach ($config['twig_feeds'] as $feed) {
                 $feed['now'] = $utility->now;

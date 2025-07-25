@@ -1,3 +1,13 @@
+# v5.1.0-beta.2
+## 25-07-2025
+
+1. [](#new)
+    * Added redundant fallbacks for `name` in cached feeds
+    * Bump parser-library to newest compatible minor-version
+2. [](#improved)
+    * Examples in README
+    * Main PHP-file internals
+
 # v5.1.0-beta.1
 ## 07-06-2025
 

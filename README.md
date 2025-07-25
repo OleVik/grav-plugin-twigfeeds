@@ -102,8 +102,8 @@ This retrieves World News from The New York Times and UK News from the BBC, whic
 {% for name, feed in twig_feeds %}
 <h4>Feed name: {{ name }}</h4>
 <small
-  >Retrieved title: <a href="{{ feed.source }}">{{ feed.title }}</a>, {{
-  feed.amount }} item(s)</small
+  >Retrieved title: <a href="{{ feed.config.source }}">{{ feed.title }}</a>, {{
+  feed.items|length }} item(s)</small
 >
 {% for item in feed.items %}
 <h5>

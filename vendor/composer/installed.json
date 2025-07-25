@@ -1,82 +1,6 @@
 {
     "packages": [
         {
-            "name": "debril/feed-io",
-            "version": "v5.0.8",
-            "version_normalized": "5.0.8.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/alexdebril/feed-io.git",
-                "reference": "fd289a940ee12d214efad9cb7bea4499632e078a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/alexdebril/feed-io/zipball/fd289a940ee12d214efad9cb7bea4499632e078a",
-                "reference": "fd289a940ee12d214efad9cb7bea4499632e078a",
-                "shasum": ""
-            },
-            "require": {
-                "ext-dom": "*",
-                "ext-json": "*",
-                "ext-libxml": "*",
-                "guzzlehttp/guzzle": "~6.2|~7.0",
-                "php": ">=8.0",
-                "psr/log": "~1.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.5",
-                "monolog/monolog": "1.*",
-                "phpstan/phpstan": "^0.12.81",
-                "phpunit/phpunit": "~9.3.0"
-            },
-            "suggest": {
-                "monolog/monolog": "Allows to handle logs"
-            },
-            "time": "2022-02-01T18:09:29+00:00",
-            "bin": [
-                "bin/feedio"
-            ],
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "FeedIo\\": "src/FeedIo"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alexandre Debril",
-                    "email": "alex.debril@gmail.com"
-                }
-            ],
-            "description": "PHP library built to consume and serve JSONFeed / RSS / Atom feeds",
-            "homepage": "https://feed-io.net",
-            "keywords": [
-                "atom",
-                "cli",
-                "client",
-                "feed",
-                "jsonfeed",
-                "news",
-                "rss"
-            ],
-            "support": {
-                "issues": "https://github.com/alexdebril/feed-io/issues",
-                "source": "https://github.com/alexdebril/feed-io/tree/v5.0.8"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/alexdebril",
-                    "type": "github"
-                }
-            ],
-            "install-path": "../debril/feed-io"
-        },
-        {
             "name": "guzzlehttp/guzzle",
             "version": "7.4.1",
             "version_normalized": "7.4.1.0",
@@ -543,6 +467,79 @@
                 "versioning"
             ],
             "install-path": "../naneau/semver"
+        },
+        {
+            "name": "php-feed-io/feed-io",
+            "version": "v5.3.3",
+            "version_normalized": "5.3.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-feed-io/feed-io.git",
+                "reference": "a06795091234281cd062ff1776295620114d0a48"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-feed-io/feed-io/zipball/a06795091234281cd062ff1776295620114d0a48",
+                "reference": "a06795091234281cd062ff1776295620114d0a48",
+                "shasum": ""
+            },
+            "require": {
+                "ext-dom": "*",
+                "ext-json": "*",
+                "ext-libxml": "*",
+                "guzzlehttp/guzzle": "~6.2|~7.0",
+                "php": ">=8.0",
+                "psr/log": "~1.0|~2.0|~3.0"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.5",
+                "monolog/monolog": "1.*|2.*",
+                "phpstan/phpstan": "^0.12.81",
+                "phpunit/phpunit": "~9.3.0"
+            },
+            "suggest": {
+                "monolog/monolog": "Allows to handle logs"
+            },
+            "time": "2025-07-12T16:40:21+00:00",
+            "bin": [
+                "bin/feedio"
+            ],
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "FeedIo\\": "src/FeedIo"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Benjamin Brahmer",
+                    "email": "info@b-brahmer.de"
+                },
+                {
+                    "name": "Alexandre Debril",
+                    "email": "alex.debril@gmail.com"
+                }
+            ],
+            "description": "PHP library built to consume and serve JSONFeed / RSS / Atom feeds",
+            "homepage": "https://php-feed-io.github.io/feed-io/",
+            "keywords": [
+                "atom",
+                "cli",
+                "client",
+                "feed",
+                "jsonfeed",
+                "news",
+                "rss"
+            ],
+            "support": {
+                "source": "https://github.com/php-feed-io/feed-io/tree/v5.3.3"
+            },
+            "install-path": "../php-feed-io/feed-io"
         },
         {
             "name": "psr/http-client",

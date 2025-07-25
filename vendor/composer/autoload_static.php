@@ -92,7 +92,7 @@ class ComposerStaticInit1e0ebdd5ab3b1316d7569408cda7a14e
         ),
         'FeedIo\\' => 
         array (
-            0 => __DIR__ . '/..' . '/debril/feed-io/src/FeedIo',
+            0 => __DIR__ . '/..' . '/php-feed-io/feed-io/src/FeedIo',
         ),
     );
 
