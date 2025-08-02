@@ -16,7 +16,7 @@
 namespace Grav\Plugin\TwigFeedsPlugin\API;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 
 /**
  * TwigFeeds Manifest
@@ -31,6 +31,12 @@ use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
  */
 class Manifest
 {
+    /**
+     * TwigFeeds Utilities
+     *
+     * @var Grav\Plugin\TwigFeedsPlugin\Utilities
+     */
+    public $utility;
 
     /**
      * True if cache is enabled
@@ -148,10 +154,10 @@ class Manifest
             if (is_dir($path)) {
                 try {
                     $this->filesystem->remove($path);
-                } catch (IOExceptionInterface $e) {
+                } catch (IOException $e) {
                     throw new \Exception($e);
                 }
-                return 'Removed ' . $path;;
+                return 'Removed ' . $path;
             } else {
                 return 'Not a directory: ' . $path;
             }
@@ -215,8 +221,8 @@ class Manifest
             } else {
                 $manifest['data'][$feed['source']]['cache_time'] = $this->cacheTime;
             }
-            if (isset($feed['extra_tags'])) {
-                $manifest['data'][$feed['source']]['extra_tags'] = $feed['extra_tags'];
+            if (isset($feed['request_options'])) {
+                $manifest['data'][$feed['source']]['request_options'] = $feed['request_options'];
             }
             $manifest['data'][$feed['source']]['last_checked'] = $this->utility->now;
             $manifest['data'][$feed['source']]['last_checked_date'] = $this->utility->humanDate($this->utility->now);

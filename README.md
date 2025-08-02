@@ -27,26 +27,29 @@ More details on the specification the new library, FeedIo, uses [is available he
 
 ## Changes in v5
 
-The plugin now HP version 8 or higher, following PicoFeed's update, and Grav version 1.7 or higher. The blueprints are now destructured into separate files which can be appended to or overridden by the local user, allowing for additions such as metadata per feed, see an example below.
+The plugin now requires PHP version 8 or higher, following FeedIO's update, and Grav version 1.7 or higher. The blueprints are now destructured into separate files which can be appended to or overridden by the local user, allowing for additions such as metadata per feed, see an example below.
 
-### Settings and Usage
+## Settings and Usage
 
-| Variable          | Default                                                                                | Options                                                           | Note                                                                                                                                                                                                                 |
-| ----------------- | -------------------------------------------------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `enabled`         | `true`                                                                                 | `true` or `false`                                                 | Enables or disables plugin entirely.                                                                                                                                                                                 |
-| `cache`           | `true`                                                                                 | `true` or `false`                                                 | Enables or disables cache-mechanism.                                                                                                                                                                                 |
-| `static_cache`    | `false`                                                                                | `true` or `false`                                                 | Makes cache-data persist beyond Grav's cache.                                                                                                                                                                        |
-| `debug`           | `false`                                                                                | `true` or `false`                                                 | Enables or disables debug-mode.                                                                                                                                                                                      |
-| `cache_time`      | 900                                                                                    | integer                                                           | Default time, in seconds, to wait before caching data again.                                                                                                                                                         |
-| `pass_headers`    | `false`                                                                                | `true` or `false`                                                 | Enables or disables passing ETag and Last Modified headers.                                                                                                                                                          |
-| `request_options` | List: `allow_redirects: true` `connect_timeout: 30` `timeout: 30` `http_errors: false` | List: `allow_redirects` `connect_timeout` `timeout` `http_errors` | Options to use with the Guzzle Client, see [their docs](http://docs.guzzlephp.org/en/stable/request-options.html).                                                                                                   |
-| `twig_feeds`      | List: ...                                                                              | List: `source` `name` `start` `end` `cache_time`                  | `source`: URL for a RSS or Atom feed; `name`: Custom title of feed; `start`: Item to start the results from; `end`: Item to end the results with; `cache_time`: Time, in seconds, to wait before caching data again. |
+| Variable          | Default                                                                                            | Options                                                            | Note                                                                                                                                                                                                                                                                                          |
+| ----------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled`         | `true`                                                                                             | `true` or `false`                                                  | Enables or disables plugin entirely.                                                                                                                                                                                                                                                          |
+| `cache`           | `true`                                                                                             | `true` or `false`                                                  | Enables or disables cache-mechanism.                                                                                                                                                                                                                                                          |
+| `static_cache`    | `false`                                                                                            | `true` or `false`                                                  | Makes cache-data persist beyond Grav's cache.                                                                                                                                                                                                                                                 |
+| `debug`           | `false`                                                                                            | `true` or `false`                                                  | Enables or disables debug-mode.                                                                                                                                                                                                                                                               |
+| `log_file`        | "twigfeeds.log"                                                                                    | string or falsy                                                    | Where to log parser-output, relative to `log://`, or `false` to disable.                                                                                                                                                                                                                      |
+| `cache_time`      | 900                                                                                                | integer                                                            | Default time, in seconds, to wait before caching data again.                                                                                                                                                                                                                                  |
+| `pass_headers`    | `false`                                                                                            | `true` or `false`                                                  | Enables or disables passing ETag and Last Modified headers.                                                                                                                                                                                                                                   |
+| `request_options` | List:<br>`allow_redirects: true`<br>`connect_timeout: 30`<br>`timeout: 30`<br>`http_errors: false` | List: `allow_redirects` `connect_timeout` `timeout` `http_errors`  | Options to use with the.                                                                                                                                                                                                                                                                      |
+| `twig_feeds`      | List: ...                                                                                          | List: `source` `name` `start` `end` `cache_time` `request_options` | `source`: URL for a RSS or Atom feed<br>`name`: Custom title of feed<br>`start`: Item to start the results from<br>`end`: Item to end the results with<br>`cache_time`: Time, in seconds, to wait before caching data again<br>`request_options`: Like above, but for this feed specifically. |
 
 In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
 
 The `cache_time`-option sets a default time to use when checking whether a feed should be cached again. This value should be no less than 300, as ETags and Last Modified headers are fickle and set by the target servers, and bypassing the plugins `cache_time` with values below 300 could lead to Exceptions being thrown by the PicoFeed-library. The `pass_headers`-option enables or disables passing ETag and Last Modified headers to the PicoFeed-library, thus relying solely on `cache_time` for preventing re-caching of data, which is more robust.
 
-The `twig_feeds`-setting takes lists containing 5 properties: `source`, `name` `start`, and `end`, `cache_time`. Only the first one is required, which should point to a URL for a RSS or Atom feed. If `name` is set it is used as the key for the returned array, so you can iterate over this array only (see example below). `start` and `end` limits the returned results, where `start` is the item to start the results from, and `end` is the item to end the results with. `cache_time` is the amount of time, in seconds, to wait before caching results again.
+The `twig_feeds`-setting takes lists containing 5 properties: `source`, `name` `start`, `end`, `cache_time`, and `request_options`. Only the first one is required, which should point to a URL for a RSS or Atom feed. If `name` is set it is used as the key for the returned array, so you can iterate over this array only (see example below). `start` and `end` limits the returned results, where `start` is the item to start the results from, and `end` is the item to end the results with. `cache_time` is the amount of time, in seconds, to wait before caching results again.
+
+**Note:** `request_options` is considered an option for expert-users, and passed directly to Guzzle Client, see [their docs](http://docs.guzzlephp.org/en/stable/request-options.html). Because of the variety in and amount of options, it is not made available per feed in the plugin's blueprints.
 
 For example, starting at 0 and ending at 10 would return a total of 10 items from the feed. You could also limit the results in Twig using the [slice-filter](http://twig.sensiolabs.org/doc/2.x/filters/slice.html) with `|slice(start, length)` or `[start:length]`.
 
@@ -107,7 +110,7 @@ This retrieves World News from The New York Times and UK News from the BBC, whic
 >
 {% for item in feed.items %}
 <h5>
-  <a href="{{ item.link }}">{{ item.title }}</a>
+  <a href="{{ item.link }}">{{ item.title|default(item.link) }}</a>
 </h5>
 <time>{{ item.lastModified }}</time>
 <p>{{ item.description }}</p>
@@ -127,7 +130,7 @@ We can also access any feed by its defined name:
 >
 {% for item in feed.items %}
 <h5>
-  <a href="{{ item.link }}">{{ item.title }}</a>
+  <a href="{{ item.link }}">{{ item.title|default(item.link) }}</a>
 </h5>
 <time>{{ item.lastModified }}</time>
 <p>{{ item.description }}</p>
@@ -195,6 +198,8 @@ This last example is based on [this Gist](https://gist.github.com/maxpou/612359e
 
 ##### Taxonomy: Adding and utilizing additional metadata
 
+**Note:** This is experimental, and subject to change, as some recursion appears to cause a memory-leak within Admin. Most [Blueprint Form Fields](https://learn.getgrav.org/17/forms/blueprints/fields-available) will work, though `taxonomy` appears to fail.
+
 Since version 5.1.0, you can add taxonomy like a category- or tag-property to your feeds, to sort, filter, and otherwise manipulate the feeds themselves. Based on [a post on the Discourse-forum](https://discourse.getgrav.org/t/twigfeeds-rss-feed-labelling-categorisation/) by [Penworks](https://github.com/Penworks).
 
 Create `user/blueprints/plugins/twigfeeds/options.yaml` add `.category` and `.tags`:
@@ -205,25 +210,22 @@ extends@:
   context: blueprints://plugins/twigfeeds
 
 form:
-  options:
-    fields:
-      twig_feeds:
-        fields:
-          .category:
-            type: selectize
-            label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.LABEL
-            description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.DESCRIPTION
-            validate:
-              type: commalist
-          .tags:
-            type: selectize
-            label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.LABEL
-            description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.DESCRIPTION
-            validate:
-              type: commalist
+  fields:
+    twig_feeds:
+      fields:
+        .category:
+          type: selectize
+          label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.LABEL
+          description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.DESCRIPTION
+          validate:
+            type: commalist
+        .tags:
+          type: selectize
+          label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.LABEL
+          description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.DESCRIPTION
+          validate:
+            type: commalist
 ```
-
-Most [Blueprint Form Fields](https://learn.getgrav.org/17/forms/blueprints/fields-available) will work, though `taxonomy` appears to fail.
 
 Create `user/languages/en.yaml` if you don't have it already, and add:
 

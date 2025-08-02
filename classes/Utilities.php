@@ -16,7 +16,7 @@
 namespace Grav\Plugin\TwigFeedsPlugin;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Yaml;
 use Naneau\SemVer\Parser as SemVerParser;
 use Naneau\SemVer\Compare as SemVerCompare;
@@ -101,10 +101,10 @@ class Utilities
             if (is_dir($path)) {
                 try {
                     $this->fs->remove($path);
-                } catch (IOExceptionInterface $e) {
+                } catch (IOException $e) {
                     throw new \Exception($e);
                 }
-                return 'Removed ' . $path;;
+                return 'Removed ' . $path;
             } else {
                 return 'Not a directory: ' . $path;
             }
@@ -114,8 +114,8 @@ class Utilities
     /**
      * Fetch the plugin version from the blueprints or manifest
      *
-     * @param array $path Path to file
-     * @param array $mode 'blueprint' or 'manifest'
+     * @param string $path Path to file
+     * @param string $mode 'blueprint' or 'manifest'
      *
      * @return string Retrieved version
      */

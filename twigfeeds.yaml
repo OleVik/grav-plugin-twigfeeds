@@ -2,6 +2,7 @@ enabled: true
 cache: true
 static_cache: false
 debug: false
+log_file: "twigfeeds.log"
 cache_time: 900
 pass_headers: false
 silence_security: false

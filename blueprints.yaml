@@ -1,5 +1,5 @@
 name: Twig Feeds
-version: 5.1.0-beta.2
+version: 5.1.0-beta.3
 description: "Parse RSS, Atom, and JSON feeds with Twig."
 icon: feed
 author:
@@ -20,9 +20,15 @@ form:
       type: tabs
       active: 1
       fields:
-        import@1:
-          type: request
-          context: blueprints://plugins/twigfeeds
-        import@2:
-          type: options
-          context: blueprints://plugins/twigfeeds
+        options:
+          type: tab
+          title: PLUGIN_TWIGFEEDS.ADMIN.TABS.OPTIONS
+          import@:
+            type: options
+            context: blueprints://plugins/twigfeeds
+        request:
+          type: tab
+          title: PLUGIN_TWIGFEEDS.ADMIN.TABS.REQUEST
+          import@:
+            type: request
+            context: blueprints://plugins/twigfeeds

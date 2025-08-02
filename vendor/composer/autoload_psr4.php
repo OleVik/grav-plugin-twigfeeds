@@ -17,5 +17,6 @@ return array(
     'GuzzleHttp\\' => array($vendorDir . '/guzzlehttp/guzzle/src'),
     'Grav\\Plugin\\TwigFeedsPlugin\\API\\' => array($baseDir . '/classes'),
     'Grav\\Plugin\\TwigFeedsPlugin\\' => array($baseDir . '/classes'),
+    'FeedIo\\Adapter\\Guzzle\\' => array($baseDir . '/classes/FeedIo/Adapter/Guzzle'),
     'FeedIo\\' => array($vendorDir . '/php-feed-io/feed-io/src/FeedIo'),
 );

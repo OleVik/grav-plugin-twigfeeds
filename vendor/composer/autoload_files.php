@@ -11,4 +11,5 @@ return array(
     '6e3fae29631ef280660b3cdad06f25a8' => $vendorDir . '/symfony/deprecation-contracts/function.php',
     '37a3dc5111fe8f707ab4c132ef1dbc62' => $vendorDir . '/guzzlehttp/guzzle/src/functions_include.php',
     '320cde22f66dd4f5d3fd621d3e88b98f' => $vendorDir . '/symfony/polyfill-ctype/bootstrap.php',
+    'e6c7f37108379685a5272e0f2b268186' => $baseDir . '/classes/FeedIo/Adapter/Guzzle/Client.php',
 );

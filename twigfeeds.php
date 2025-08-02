@@ -119,6 +119,7 @@ class TwigFeedsPlugin extends Plugin
             $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
         }
         $config['blueprint_path'] = $config['locator']->findResource('user://plugins/twigfeeds/blueprints.yaml', true);
+        $config['log_file'] = $config['locator']->findResource('log://' . $config['log_file'], true, true);
         return $config;
     }
 
@@ -226,7 +227,7 @@ class TwigFeedsPlugin extends Plugin
                 }
                 $path = $config['cache_path'] . $data['filename'];
                 if (!file_exists($path)) {
-                    $debug ? $this->debug('Can\'t find ' . $data['filename'] . ', writing it') : null;
+                    $debug ? $this->debug('Can\'t find ' . $entry . ' in ' . $data['filename'] . ', writing it') : null;
                     $call = $parser->parseFeed($data, $path);
                     if ($config['silence_security'] && $call == null) {
                         continue;
@@ -294,7 +295,7 @@ class TwigFeedsPlugin extends Plugin
                 } else {
                     $debug ? $this->debug('Could not find ' . $filename . ', continuing') : null;
                 }
-          }
+            }
         } else {
             foreach ($config['twig_feeds'] as $feed) {
                 $feed['now'] = $utility->now;

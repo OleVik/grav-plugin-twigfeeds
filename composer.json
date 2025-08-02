@@ -13,7 +13,14 @@
   "autoload": {
     "psr-4": {
       "Grav\\Plugin\\TwigFeedsPlugin\\": "classes/",
-      "Grav\\Plugin\\TwigFeedsPlugin\\API\\": "classes/"
-    }
+      "Grav\\Plugin\\TwigFeedsPlugin\\API\\": "classes/",
+      "FeedIo\\Adapter\\Guzzle\\": "classes/FeedIo/Adapter/Guzzle"
+    },
+    "files": [
+      "classes/FeedIo/Adapter/Guzzle/Client.php"
+    ],
+    "exclude-from-classmap": [
+      "vendor/php-feed-io/feed-io/src/FeedIo/Adapter/Guzzle/Client.php"
+    ]
   }
 }

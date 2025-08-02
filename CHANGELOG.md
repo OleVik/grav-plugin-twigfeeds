@@ -1,3 +1,16 @@
+# v5.1.0-beta.3
+## 02-08-2025
+
+1. [](#new)
+   - Extended logging of Parser-output to `log://twigfeeds.log` with `log_file`-setting
+2. [](#improved)
+   - README
+   - Code quality
+   - Pass `request_options` per feed
+3. ## [](#bugfix)
+   - Shift blueprints
+   - Patch `FeedIo/Adapter/GuzzleClient.php` to re-enable GET-requests, see [upstream](https://github.com/php-feed-io/feed-io/pull/15) pull request
+
 # v5.1.0-beta.2
 ## 25-07-2025
 

@@ -16,12 +16,14 @@
 namespace Grav\Plugin\TwigFeedsPlugin\API;
 
 use DateTime;
-use DateTimeZone;
 use FeedIo\Adapter\Guzzle\Client;
 use FeedIo\Reader\ReadErrorException;
 use GuzzleHttp\Client as GuzzleClient;
-use Psr\Log\NullLogger;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Grav\Common\Utils;
 
 /**
  * TwigFeeds Parser
@@ -42,6 +44,11 @@ class Parser
      * @var Filesystem
      */
     public $filesystem;
+
+    /**
+     * Parser configuration
+     */
+    public $config;
 
     /**
      * Instantiate TwigFeeds Parser
@@ -86,29 +93,22 @@ class Parser
     public function parseFeed($args, $path = false)
     {
         $data = array();
+        $requestOptions = $this->config['request_options'];
+        if (isset($args['request_options'])) {
+            $requestOptions = Utils::arrayMergeRecursiveUnique($this->config['request_options'], $args['request_options']);
+        }
         try {
-            $guzzle = new GuzzleClient($this->config['request_options']);
+            $guzzle = new GuzzleClient($requestOptions);
             $client = new Client($guzzle);
-            $logger = new NullLogger();
+            $logger = new \Psr\Log\NullLogger();
+            if ($this->config['log_file'] && !empty($this->config['log_file']) && is_string($this->config['log_file'])) {
+                $logger = new Logger('default', [new StreamHandler($this->config['log_file'])]);
+            }
             $feedIo = new \FeedIo\FeedIo($client, $logger);
             try {
-                if ($this->config['pass_headers'] == true && !empty($args['last_modified'])) {
-                    $resource = $feedIo->readSince(
-                        $args['source'],
-                        new \DateTime(
-                            $args['last_modified']['date'],
-                            new DateTimeZone($args['last_modified']['timezone'])
-                        )
-                    );
-                } else {
-                    $resource = $feedIo->read(
-                        $args['source']
-                    );
-                }
-            } catch (InvalidCertificateException $e) {
-                if ($this->config['silence_security'] != true) {
-                    throw new \Exception($e);
-                }
+                $resource = $feedIo->read(
+                    $args['source']
+                );
             } catch (ReadErrorException $e) {
                 error_log($e);
                 return array();
@@ -127,7 +127,7 @@ class Parser
             } catch (\GuzzleHttp\Exception\TooManyRedirectsException $e) {
                 error_log($e);
                 return array();
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 throw new \Exception($e);
             }
 
@@ -179,7 +179,7 @@ class Parser
                     break;
                 }
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new \Exception($e);
         }
         $return = array();
@@ -188,7 +188,7 @@ class Parser
                 throw new \Exception('Parser->parseFeed() has no path');
             } else {
                 try {
-                    $this->filesystem->dumpFile($path, json_encode($data, JSON_PRETTY_PRINT));
+                    $this->filesystem->dumpFile($path, json_encode($data));
                     $return['callback'] = 'Wrote ' . $path;
                 } catch (IOException $e) {
                     throw new \Exception($e);

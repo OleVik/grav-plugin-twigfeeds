@@ -11,6 +11,9 @@ en:
         DEBUG:
           LABEL: Debug
           DESCRIPTION: Enables Debug-mode, which logs to Grav's Debugger and log-file.
+        LOGFILE:
+          LABEL: Logfile
+          DESCRIPTION: Where to log parser-output, relative to `log://`, or empty to disable.
         SILENCE_SECURITY:
           LABEL: Silence security errors
           DESCRIPTION: Silently ignores security errors, such as missing certificates.

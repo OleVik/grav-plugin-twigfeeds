@@ -14,6 +14,13 @@ use GuzzleHttp\TransferStats;
 
 /**
  * Guzzle dependent HTTP client
+ *
+ * @category Overwrites
+ * @package  FeedIo\Adapter\Guzzle
+ * @author   Ole Vik <git@olevik.net>
+ * @license  http://www.opensource.org/licenses/mit-license.html MIT License
+ * @link     https://github.com/OleVik/grav-plugin-twigfeeds
+ * @see      https://github.com/php-feed-io/feed-io/pull/15
  */
 class Client implements ClientInterface
 {
@@ -47,13 +54,6 @@ class Client implements ClientInterface
      */
     public function getResponse(string $url, DateTime $modifiedSince = null): ResponseInterface
     {
-        if ($modifiedSince) {
-            $headResponse = $this->request('head', $url, $modifiedSince);
-            if (304 === $headResponse->getStatusCode()) {
-                return $headResponse;
-            }
-        }
-
         return $this->request('get', $url, $modifiedSince);
     }
 
