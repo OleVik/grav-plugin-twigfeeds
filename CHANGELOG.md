@@ -1,3 +1,9 @@
+# v5.1.0-beta.4
+## 02-08-2025
+
+1. ## [](#bugfix)
+   - Testing-setting in blueprints
+
 # v5.1.0-beta.3
 ## 02-08-2025
 
