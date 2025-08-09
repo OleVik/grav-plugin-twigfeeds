@@ -1,3 +1,11 @@
+# v5.1.0-beta.5
+## 09-08-2025
+
+1. [](#new)
+   - `mode`-setting to switch operation between regular feed-parsing and direct-query
+2. [](#improved)
+   - `Parser`-class construction and method-separation
+
 # v5.1.0-beta.4
 ## 02-08-2025
 

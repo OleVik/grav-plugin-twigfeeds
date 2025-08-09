@@ -31,6 +31,9 @@ en:
           END:
             LABEL: Item End
             DESCRIPTION: End of feed results. Must be a number between 0 and 500.
+          MODE:
+            LABEL: Mode
+            DESCRIPTION: Operation-mode, 'default' or 'direct'
           CACHE_TIME:
             LABEL: Cache Time
             DESCRIPTION: Time, in seconds, to wait before caching data again.

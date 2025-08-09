@@ -86,6 +86,12 @@ form:
             type: int
             min: 0
             max: 500
+        .mode:
+          type: select
+          label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.MODE.LABEL
+          options:
+            default: "Default - parse feed normally"
+            direct: "Direct - get feed without checking headers"
         .cache_time:
           type: text
           label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CACHE_TIME.LABEL
