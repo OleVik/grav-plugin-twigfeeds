@@ -1,3 +1,15 @@
+# v5.1.0-beta.6
+## 10-08-2025
+
+1. [](#new)
+   - Categories- and Tags-settings for feeds
+   - `taxonomyValues`-method to get used taxons
+   - Add `Categories`- and `Tags`-setting natively
+1. [](#improved)
+   - README
+   - Move descriptions into placeholders in Admin-blueprints to conserve space
+   - Add execution-timers
+
 # v5.1.0-beta.5
 ## 09-08-2025
 

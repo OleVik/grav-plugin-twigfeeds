@@ -15,6 +15,7 @@
 
 namespace Grav\Plugin;
 
+use Grav\Common\Grav;
 use Grav\Common\Plugin;
 use RocketTheme\Toolbox\Event\Event;
 use Grav\Plugin\TwigFeedsPlugin\API\Parser;
@@ -76,6 +77,9 @@ class TwigFeedsPlugin extends Plugin
             $this->grav['log']->error('TwigFeeds-plugin v5 requires PHP v8 or above');
             return;
         }
+        if ($this->config->get('system.debugger.enabled')) {
+            $this->grav['debugger']->startTimer('twigfeeds', 'TwigFeeds');
+        }
         $this->enable(
             [
                 'onBeforeCacheClear' => ['onBeforeCacheClear', 0],
@@ -83,6 +87,9 @@ class TwigFeedsPlugin extends Plugin
                 'onTwigPageVariables' => ['outputFeeds', 0]
             ]
         );
+        if ($this->config->get('system.debugger.enabled')) {
+            $this->grav['debugger']->stopTimer('twigfeeds');
+        }
     }
 
     /**
@@ -138,6 +145,37 @@ class TwigFeedsPlugin extends Plugin
             $this->grav['debugger']->addMessage('TwigFeeds: ' . $msg);
             $this->grav['log']->debug('TwigFeeds: ' . $msg);
         }
+    }
+
+    /**
+     * Get taxons
+     *
+     * @param string $taxon Taxonomy-type to get
+     * @param string $fieldType Field-type to prepare data for
+     *
+     * @return array
+     *
+     * @see https://discourse.getgrav.org/t/set-category-and-tag-taxonomies-as-required/21837/12
+     */
+    public static function taxonomyValues(string $taxon, string $fieldType)
+    {
+        $grav = Grav::instance();
+        $admin = $grav['admin'];
+        $admin->enablePages();
+        $taxonomy = $grav['taxonomy'];
+        $keys = $taxonomy->getTaxonomyItemKeys($taxon);
+        $values = [];
+        foreach ($keys as $key) {
+            if ($fieldType === 'select') {
+                $values[$key] = $key;
+            } else {
+                $values[] = [
+                    'text' => $key,
+                    'value' => $key,
+                ];
+            }
+        }
+        return $values;
     }
 
     /**

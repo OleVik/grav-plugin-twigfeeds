@@ -31,6 +31,12 @@ en:
           END:
             LABEL: Item End
             DESCRIPTION: End of feed results. Must be a number between 0 and 500.
+          CATEGORIES:
+            LABEL: Categories
+            DESCRIPTION: A broader grouping of metadata, like 'news' or 'people'
+          TAGS:
+            LABEL: Tags
+            DESCRIPTION: A narrower grouping of metadata, like 'Leipzig' or 'Manchester'
           MODE:
             LABEL: Mode
             DESCRIPTION: Operation-mode, 'default' or 'direct'

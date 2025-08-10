@@ -27,25 +27,25 @@ More details on the specification the new library, FeedIo, uses [is available he
 
 ## Changes in v5
 
-The plugin now requires PHP version 8 or higher, following FeedIO's update, and Grav version 1.7 or higher. The blueprints are now destructured into separate files which can be appended to or overridden by the local user, allowing for additions such as metadata per feed, see an example below.
+The plugin now requires PHP version 8 or higher, following the parser-library's update, and Grav version 1.7 or higher. The blueprints are now destructured into separate files which can be appended to or overridden by the local user, allowing for additions such as metadata per feed, see an example below. There are also new settings, and backwards-incompatible code-changes, so when upgrading be aware that your old settings may not work with the new major-version.
 
 ## Settings and Usage
 
-| Variable          | Default                                                                                            | Options                                                            | Note                                                                                                                                                                                                                                                                                          |
-| ----------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `enabled`         | `true`                                                                                             | `true` or `false`                                                  | Enables or disables plugin entirely.                                                                                                                                                                                                                                                          |
-| `cache`           | `true`                                                                                             | `true` or `false`                                                  | Enables or disables cache-mechanism.                                                                                                                                                                                                                                                          |
-| `static_cache`    | `false`                                                                                            | `true` or `false`                                                  | Makes cache-data persist beyond Grav's cache.                                                                                                                                                                                                                                                 |
-| `debug`           | `false`                                                                                            | `true` or `false`                                                  | Enables or disables debug-mode.                                                                                                                                                                                                                                                               |
-| `log_file`        | "twigfeeds.log"                                                                                    | string or falsy                                                    | Where to log parser-output, relative to `log://`, or `false` to disable.                                                                                                                                                                                                                      |
-| `cache_time`      | 900                                                                                                | integer                                                            | Default time, in seconds, to wait before caching data again.                                                                                                                                                                                                                                  |
-| `pass_headers`    | `false`                                                                                            | `true` or `false`                                                  | Enables or disables passing ETag and Last Modified headers.                                                                                                                                                                                                                                   |
-| `request_options` | List:<br>`allow_redirects: true`<br>`connect_timeout: 30`<br>`timeout: 30`<br>`http_errors: false` | List: `allow_redirects` `connect_timeout` `timeout` `http_errors`  | Options to use with the.                                                                                                                                                                                                                                                                      |
-| `twig_feeds`      | List: ...                                                                                          | List: `source` `name` `start` `end` `cache_time` `request_options` | `source`: URL for a RSS or Atom feed<br>`name`: Custom title of feed<br>`start`: Item to start the results from<br>`end`: Item to end the results with<br>`cache_time`: Time, in seconds, to wait before caching data again<br>`request_options`: Like above, but for this feed specifically. |
+| Variable          | Default                                                                                            | Options                                                                                       | Note                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ----------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `enabled`         | `true`                                                                                             | `true` or `false`                                                                             | Enables or disables plugin entirely.                                                                                                                                                                                                                                                                                                                                                                                        |
+| `cache`           | `true`                                                                                             | `true` or `false`                                                                             | Enables or disables cache-mechanism.                                                                                                                                                                                                                                                                                                                                                                                        |
+| `static_cache`    | `false`                                                                                            | `true` or `false`                                                                             | Makes cache-data persist beyond Grav's cache.                                                                                                                                                                                                                                                                                                                                                                               |
+| `debug`           | `false`                                                                                            | `true` or `false`                                                                             | Enables or disables debug-mode.                                                                                                                                                                                                                                                                                                                                                                                             |
+| `log_file`        | "twigfeeds.log"                                                                                    | string or falsy                                                                               | Where to log parser-output, relative to `log://`, or `false` to disable.                                                                                                                                                                                                                                                                                                                                                    |
+| `cache_time`      | 900                                                                                                | integer                                                                                       | Default time, in seconds, to wait before caching data again.                                                                                                                                                                                                                                                                                                                                                                |
+| `pass_headers`    | `false`                                                                                            | `true` or `false`                                                                             | Enables or disables passing ETag and Last Modified headers.                                                                                                                                                                                                                                                                                                                                                                 |
+| `request_options` | List:<br>`allow_redirects: true`<br>`connect_timeout: 30`<br>`timeout: 30`<br>`http_errors: false` | List: `allow_redirects` `connect_timeout` `timeout` `http_errors`                             | Options to use with the.                                                                                                                                                                                                                                                                                                                                                                                                    |
+| `twig_feeds`      | List: ...                                                                                          | List: `source` `name` `start` `end` `mode` `cache_time` `request_options` `categories` `tags` | `source`: URL for a RSS or Atom feed<br>`name`: Custom title of feed<br>`start`: Item to start the results from<br>`end`: Item to end the results with<br>`mode`: 'default' or 'direct', to parse normally get the XML directly<br>`cache_time`: Time, in seconds, to wait before caching data again<br>`request_options`: Like above, but for this feed specifically.<br>`categories` and `tags`: List of metadata strings |
 
-In addition to `enabled`, there is also a `cache`-option which enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
+The `cache`-option enables the caching-mechanism. The `static_cache`-option changes the cache-location to /user/data, which makes feed-data persist beyond Grav's cache, and requires `cache: true`. This means that `bin/grav clearcache -all` does not invalidate the data, but it is still updated if Grav's cache is disabled and the plugin runs. The `debug`-option logs the execution of the plugin to Grav's Debugger and in /logs/grav.log.
 
-The `cache_time`-option sets a default time to use when checking whether a feed should be cached again. This value should be no less than 300, as ETags and Last Modified headers are fickle and set by the target servers, and bypassing the plugins `cache_time` with values below 300 could lead to Exceptions being thrown by the PicoFeed-library. The `pass_headers`-option enables or disables passing ETag and Last Modified headers to the PicoFeed-library, thus relying solely on `cache_time` for preventing re-caching of data, which is more robust.
+The `cache_time`-option sets a default time to use when checking whether a feed should be cached again. This value should be no less than 300, as ETags and Last Modified headers are fickle and set by the target servers, and bypassing the plugins `cache_time` with values below 300 could lead to Exceptions being thrown by the underlying parser-library. The `pass_headers`-option enables or disables passing ETag and Last Modified headers to the parser-library, thus relying solely on `cache_time` for preventing re-caching of data, which is more robust.
 
 The `twig_feeds`-setting takes lists containing 5 properties: `source`, `name` `start`, `end`, `cache_time`, and `request_options`. Only the first one is required, which should point to a URL for a RSS or Atom feed. If `name` is set it is used as the key for the returned array, so you can iterate over this array only (see example below). `start` and `end` limits the returned results, where `start` is the item to start the results from, and `end` is the item to end the results with. `cache_time` is the amount of time, in seconds, to wait before caching results again.
 
@@ -53,7 +53,7 @@ The `twig_feeds`-setting takes lists containing 5 properties: `source`, `name` `
 
 For example, starting at 0 and ending at 10 would return a total of 10 items from the feed. You could also limit the results in Twig using the [slice-filter](http://twig.sensiolabs.org/doc/2.x/filters/slice.html) with `|slice(start, length)` or `[start:length]`.
 
-**Note:** If you use a feed that is secured with HTTPS, then your server setup must be able to connect with this through Curl. Otherwise you'll get an error like this `curl: (60) SSL certificate problem: unable to get local issuer certificate`. A quick [how-to](https://www.saotn.org/dont-turn-off-curlopt_ssl_verifypeer-fix-php-configuration/). Further, your feed's encoding must match the encoding your server returns, or the PicoFeed-library's parser may fail.
+**Note:** If you use a feed that is secured with HTTPS, then your server setup must be able to connect with this through Curl. Otherwise you'll get an error like this `curl: (60) SSL certificate problem: unable to get local issuer certificate`. A quick [how-to](https://www.saotn.org/dont-turn-off-curlopt_ssl_verifypeer-fix-php-configuration/). Further, your feed's encoding must match the encoding your server returns, or the parser-library may fail.
 
 Since v4.0.0 all tags, including non-standard ones, are retrieved. Eg., `itunes:duration` can be found in the `elements`-array of a feed item that has it, and could return `01:21:43`. Depending on how the feed sets the data in non-standard tags, it may require special handling in Twig: The returned tag can be a single array-item or contain multiple items, and if the tag contains a colon (`:`) you must treat this using Twig's `attribute()`. For example:
 
@@ -61,7 +61,7 @@ Since v4.0.0 all tags, including non-standard ones, are retrieved. Eg., `itunes:
 
 #### Caching
 
-The `cache`-option relies on [Entity tags](https://en.wikipedia.org/wiki/HTTP_ETag) (ETags) and [Last Modified](https://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers/) headers. If the feed does not return these, then the cache is invalidated upon checking for new content. When set, the plugin checks whether the feed has modified content, and then stores the content locally in Grav's cache for subsequent use. This is superseded by `cache_time`, thus ETag and Last Modified headers are only checked if the time since the feed was last checked plus `cache_time` exceeds the current time.
+The `cache`-option relies on [Entity tags](https://en.wikipedia.org/wiki/HTTP_ETag) (ETags) and [Last Modified](https://fishbowl.pastiche.org/2002/10/21/http_conditional_get_for_rss_hackers/) headers. If the feed does not return these, then the cache is invalidated upon checking for new content. When set, the plugin checks whether the feed has modified content, and then stores the content locally in the cache for subsequent use. This is superseded by `cache_time`, thus ETag and Last Modified headers are only checked if the time since the feed was last checked plus `cache_time` exceeds the current time.
 
 #### Returned values
 
@@ -198,74 +198,7 @@ This last example is based on [this Gist](https://gist.github.com/maxpou/612359e
 
 ##### Taxonomy: Adding and utilizing additional metadata
 
-**Note:** This is experimental, and subject to change, as some recursion appears to cause a memory-leak within Admin. Most [Blueprint Form Fields](https://learn.getgrav.org/17/forms/blueprints/fields-available) will work, though `taxonomy` appears to fail.
-
-Since version 5.1.0, you can add taxonomy like a category- or tag-property to your feeds, to sort, filter, and otherwise manipulate the feeds themselves. Based on [a post on the Discourse-forum](https://discourse.getgrav.org/t/twigfeeds-rss-feed-labelling-categorisation/) by [Penworks](https://github.com/Penworks).
-
-Create `user/blueprints/plugins/twigfeeds/options.yaml` add `.category` and `.tags`:
-
-```yaml
-extends@:
-  type: options
-  context: blueprints://plugins/twigfeeds
-
-form:
-  fields:
-    twig_feeds:
-      fields:
-        .category:
-          type: selectize
-          label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.LABEL
-          description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORY.DESCRIPTION
-          validate:
-            type: commalist
-        .tags:
-          type: selectize
-          label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.LABEL
-          description: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.DESCRIPTION
-          validate:
-            type: commalist
-```
-
-Create `user/languages/en.yaml` if you don't have it already, and add:
-
-```yaml
-PLUGIN_TWIGFEEDS:
-  ADMIN:
-    OPTIONS:
-      TWIG_FEEDS:
-        CATEGORY:
-          LABEL: Categories
-          DESCRIPTION: A broader grouping of metadata, like 'news' or 'people'
-        TAGS:
-          LABEL: Tags
-          DESCRIPTION: A narrower grouping of metadata, like 'Leipzig' or 'Manchester'
-```
-
-In `user/config/plugins/twigfeeds.yaml`, add additional properties:
-
-```yaml
-enabled: true
-
-twig_feeds:
-  - source: "http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
-    name: "NY Times"
-    start: 0
-    end: 2
-    cache_time: null
-    category:
-      - news
-      - people
-  - source: "http://feeds.bbci.co.uk/news/uk/rss.xml"
-    name: null
-    start: null
-    end: 4
-    cache_time: 3600
-    category:
-      - news
-    tags:
-      - Manchester
-```
+Since version 5.1.0, you can add taxonomy like category- or tag-properties to your feeds, to sort, filter, and otherwise manipulate the feeds themselves. Based on [a post on the Discourse-forum](https://discourse.getgrav.org/t/twigfeeds-rss-feed-labelling-categorisation/) by [Penworks](https://github.com/Penworks).
 
 In iteration, `{{ feed.config.category }}` and `{{ feed.config.tags }}` are now available.
 
