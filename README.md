@@ -200,7 +200,7 @@ This last example is based on [this Gist](https://gist.github.com/maxpou/612359e
 
 Since version 5.1.0, you can add taxonomy like category- or tag-properties to your feeds, to sort, filter, and otherwise manipulate the feeds themselves. Based on [a post on the Discourse-forum](https://discourse.getgrav.org/t/twigfeeds-rss-feed-labelling-categorisation/) by [Penworks](https://github.com/Penworks).
 
-In iteration, `{{ feed.config.category }}` and `{{ feed.config.tags }}` are now available.
+In iteration, `{{ feed.config.categories }}` and `{{ feed.config.tags }}` are now available.
 
 ## License
 
