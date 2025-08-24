@@ -338,6 +338,7 @@ class TwigFeedsPlugin extends Plugin
             foreach ($config['twig_feeds'] as $feed) {
                 $feed['now'] = $utility->now;
                 $feed['cache'] = 'no';
+                $feed['config'] = $feed;
                 if (isset($feed['start'])) {
                     $start = $feed['start'];
                 } else {

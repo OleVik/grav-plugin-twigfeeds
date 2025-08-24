@@ -1,3 +1,9 @@
+# v5.1.0-beta.8
+## 24-08-2025
+
+1. [](#bugfix)
+   - Add missing `config` to live feed data
+
 # v5.1.0-beta.7
 ## 24-08-2025
 
