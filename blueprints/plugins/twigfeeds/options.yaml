@@ -88,32 +88,14 @@ form:
             max: 500
         .categories:
           type: selectize
-          merge_items: true
           label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORIES.LABEL
           placeholder: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CATEGORIES.DESCRIPTION
-          selectize:
-            allowEmptyOption: true
-            data-options@:
-              [
-                '\Grav\Plugin\TwigFeedsPlugin::taxonomyValues',
-                "category",
-                "selectize",
-              ]
           validate:
             type: commalist
         .tags:
           type: selectize
-          merge_items: true
           label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.LABEL
           placeholder: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.TAGS.DESCRIPTION
-          selectize:
-            allowEmptyOption: true
-            data-options@:
-              [
-                '\Grav\Plugin\TwigFeedsPlugin::taxonomyValues',
-                "tag",
-                "selectize",
-              ]
           validate:
             type: commalist
         .mode:

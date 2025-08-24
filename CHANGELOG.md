@@ -1,3 +1,9 @@
+# v5.1.0-beta.7
+## 24-08-2025
+
+1. [](#bugfix)
+   - Selectize-field misbehaving because of data-defaults
+
 # v5.1.0-beta.6
 ## 10-08-2025
 
