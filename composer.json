@@ -6,14 +6,22 @@
   "require": {
     "symfony/filesystem": "^3.2",
     "naneau/semver": "^0.0.7",
-    "psr/log": "^1.1",
+    "psr/log": "^3.0",
     "kevinrob/guzzle-cache-middleware": "^3.2",
     "php-feed-io/feed-io": "5.3.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^11.5"
+  },
+  "scripts": {
+    "test": "php vendor/bin/phpunit --no-output",
+    "test:debug": "php vendor/bin/phpunit --no-output --log-events-text php://stdout"
   },
   "autoload": {
     "psr-4": {
       "Grav\\Plugin\\TwigFeedsPlugin\\": "classes/",
       "Grav\\Plugin\\TwigFeedsPlugin\\API\\": "classes/",
+      "TwigFeeds\\Tests\\": "tests/",
       "FeedIo\\Adapter\\Guzzle\\": "classes/FeedIo/Adapter/Guzzle"
     },
     "files": [

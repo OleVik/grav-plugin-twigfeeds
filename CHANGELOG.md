@@ -1,3 +1,9 @@
+# v5.1.0-beta.9
+## xx-xx-2025
+
+1. [](#improved)
+   - Updated `psr/log`-library
+
 # v5.1.0-beta.8
 ## 24-08-2025
 

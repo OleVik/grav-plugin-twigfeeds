@@ -6,11 +6,13 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'TwigFeeds\\Tests\\' => array($baseDir . '/tests'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Symfony\\Component\\Filesystem\\' => array($vendorDir . '/symfony/filesystem'),
-    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-factory/src', $vendorDir . '/psr/http-message/src'),
     'Psr\\Http\\Client\\' => array($vendorDir . '/psr/http-client/src'),
+    'PhpParser\\' => array($vendorDir . '/nikic/php-parser/lib/PhpParser'),
     'Kevinrob\\GuzzleCache\\' => array($vendorDir . '/kevinrob/guzzle-cache-middleware/src'),
     'GuzzleHttp\\Psr7\\' => array($vendorDir . '/guzzlehttp/psr7/src'),
     'GuzzleHttp\\Promise\\' => array($vendorDir . '/guzzlehttp/promises/src'),
@@ -19,4 +21,5 @@ return array(
     'Grav\\Plugin\\TwigFeedsPlugin\\' => array($baseDir . '/classes'),
     'FeedIo\\Adapter\\Guzzle\\' => array($baseDir . '/classes/FeedIo/Adapter/Guzzle'),
     'FeedIo\\' => array($vendorDir . '/php-feed-io/feed-io/src/FeedIo'),
+    'DeepCopy\\' => array($vendorDir . '/myclabs/deep-copy/src/DeepCopy'),
 );
