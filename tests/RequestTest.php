@@ -69,15 +69,22 @@ class RequestTest extends TestCase
     {
         Util::output('🔨 [TEST]: feed-items');
         foreach ($items as $source => $items) {
-            Util::output($source . ' items ' . count($items));
-            foreach ($items as $item) {
+            if ($_ENV['extra']) {
+                Util::output('🔍 First ' . $_ENV['extra_limit'] .
+                ' items of ' . $source);
+            }
+            foreach (array_slice($items, 0, $_ENV['extra_limit'], true) as $item) {
                 $this->assertArrayHasKey('title', $item, '❗ Missing title-property');
                 $this->assertArrayHasKey('link', $item, '❗ Missing link-property');
                 $this->assertArrayHasKey('lastModified', $item, '❗ Missing lastModified-property');
                 $this->assertArrayHasKey('content', $item, '❗ Missing item-property');
                 $this->assertTrue(!empty($item['content']), '❗ Empty content');
                 if ($_ENV['extra']) {
-                    Util::output('  ' . $item['lastModified'] . ' - ' . substr($item['title'], 0, 40) . ': ' . strlen($item['content']));
+                    Util::output(
+                        '   ' . $item['lastModified'] .
+                        ' ' . substr($item['title'], 0, 40) .
+                        ' (' . strlen($item['content']) . ')'
+                    );
                 }
             }
         }

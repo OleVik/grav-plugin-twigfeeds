@@ -21,6 +21,7 @@
     </testsuite>
   </testsuites>
   <php>
-    <env name="extra" value="false" />
+    <env name="extra" value="true" />
+    <env name="extra_limit" value="5" />
   </php>
 </phpunit>
