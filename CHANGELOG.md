@@ -1,3 +1,13 @@
+# v5.1.0-beta.10
+## 12-09-2025
+
+1. [](#new)
+   - Unit-testing
+2. [](#improved)
+   - Updated `psr/log`-library
+2. [](#bugfix)
+   - Method-call in Parser
+
 # v5.1.0-beta.9
 ## 11-09-2025
 

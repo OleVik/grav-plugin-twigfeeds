@@ -1,0 +1,4 @@
+http://php.net/feed.atom
+https://packagist.org/feeds/releases.rss
+http://rss.nytimes.com/services/xml/rss/nyt/World.xml
+http://feeds.bbci.co.uk/news/uk/rss.xml
