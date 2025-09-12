@@ -1,3 +1,10 @@
+# v5.1.0-beta.9
+## 11-09-2025
+
+1. [](#improved)
+   - Error-logging to defined log-file as well as `error_log`
+   - Error-handling in Parser-class
+
 # v5.1.0-beta.8
 ## 24-08-2025
 

@@ -121,6 +121,10 @@ class Parser
         } catch (\Exception $e) {
             throw new \Exception($e);
         }
+        if ($resource === null) {
+            $this->logger->debug('Querying ' . $args['source'] . ' returned null or failed.');
+            return;
+        }
         $feed = $resource->getFeed();
         if (count($feed->toArray()['items']) < 1) {
             return;
@@ -211,27 +215,29 @@ class Parser
                     $resource = $feedIo->read($URL);
                 } catch (ReadErrorException $e) {
                     error_log($e);
-                    return array();
+                    $logger->error($e);
                 }
             } elseif ($mode === 'direct') {
                 $resource = $client->request('GET', $URL);
             }
         } catch (\GuzzleHttp\Exception\ConnectException $e) {
             error_log($e);
-            return array();
+            $logger->error($e);
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             error_log($e);
-            return array();
+            $logger->error($e);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             error_log($e);
-            return array();
+            $logger->error($e);
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             error_log($e);
-            return array();
+            $logger->error($e);
         } catch (\GuzzleHttp\Exception\TooManyRedirectsException $e) {
             error_log($e);
-            return array();
+            $logger->error($e);
         } catch (\Exception $e) {
+            error_log($e);
+            $logger->error($e);
             throw new \Exception($e);
         }
         return $resource;
