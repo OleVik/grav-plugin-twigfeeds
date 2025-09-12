@@ -210,4 +210,84 @@ class Utilities
 
         return $versions;
     }
+
+    /**
+     * Try to normalize XML feed-data into a common structure
+     *
+     * @param array $data Input-data
+     *
+     * @return array
+     */
+    public static function normalizeDirectFeedData($data)
+    {
+        if (array_key_exists('channel', $data)) {
+            $data = $data['channel'];
+        } else {
+            return $data;
+        }
+        if (
+            !array_key_exists('items', $data) &&
+            array_key_exists('entry', $data)
+        ) {
+            $data['items'] = $data['entry'];
+            unset($data['entry']);
+        }
+        if (
+            !array_key_exists('items', $data) &&
+            array_key_exists('item', $data)
+        ) {
+            $data['items'] = $data['item'];
+            unset($data['item']);
+        }
+        foreach ($data['items'] as $item) {
+          if (array_key_exists('item', $data)) {
+              $data['items'] = $data['item'];
+              unset($data['item']);
+          }
+        }
+        for ($i=0; $i < count($data['items']); $i++) {
+            if (
+              !array_key_exists('content', $data['items'][$i]) &&
+              array_key_exists('description', $data['items'][$i])
+            ) {
+                $data['items'][$i]['content'] = $data['items'][$i]['description'];
+                unset($data['items'][$i]['description']);
+            }
+            if (
+              !array_key_exists('lastModified', $data['items'][$i]) &&
+              array_key_exists('pubDate', $data['items'][$i])
+            ) {
+                $data['items'][$i]['lastModified'] = $data['items'][$i]['pubDate'];
+                unset($data['items'][$i]['pubDate']);
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * Recursively convert XML-data to a normal array
+     *
+     * @param SimpleXMLElement $xml XML-data
+     *
+     * @return array
+     *
+     * @see https://stackoverflow.com/a/24919807
+     */
+    public static function simpleXml2ArrayWithCDATASupport($xml)
+    {
+        $array = (array) $xml;
+        if (count($array) === 0) {
+            return (string)$xml;
+        }
+        foreach ($array as $key => $value) {
+            if (is_object($value) && strpos(get_class($value), 'SimpleXML') > -1) {
+                $array[$key] = self::simpleXml2ArrayWithCDATASupport($value);
+            } else if (is_array($value)) {
+                $array[$key] = self::simpleXml2ArrayWithCDATASupport($value);
+            } else {
+                continue;
+            }
+        }
+        return $array;
+    }
 }

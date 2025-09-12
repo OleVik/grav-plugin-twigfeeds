@@ -1,0 +1,15 @@
+[
+  {
+    "source": "https://news-web.php.net/group.php?group=php.announce&format=rss",
+    "mode": "direct"
+  },
+  {
+    "source": "https://packagist.org/feeds/releases.rss"
+  },
+  {
+    "source": "http://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+  },
+  {
+    "source": "http://feeds.bbci.co.uk/news/uk/rss.xml"
+  }
+]

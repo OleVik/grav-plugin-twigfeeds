@@ -104,6 +104,7 @@ form:
           options:
             default: "Default - parse feed normally"
             direct: "Direct - get feed without checking headers"
+            raw: "Raw - get feed without checking headers or normalizing data"
         .cache_time:
           type: text
           label: PLUGIN_TWIGFEEDS.ADMIN.OPTIONS.TWIG_FEEDS.CACHE_TIME.LABEL

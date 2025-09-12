@@ -7,8 +7,6 @@ use PHPUnit\Framework\TestCase;
 use Grav\Plugin\TwigFeedsPlugin\API\Parser;
 use TwigFeeds\Tests\Utilities as Util;
 
-// require_once 'bootstrap.php';
-
 class RequestTest extends TestCase
 {
     private $config;
@@ -21,21 +19,21 @@ class RequestTest extends TestCase
                 'allow_redirects' => true,
                 'connect_timeout' => 30,
                 'timeout' => 30,
-                'http_errors' => false
+                'http_errors' => true
             ],
             'pass_headers' => true,
             'log_file' => null
         ];
-        $this->feeds = explode("\n", file_get_contents(__DIR__ . '/feeds.txt'));
+        $this->feeds = json_decode(file_get_contents(__DIR__ . '/feeds.json'));
     }
 
     public function testFeedsSource()
     {
-        Util::output('🔨 [TEST]: Validity of sources in /tests/feeds.txt');
+        Util::output('🔨 [TEST]: Validity of sources in /tests/feeds.json');
         foreach ($this->feeds as $feed) {
-            $this->assertIsString($feed);
-            $this->assertSame(1, Util::validateURL($feed));
-            Util::output('✅ [Valid URL]: ' . $feed);
+            $this->assertIsString($feed->source);
+            $this->assertSame(1, Util::validateURL($feed->source));
+            Util::output('✅ [Valid URL]: ' . $feed->source);
         }
     }
 
@@ -48,18 +46,19 @@ class RequestTest extends TestCase
         Util::output('✅ [Class]: Parser-class instantiated without errors');
         $items = [];
         foreach ($this->feeds as $feed) {
-            $data['title'] = $feed;
-            $data['source'] = $feed;
+            $data['title'] = $feed->title ?? $feed->source;
+            $data['source'] = $feed->source;
             $data['now'] = time();
             $data['cache'] = false;
-            Util::output('🔨 [Call]: Attempt parsing feed - ' . $feed);
+            $data['mode'] = $feed->mode ?? 'default';
+            Util::output('🔨 [Call]: Attempt parsing feed - ' . $feed->source);
             $call = $parser->parseFeed($data);
             $this->assertIsArray($call, '❗ Source-call did not return an array');
             $this->assertArrayHasKey('data', $call, '❗ Array missing data-property');
             $this->assertArrayHasKey('items', $call['data'], '❗ Data missing items-property');
             $this->assertNotEmpty($call['data']['items'], '❗ Items empty');
             Util::output('✅ [feed-array has "data" with "items"]: ' . count($call['data']['items']));
-            $items[$feed] = $call['data']['items'];
+            $items[$feed->source] = $call['data']['items'];
         }
         return $items;
     }

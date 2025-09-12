@@ -25,6 +25,7 @@ use Monolog\Handler\StreamHandler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Grav\Common\Utils;
+use Grav\Plugin\TwigFeedsPlugin\Utilities;
 
 /**
  * TwigFeeds Parser
@@ -110,13 +111,24 @@ class Parser
         if (isset($args['mode']) && $args['mode'] === 'direct') {
             $mode = 'direct';
         }
+        if (isset($args['mode']) && $args['mode'] === 'raw') {
+            $mode = 'raw';
+        }
         if (isset($args['request_options'])) {
             $requestOptions = Utils::arrayMergeRecursiveUnique($this->config['request_options'], $args['request_options']);
         }
         try {
             $resource = Parser::query($args['source'], $requestOptions, $this->logger, $mode);
             if ($mode === 'direct') {
-                return simplexml_load_string($resource->getBody());
+                $xml = simplexml_load_string($resource->getBody());
+                $parsed = Utilities::simpleXml2ArrayWithCDATASupport($xml);
+                $parsed = Utilities::normalizeDirectFeedData($parsed);
+                return ['data' => $parsed];
+            }
+            if ($mode === 'raw') {
+                $xml = simplexml_load_string($resource->getBody());
+                $parsed = Utilities::simpleXml2ArrayWithCDATASupport($xml);
+                return ['data' => $parsed];
             }
         } catch (\Exception $e) {
             throw new \Exception($e);
@@ -207,18 +219,22 @@ class Parser
     {
         $guzzle = new GuzzleClient($requestOptions);
         $client = new Client($guzzle);
-        $resource = null;
         try {
             if ($mode === 'default' || empty($mode)) {
                 $feedIo = new \FeedIo\FeedIo($client, $logger);
                 try {
-                    $resource = $feedIo->read($URL);
+                    return $feedIo->read($URL);
                 } catch (ReadErrorException $e) {
                     error_log($e);
                     $logger->error($e);
                 }
             } elseif ($mode === 'direct') {
-                $resource = $client->request('GET', $URL);
+                try {
+                    return $guzzle->request('GET', $URL);
+                } catch (\Exception $e) {
+                    error_log($e);
+                    $logger->error($e);
+                }
             }
         } catch (\GuzzleHttp\Exception\ConnectException $e) {
             error_log($e);
@@ -240,7 +256,6 @@ class Parser
             $logger->error($e);
             throw new \Exception($e);
         }
-        return $resource;
     }
 
     /**

@@ -39,7 +39,7 @@ en:
             DESCRIPTION: A narrower grouping of metadata, like 'Leipzig' or 'Manchester'
           MODE:
             LABEL: Mode
-            DESCRIPTION: Operation-mode, 'default' or 'direct'
+            DESCRIPTION: Operation-mode, 'default', 'direct' or 'raw'
           CACHE_TIME:
             LABEL: Cache Time
             DESCRIPTION: Time, in seconds, to wait before caching data again.
