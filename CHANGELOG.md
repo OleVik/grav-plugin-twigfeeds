@@ -1,3 +1,15 @@
+# v5.1.0-beta.11
+## 14-09-2025
+
+1. [](#improved)
+   - Structure of and details in README
+   - Simplify Logging-method
+   - Command-line methods
+2. [](#bugfix)
+   - Parsing-modes and normalizations with 'direct'
+   - Corrections for testing
+   - Downgrade `psr/log`-library, both major-version 2 and 3 contain invalid interfaces
+
 # v5.1.0-beta.10
 ## 12-09-2025
 

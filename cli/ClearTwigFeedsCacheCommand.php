@@ -43,10 +43,12 @@ class ClearTwigFeedsCacheCommand extends ConsoleCommand
     protected function configure()
     {
         $this
-            ->setName('clearcache')
-            ->setAliases(['clear-cache'])
+            ->setName('clear')
+            ->setAliases(['clear-cache', 'clearcache'])
             ->setDescription('Clears TwigFeeds cache')
-            ->setHelp('The <info>clearcache</info> command deletes cached files from the active cache location');
+            ->addOption('cache', null, InputOption::VALUE_NONE, 'If set, clears grav/cache/twigfeeds/*')
+            ->addOption('data', null, InputOption::VALUE_NONE, 'If set, clears to grav/user/data/twigfeeds/*')
+            ->setHelp('The <info>clear</info> command deletes cached files from the active or selected cache-location');
     }
 
     /**
@@ -69,8 +71,10 @@ class ClearTwigFeedsCacheCommand extends ConsoleCommand
     {
         $config = Grav::instance()['config']->get('plugins.twigfeeds');
         $config['locator'] = Grav::instance()['locator'];
-        if ($config['static_cache']) {
+        if ($config['static_cache'] || $this->input->getOption('data')) {
             $config['cache_path'] = $config['locator']->findResource('user://data', true) . '/twigfeeds/';
+        } elseif ($config['static_cache'] === false || $this->input->getOption('cache')) {
+            $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
         } else {
             $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
         }

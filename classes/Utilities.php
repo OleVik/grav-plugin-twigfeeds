@@ -15,6 +15,7 @@
 
 namespace Grav\Plugin\TwigFeedsPlugin;
 
+use DateTime;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Yaml;
@@ -289,5 +290,18 @@ class Utilities
             }
         }
         return $array;
+    }
+
+    public static function logger($logFile, $level = "", $message = "")
+    {
+        if (!$logFile || !is_string($logFile) || empty($logFile)) {
+            return;
+        }
+        $date = new DateTime('now');
+        file_put_contents(
+          $logFile,
+          $date->format('Y-m-d H:i:s') . ' ' . '[' . $level . '] ' . $message . PHP_EOL,
+          FILE_APPEND | LOCK_EX
+        );
     }
 }

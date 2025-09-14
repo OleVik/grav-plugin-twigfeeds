@@ -19,9 +19,6 @@ use DateTime;
 use FeedIo\Adapter\Guzzle\Client;
 use FeedIo\Reader\ReadErrorException;
 use GuzzleHttp\Client as GuzzleClient;
-use Psr\Log\NullLogger;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Grav\Common\Utils;
@@ -53,13 +50,6 @@ class Parser
     public $config;
 
     /**
-     * Logger-instance
-     *
-     * @var NullLogger|Logger
-     */
-    public $logger;
-
-    /**
      * Instantiate TwigFeeds Parser
      *
      * @param array $config Plugin-configuration
@@ -68,10 +58,6 @@ class Parser
     {
         $this->filesystem = new Filesystem();
         $this->config = $config;
-        $this->logger = new NullLogger();
-        if ($this->config['log_file'] && !empty($this->config['log_file']) && is_string($this->config['log_file'])) {
-            $this->logger = new Logger('default', [new StreamHandler($this->config['log_file'])]);
-        }
     }
 
     /**
@@ -118,7 +104,7 @@ class Parser
             $requestOptions = Utils::arrayMergeRecursiveUnique($this->config['request_options'], $args['request_options']);
         }
         try {
-            $resource = Parser::query($args['source'], $requestOptions, $this->logger, $mode);
+            $resource = Parser::query($args['source'], $requestOptions, $this->config['log_file'], $mode);
             if ($mode === 'direct') {
                 $xml = simplexml_load_string($resource->getBody());
                 $parsed = Utilities::simpleXml2ArrayWithCDATASupport($xml);
@@ -134,8 +120,8 @@ class Parser
             throw new \Exception($e);
         }
         if ($resource === null) {
-            $this->logger->debug('Querying ' . $args['source'] . ' returned null or failed.');
-            return;
+            Utilities::logger($this->config['log_file'], 'WARNING', 'Querying ' . $args['source'] . ' returned null or failed.');
+            return ['callback' => '<red>Querying ' . $args['source'] . ' returned null or failed.</red>'];
         }
         $feed = $resource->getFeed();
         if (count($feed->toArray()['items']) < 1) {
@@ -193,7 +179,8 @@ class Parser
                     $this->filesystem->dumpFile($path, json_encode($data));
                     $return['callback'] = 'Wrote ' . $path;
                 } catch (IOException $e) {
-                    throw new \Exception($e);
+                    error_log($e);
+                    Utilities::logger($this->config['log_file'], 'WARNING', 'Couldn\t get data from ' . $args['source']);
                 }
             }
         }
@@ -206,7 +193,7 @@ class Parser
      *
      * @param string $URL Target source
      * @param array $requestOptions Guzzle Client-options
-     * @param NullLogger|Logger $logger Logger-instance
+     * @param string $logFile Log-file path
      * @param string $mode Operating mode, either 'default' or 'direct'
      *
      * @return object|null Query-result or null
@@ -215,53 +202,52 @@ class Parser
      * @throws \GuzzleHttp\Exception If connection-error
      * @throws \Exception For other errors
      */
-    public static function query($URL, $requestOptions, $logger, $mode = 'default')
+    public static function query($URL, $requestOptions, $logFile, $mode = 'default')
     {
         $guzzle = new GuzzleClient($requestOptions);
         $client = new Client($guzzle);
         try {
             if ($mode === 'default' || empty($mode)) {
-                $feedIo = new \FeedIo\FeedIo($client, $logger);
+                $feedIo = new \FeedIo\FeedIo($client, new \Psr\Log\NullLogger());
                 try {
                     return $feedIo->read($URL);
                 } catch (ReadErrorException $e) {
                     error_log($e);
-                    $logger->error($e);
+                    Utilities::logger($logFile, 'ERROR', $e);
                 }
             } elseif ($mode === 'direct') {
                 try {
                     return $guzzle->request('GET', $URL);
                 } catch (\Exception $e) {
                     error_log($e);
-                    $logger->error($e);
+                    Utilities::logger($logFile, 'ERROR', $e);
                 }
             }
         } catch (\GuzzleHttp\Exception\ConnectException $e) {
             error_log($e);
-            $logger->error($e);
+            Utilities::logger($logFile, 'ERROR', $e);
         } catch (\GuzzleHttp\Exception\RequestException $e) {
             error_log($e);
-            $logger->error($e);
+            Utilities::logger($logFile, 'ERROR', $e);
         } catch (\GuzzleHttp\Exception\ClientException $e) {
             error_log($e);
-            $logger->error($e);
+            Utilities::logger($logFile, 'ERROR', $e);
         } catch (\GuzzleHttp\Exception\ServerException $e) {
             error_log($e);
-            $logger->error($e);
+            Utilities::logger($logFile, 'ERROR', $e);
         } catch (\GuzzleHttp\Exception\TooManyRedirectsException $e) {
             error_log($e);
-            $logger->error($e);
+            Utilities::logger($logFile, 'ERROR', $e);
         } catch (\Exception $e) {
             error_log($e);
-            $logger->error($e);
-            throw new \Exception($e);
+            Utilities::logger($logFile, 'ERROR', $e);
         }
     }
 
     /**
      * Find Item date
      *
-     * @param array $item         Feed Item
+     * @param array $item Feed Item
      * @param int   $lastModified Feed Modified date
      *
      * @return int Modified date
@@ -272,6 +258,8 @@ class Parser
             return $item['lastModified'];
         } elseif (isset($item['elements']['dc:date']) && !empty($item['elements']['dc:date'])) {
             return $item['elements']['dc:date'];
+        } elseif (isset($item['pubDate']) && !empty($item['pubDate'])) {
+            return $item['pubDate'];
         } elseif (isset($lastModified) && !empty($lastModified)) {
             return $lastModified;
         }

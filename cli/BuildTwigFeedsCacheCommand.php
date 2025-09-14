@@ -46,12 +46,12 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
     protected function configure()
     {
         $this
-            ->setName('buildcache')
-            ->setAliases(['build-cache'])
+            ->setName('build')
+            ->setAliases(['build-cache', 'buildcache'])
             ->setDescription('Builds TwigFeeds cache')
-            ->addOption('cache', null, InputOption::VALUE_NONE, 'If set builds to cache/twigfeeds/*')
-            ->addOption('data', null, InputOption::VALUE_NONE, 'If set builds to user/data/twigfeeds/*')
-            ->setHelp('The <info>buildcache</info> command builds the cache, by default to the active cache location');
+            ->addOption('cache', null, InputOption::VALUE_NONE, 'If set, builds to cache/twigfeeds/*')
+            ->addOption('data', null, InputOption::VALUE_NONE, 'If set, builds to user/data/twigfeeds/*')
+            ->setHelp('The <info>build</info> command creates cached files, to the active or selected cache-location');
     }
 
     /**
@@ -62,8 +62,16 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
     protected function serve()
     {
         $config = $this->config();
-        $this->buildManifest($config);
-        $this->buildCache($config);
+        try {
+            $this->buildManifest($config);
+        } catch (\Exception $e) {
+            throw new \Exception($e);
+        }
+        try {
+            $this->buildCache($config);
+        } catch (\Exception $e) {
+            throw new \Exception($e);
+        }
     }
 
     /**
@@ -76,12 +84,15 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
         $config = Grav::instance()['config']->get('plugins.twigfeeds');
         $config['locator'] = Grav::instance()['locator'];
         $config['config_file'] = $config['locator']->findResource('user://config', true) . '/plugins/twigfeeds.yaml';
-        if ($config['static_cache']) {
+        if ($config['static_cache'] || $this->input->getOption('data')) {
             $config['cache_path'] = $config['locator']->findResource('user://data', true) . '/twigfeeds/';
+        } elseif ($config['static_cache'] === false || $this->input->getOption('cache')) {
+            $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
         } else {
             $config['cache_path'] = $config['locator']->findResource('cache://', true) . '/twigfeeds/';
         }
         $config['blueprint_path'] = $config['locator']->findResource('user://plugins/twigfeeds/blueprints.yaml', true);
+        $config['log_file'] = $config['locator']->findResource('log://', true) . '/twigfeeds.log';
         return $config;
     }
 
@@ -97,11 +108,13 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
         $this->output->writeln('');
         $this->output->writeln('<magenta>Building TwigFeeds manifest</magenta>');
         $this->output->writeln('');
-
-        include __DIR__ . '/../vendor/autoload.php';
-        $utility = new Utilities($config);
-        $manifest = new Manifest($config, $utility);
-
+        try {
+            include __DIR__ . '/../vendor/autoload.php';
+            $utility = new Utilities($config);
+            $manifest = new Manifest($config, $utility);
+        } catch (\Exception $e) {
+            throw new \Exception($e);
+        }
         $manifestFile = $config['cache_path'] . 'manifest.json';
         if (!file_exists($manifestFile)) {
             $this->output->writeln('<white>Manifest does not exist, writing it</white>');
@@ -140,11 +153,14 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
         $this->output->writeln('');
         $this->output->writeln('<magenta>Building TwigFeeds cache</magenta>');
         $this->output->writeln('');
-
-        include __DIR__ . '/../vendor/autoload.php';
-        $utility = new Utilities($config);
-        $manifest = new Manifest($config, $utility);
-        $parser = new Parser($config);
+        try {
+            include __DIR__ . '/../vendor/autoload.php';
+            $utility = new Utilities($config);
+            $manifest = new Manifest($config, $utility);
+            $parser = new Parser($config);
+        } catch (\Exception $e) {
+            throw new \Exception($e);
+        }
         $manifestFile = $config['cache_path'] . 'manifest.json';
         $content = $manifest->readManifest($manifestFile);
         foreach ($content['data'] as $entry => $data) {
@@ -158,7 +174,7 @@ class BuildTwigFeedsCacheCommand extends ConsoleCommand
                 unset($data['last_modified']);
             }
             if (!file_exists($path)) {
-                $this->output->writeln('<white>Can\'t find ' . $data['filename'] . ', writing it</white>');
+                $this->output->writeln('<white>Can\'t find ' . $data['filename'] . '</white>');
                 $call = $parser->parseFeed($data, $path);
                 $this->output->writeln('  ' . $call['callback']);
                 $content['data'][$entry]['etag'] = $call['data']['etag'];

@@ -221,9 +221,7 @@ The `cache`-option relies on [Entity tags](https://en.wikipedia.org/wiki/HTTP_ET
 
 ## Command Line Interface
 
-The plugin supports CLI-usage, which means that you can clear or build the cache from settings independently of running it on a site. Two methods are available: `bin/plugin twigfeeds clearcache` and `bin/plugin twigfeeds buildcache`. The `clearcache`-command deletes cached files from the active cache location, using the plugin's settings to determine whether the cache is in `/cache` or `/user/data`.
-
-The `buildcache`-command builds the cache, by default to the active cache location, which allows you to precache the feeds-data. It also uses the plugin's settings to determine the cache-location. You can also pass `--cache` to build the feeds to `/cache` or `--data` to build to `/user/data`.
+The plugin supports CLI-usage, which means that you can build or clear the cache from settings independently of running it on a site. Two methods are available: `bin/plugin twigfeeds build` and `bin/plugin twigfeeds clear`. The `build`-command creates the cached files, whilst the `clear`-command deletes cached files from the active or selected cache-location. This allows a cronjob to run the CLI to cache routinely, such that the visitor is not as exposed to re-caches. It will respect your plugin-configuration, and so running it frequently will not unecessarily process anything that would not run otherwise by a visit to the site.
 
 ## Testing
 

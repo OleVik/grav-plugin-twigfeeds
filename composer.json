@@ -4,11 +4,11 @@
     "platform-check": false
   },
   "require": {
-    "symfony/filesystem": "^3.2",
+    "symfony/filesystem": "3.4",
     "naneau/semver": "^0.0.7",
-    "psr/log": "^3.0",
     "kevinrob/guzzle-cache-middleware": "^3.2",
-    "php-feed-io/feed-io": "5.3.3"
+    "php-feed-io/feed-io": "5.3.3",
+    "psr/log": "1.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^11.5"
