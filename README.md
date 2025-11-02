@@ -2,6 +2,8 @@
 
 Exposes RSS and Atom feeds to Grav, making them available for use in Twig. This means you can define RSS feeds in the plugin-configuration, then access them for iteration in templates.
 
+**See [v5-notes](#changes-in-v5) for compatibility with Grav 1.8.**
+
 ## Installation and Configuration
 
 1. Download the zip version of [this repository](https://github.com/OleVik/grav-plugin-twigfeeds) and unzip it under `/your/site/grav/user/plugins`.
@@ -233,7 +235,9 @@ When upgrading to a new major-version, be aware that your old settings may not w
 
 ### Changes in v5
 
-The plugin now requires PHP version 8 or higher, following the parser-library's update, and Grav version 1.7 or higher. The blueprints are now destructured into separate files which [theoretically](https://github.com/getgrav/grav-plugin-admin/issues/2458) can be overridden by the local user, allowing for additions such as metadata per feed.
+The plugin now requires PHP version 8 or higher, following the parser-library's update, and Grav version 1.7. The blueprints are now destructured into separate files which [theoretically](https://github.com/getgrav/grav-plugin-admin/issues/2458) can be overridden by the local user, allowing for additions such as metadata per feed.
+
+**Note:** Grav version 1.8 requires PHP 8.3, which introduces new syntax that invalidates a method-signature of an underlying library of this plugin. The next major-version will work with Grav 1.8, but version 5 will be locked to Grav 1.7 to retain compatibility with PHP 7.3.6.
 
 More details on the specification the new library, FeedIo, uses [is available here](https://github.com/php-feed-io/feed-io/blob/main/docs/specifications-support.md). Changes to options:
 

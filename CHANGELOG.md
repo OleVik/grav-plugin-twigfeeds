@@ -1,3 +1,11 @@
+# v5.1.0-beta.12
+## 02-11-2025
+
+1. [](#improved)
+   - Note in README regarding compatibility with Grav 1.8 and PHP
+   - Add enabled-check earlier in processing
+   - Change version-specification for library
+
 # v5.1.0-beta.11
 ## 14-09-2025
 

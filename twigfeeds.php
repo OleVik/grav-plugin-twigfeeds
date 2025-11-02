@@ -77,6 +77,9 @@ class TwigFeedsPlugin extends Plugin
             $this->grav['log']->error('TwigFeeds-plugin v5 requires PHP v8 or above');
             return;
         }
+        if (!$this->config->get('plugins.twigfeeds.enabled')) {
+            return;
+        }
         if ($this->config->get('system.debugger.enabled')) {
             $this->grav['debugger']->startTimer('twigfeeds', 'TwigFeeds');
         }
@@ -185,7 +188,7 @@ class TwigFeedsPlugin extends Plugin
      */
     public function outputFeeds()
     {
-        if ($this->isAdmin() || $this->config()['enabled'] != true) {
+        if ($this->isAdmin() || $this->config()['enabled'] !== true) {
             return;
         }
         if (isset($this->grav['twig']->twig_vars['twig_feeds'])) {
