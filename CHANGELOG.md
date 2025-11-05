@@ -1,3 +1,9 @@
+# v5.1.0-beta.13
+## 05-11-2025
+
+1. [](#improved)
+   - Compatibility with Grav 1.7 and 1.8 using unified Psr/Log-fix
+
 # v5.1.0-beta.12
 ## 02-11-2025
 
