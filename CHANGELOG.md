@@ -1,3 +1,11 @@
+# v5.1.0
+## 31-01-2026
+
+1. [](#new)
+   - Minor-release from betas
+2. [](#improved)
+   - README
+
 # v5.1.0-beta.13
 ## 05-11-2025
 

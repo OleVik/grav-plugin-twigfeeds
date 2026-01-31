@@ -237,7 +237,7 @@ When upgrading to a new major-version, be aware that your old settings may not w
 
 The plugin now requires PHP version 8 or higher, following the parser-library's update, and Grav version 1.7. The blueprints are now destructured into separate files which [theoretically](https://github.com/getgrav/grav-plugin-admin/issues/2458) can be overridden by the local user, allowing for additions such as metadata per feed.
 
-**Note:** Grav version 1.8 requires PHP 8.3, which introduces new syntax that invalidates a method-signature of an underlying library of this plugin. This is resolved in version 5.1.0-beta.13 of this plugin.
+**Note:** Grav version 1.8 requires PHP 8.3, which introduces new syntax that invalidates a method-signature of an underlying library of this plugin. This is resolved in version 5.1.0 of this plugin.
 
 More details on the specification the new library, FeedIo, uses [is available here](https://github.com/php-feed-io/feed-io/blob/main/docs/specifications-support.md). Changes to options:
 
@@ -247,10 +247,10 @@ More details on the specification the new library, FeedIo, uses [is available he
 
 ### Changes in v4
 
-PicoFeed was deprecated long ago, and hasn't been properly maintained in most forks. This caused some errors to be persistent, that could not be resolved without forking and patching the library. Thus, though the API in PHP remains largely intact, it has changed in Twig.
+PicoFeed was deprecated long ago, and hasn't been properly maintained in most forks. This caused some errors to be persistent, that could not be resolved without forking and patching the library. Thus, even though the API in PHP remains largely intact, it has changed in Twig.
 
 Some properties will have different names than before. To get an idea of what the data looks like, use `{{ dump(twig_feeds) }}` in a Twig-template and inspect the debugger. Most notably, `item.url` is now `item.link`, `item.content` is `item.description`, and `item.date.date` is `item.lastModified`.
 
 ## License
 
-MIT License 2019-2025 by [Ole Vik](http://github.com/olevik).
+MIT License 2019-2026 by [Ole Vik](http://github.com/olevik).
