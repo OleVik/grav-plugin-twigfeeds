@@ -10,7 +10,7 @@
     "php-feed-io/feed-io": "5.3.3"
   },
   "require-dev": {
-    "phpunit/phpunit": "^11.5"
+    "phpunit/phpunit": "^12.5"
   },
   "replace": {
     "psr/log": "*"
